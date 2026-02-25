@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
+  "devDependencies": {
+    "@actions/github-script": "github:actions/github-script",
+    "@types/node": ">=24",
+    "@typescript/native-preview": "latest"
+  }
+}

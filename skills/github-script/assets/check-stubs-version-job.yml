@@ -1,0 +1,19 @@
+check:
+  runs-on: ubuntu-latest
+  permissions: { contents: read }
+  outputs:
+    name: ${{ fromJson(steps.check.outputs.result).name }}
+    version: ${{ fromJson(steps.check.outputs.result).version }}
+    pypi_url: ${{ fromJson(steps.check.outputs.result).pypi_url }}
+  steps:
+    - uses: actions/checkout@v6
+    - uses: astral-sh/setup-uv@v7
+    - run: uv sync
+
+    - uses: actions/github-script@v8
+      id: check
+      with:
+        result-encoding: json
+        script: |
+          const { default: checkStubsVersion } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/stubs-version.mjs`)
+          return await checkStubsVersion({ core, context, exec })
