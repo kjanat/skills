@@ -22,24 +22,24 @@ from Rakov & Uman (2003) unless noted.
 
 ## Reading Order
 
-| Task                                            | File                                       |
-| ----------------------------------------------- | ------------------------------------------ |
-| Lightning types, terminology, global circuit    | `references/types-terminology-circuit.md`  |
-| Flash rates, density, geographic distribution   | `references/incidence-statistics.md`       |
-| Thundercloud charge structure, electrification  | `references/cloud-electrification.md`      |
-| Stepped leader physics                          | `references/stepped-leader.md`             |
-| Return stroke currents, speed, channel, fields  | `references/return-stroke.md`              |
-| Dart leader, continuing current, M-components   | `references/dart-leader-m-component.md`    |
-| Positive, upward, and triggered lightning       | `references/positive-upward-triggered.md`  |
-| Cloud discharges and winter lightning           | `references/cloud-winter-discharges.md`    |
-| Aircraft interaction and thunder                | `references/aircraft-thunder.md`           |
-| Return stroke modeling (engineering + physical) | `references/return-stroke-models.md`       |
-| Sferics, Schumann resonances, sprites, TLEs     | `references/distant-em-upper-atmo.md`      |
-| NOx production, extraterrestrial lightning      | `references/chemistry-extraterrestrial.md` |
-| Lightning locating systems (NLDN, satellite)    | `references/locating-systems.md`           |
-| Protection methods, grounding, standards        | `references/protection-standards.md`       |
-| Human hazards, safety, ball lightning           | `references/human-hazards-unusual.md`      |
-| Cross-study statistical tables (Berger, Rakov)  | `references/detailed-statistical-tables.md`|
+| Task                                            | File                                        |
+| ----------------------------------------------- | ------------------------------------------- |
+| Lightning types, terminology, global circuit    | `references/types-terminology-circuit.md`   |
+| Flash rates, density, geographic distribution   | `references/incidence-statistics.md`        |
+| Thundercloud charge structure, electrification  | `references/cloud-electrification.md`       |
+| Stepped leader physics                          | `references/stepped-leader.md`              |
+| Return stroke currents, speed, channel, fields  | `references/return-stroke.md`               |
+| Dart leader, continuing current, M-components   | `references/dart-leader-m-component.md`     |
+| Positive, upward, and triggered lightning       | `references/positive-upward-triggered.md`   |
+| Cloud discharges and winter lightning           | `references/cloud-winter-discharges.md`     |
+| Aircraft interaction and thunder                | `references/aircraft-thunder.md`            |
+| Return stroke modeling (engineering + physical) | `references/return-stroke-models.md`        |
+| Sferics, Schumann resonances, sprites, TLEs     | `references/distant-em-upper-atmo.md`       |
+| NOx production, extraterrestrial lightning      | `references/chemistry-extraterrestrial.md`  |
+| Lightning locating systems (NLDN, satellite)    | `references/locating-systems.md`            |
+| Protection methods, grounding, standards        | `references/protection-standards.md`        |
+| Human hazards, safety, ball lightning           | `references/human-hazards-unusual.md`       |
+| Cross-study statistical tables (Berger, Rakov)  | `references/detailed-statistical-tables.md` |
 
 ## Quick Reference: Key Parameters
 
