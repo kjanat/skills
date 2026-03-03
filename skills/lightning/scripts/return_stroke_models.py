@@ -10,6 +10,7 @@ All SI units.
 """
 
 import math
+from collections.abc import Callable
 from enum import Enum
 
 EPS_0 = 8.854187817e-12  # F/m
@@ -78,7 +79,7 @@ def channel_current(
     model: RSModel,
     z_prime: float,
     t: float,
-    base_current_fn: object,
+    base_current_fn: Callable[[float], float],
     v_f: float,
     h_total: float = 7500.0,
     lambda_decay: float = 2000.0,
@@ -114,7 +115,7 @@ def channel_current(
         if t_retarded < 0:
             return 0.0
 
-    return p * base_current_fn(t_retarded)  # type: ignore[operator]
+    return p * base_current_fn(t_retarded)
 
 
 # --- Far-field (radiation) relations from TL model ---
@@ -192,20 +193,15 @@ def peak_current_from_field(
 def braginskii_radius(
     i: float,
     t: float,
-    sigma: float = 2.22e4,
-    rho_0: float = 1.29,
 ) -> float:
     """Braginskii (1958) channel radius for linearly increasing current.
 
-    r(t) = 9.35 * I^(1/3) * t^(1/2)  [cgs: r in cm, I in A, t in s]
-
-    Converted to SI (meters).
+    Simplified CGS formula: r(t) = 9.35 * I^(1/3) * t^(1/2)
+    [cgs: r in cm, I in A, t in s]. Converted to SI (meters).
 
     Args:
         i: Current (A).
         t: Time since discharge onset (s).
-        sigma: Channel conductivity (S/m). Default: 2.22e4.
-        rho_0: Ambient air density (kg/m^3). Default: 1.29.
 
     Returns:
         r: Channel radius (m).
@@ -248,6 +244,9 @@ def heidler_current(
     I(t) = (I_0 / eta) * (t/tau_1)^n / (1 + (t/tau_1)^n) * exp(-t/tau_2)
 
     where eta is a correction factor for peak normalization.
+    Note: eta is an approximation; the exact factor requires numerically
+    finding the peak of the unnormalized function. Accurate for typical
+    lightning parameters (n>=5, tau_1 << tau_2).
 
     Args:
         t: Time (s).

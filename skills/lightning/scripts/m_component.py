@@ -7,6 +7,7 @@ All SI units.
 """
 
 import math
+from collections.abc import Callable
 
 
 def m_component_current_before_ground(
@@ -14,7 +15,7 @@ def m_component_current_before_ground(
     t: float,
     h: float,
     v: float,
-    source_current_fn: object,
+    source_current_fn: Callable[[float], float],
 ) -> float:
     """M-component current before wave reaches ground (t < H/v).
 
@@ -36,7 +37,7 @@ def m_component_current_before_ground(
     t_retarded = t - (h - z_prime) / v
     if t_retarded < 0:
         return 0.0
-    return source_current_fn(t_retarded)  # type: ignore[operator]
+    return source_current_fn(t_retarded)
 
 
 def m_component_current_after_ground(
@@ -44,7 +45,7 @@ def m_component_current_after_ground(
     t: float,
     h: float,
     v: float,
-    source_current_fn: object,
+    source_current_fn: Callable[[float], float],
 ) -> float:
     """M-component current after wave reflects at ground (t >= H/v).
 
@@ -66,8 +67,8 @@ def m_component_current_after_ground(
     t1 = t - (h - z_prime) / v
     t2 = t - (h + z_prime) / v
 
-    i1 = source_current_fn(t1) if t1 >= 0 else 0.0  # type: ignore[operator]
-    i2 = source_current_fn(t2) if t2 >= 0 else 0.0  # type: ignore[operator]
+    i1 = source_current_fn(t1) if t1 >= 0 else 0.0
+    i2 = source_current_fn(t2) if t2 >= 0 else 0.0
 
     return i1 + i2
 
@@ -77,7 +78,7 @@ def m_component_current(
     t: float,
     h: float,
     v: float,
-    source_current_fn: object,
+    source_current_fn: Callable[[float], float],
 ) -> float:
     """M-component current at height z' and time t.
 

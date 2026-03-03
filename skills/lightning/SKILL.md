@@ -30,11 +30,14 @@ from Rakov & Uman (2003) unless noted.
 | Stepped leader physics                          | `references/stepped-leader.md`              |
 | Return stroke currents, speed, channel, fields  | `references/return-stroke.md`               |
 | Dart leader, continuing current, M-components   | `references/dart-leader-m-component.md`     |
-| Positive, upward, and triggered lightning       | `references/positive-upward-triggered.md`   |
+| Positive CG lightning and bipolar flashes       | `references/positive-lightning.md`          |
+| Upward lightning from tall structures           | `references/upward-lightning.md`            |
+| Rocket-triggered lightning                      | `references/triggered-lightning.md`         |
 | Cloud discharges and winter lightning           | `references/cloud-winter-discharges.md`     |
 | Aircraft interaction and thunder                | `references/aircraft-thunder.md`            |
 | Return stroke modeling (engineering + physical) | `references/return-stroke-models.md`        |
-| Sferics, Schumann resonances, sprites, TLEs     | `references/distant-em-upper-atmo.md`       |
+| Sferics, Schumann resonances, whistlers         | `references/distant-em-signals.md`          |
+| Sprites, elves, blue jets, TGFs                 | `references/upper-atmosphere-tles.md`       |
 | NOx production, extraterrestrial lightning      | `references/chemistry-extraterrestrial.md`  |
 | Lightning locating systems (NLDN, satellite)    | `references/locating-systems.md`            |
 | Protection methods, grounding, standards        | `references/protection-standards.md`        |
@@ -113,19 +116,6 @@ from Rakov & Uman (2003) unless noted.
 | Charge transfer | 80 C          | 350 C         |
 | Action integral | 6.5x10^5 A^2s | 1.5x10^7 A^2s |
 
-## Terminology
-
-| Term               | Definition                                                      |
-| ------------------ | --------------------------------------------------------------- |
-| Flash              | Entire lightning discharge                                      |
-| Stroke             | Component of CG discharge (leader + return stroke)              |
-| Leader             | Self-propagating discharge, conductivity ~10^4 S/m              |
-| Streamer           | Low-conductivity precursor; air remains insulating              |
-| Corona             | Non-self-propagating cluster of streamers near electrode        |
-| Continuing current | Quasi-stationary arc (tens-hundreds of A, up to hundreds of ms) |
-| M-component        | Current/luminosity surge during continuing current              |
-| ICC                | Initial continuous current (upward/triggered lightning)         |
-
 ## Computational Tools
 
 | Script                            | Contents                                                              |
@@ -139,15 +129,3 @@ from Rakov & Uman (2003) unless noted.
 | `scripts/incidence.py`            | Ng-Td/Th formulas, structure incidence, Poisson probability           |
 
 All scripts use stdlib only (`math`, `enum`). Each has a `__main__` demo block.
-
-## Three Modes of Charge Transfer to Ground
-
-1. **Leader-return-stroke**: Leader deposits charge; return stroke neutralizes.
-   Front lengths: ~10 m (dart leader), ~100 m (return stroke).
-2. **Continuing current**: Quasi-stationary arc; tens-hundreds of A; up to
-   hundreds of ms.
-3. **M-component**: Guided-wave perturbation in continuing current; front
-   length ~1 km; requires existing conducting channel.
-
-Key distinction: leader-return-stroke occurs without conducting path (leader
-creates it); M-component requires existing path.

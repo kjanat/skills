@@ -47,6 +47,8 @@ Log-normal distribution with geometric mean ~30 kA (first), ~12 kA
 (subsequent). Two first-stroke populations: median 61 kA (first component)
 and 33.3 kA (second component).
 
+See `references/detailed-statistical-tables.md` for extended percentile data.
+
 ## Return-Stroke Speed
 
 | Source                  | Speed (10^8 m/s)   | Notes                   |

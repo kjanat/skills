@@ -125,6 +125,7 @@ def leader_retarded_height(
     """
     # Initial guess: non-retarded position
     h = max(h_m - v * t, 0.01)
+    f = float("inf")
 
     for _ in range(50):
         f = (h_m - h) / v + math.sqrt(h * h + r * r) / C - t
@@ -136,6 +137,14 @@ def leader_retarded_height(
             h = h_new
             break
         h = max(h_new, 0.0)
+    else:
+        import warnings
+
+        warnings.warn(
+            f"leader_retarded_height: Newton's method did not converge "
+            f"after 50 iterations (residual |f|={abs(f):.2e})",
+            stacklevel=2,
+        )
 
     return h
 

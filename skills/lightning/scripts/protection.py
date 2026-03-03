@@ -151,56 +151,6 @@ def soil_breakdown_radius(
     return math.sqrt(i_peak / (2.0 * math.pi * sigma * e_b))
 
 
-# --- Lightning Incidence to Structures ---
-
-
-def flash_incidence_eriksson(
-    h_s: float,
-    n_g: float,
-) -> float:
-    """Annual lightning incidence to isolated structure (Eriksson 1987).
-
-    N = 24e-6 * H_s^2.05 * N_g  (flashes per year)
-
-    Args:
-        h_s: Structure height (m).
-        n_g: Ground flash density (km^-2 yr^-1).
-
-    Returns:
-        N: Expected flashes per year.
-    """
-    return 24e-6 * h_s**2.05 * n_g
-
-
-def upward_flash_percentage(h_s: float) -> float:
-    """Percentage of flashes that are upward-initiated.
-
-    P_u = 52.8 * ln(H_s) - 230  (valid 78-518 m)
-
-    Args:
-        h_s: Structure height (m).
-
-    Returns:
-        P_u: Percentage of upward flashes (%). Clamped 0-100.
-    """
-    p = 52.8 * math.log(h_s) - 230.0
-    return max(0.0, min(100.0, p))
-
-
-def ground_flash_density_from_td(t_d: float) -> float:
-    """Ground flash density from thunderstorm days (Anderson et al. 1984a).
-
-    N_g = 0.04 * T_D^1.25  (IEEE/CIGRE standard)
-
-    Args:
-        t_d: Annual thunderstorm days.
-
-    Returns:
-        N_g: Ground flash density (km^-2 yr^-1).
-    """
-    return 0.04 * t_d**1.25
-
-
 def distribution_line_strike_rate(
     n_g: float,
     h: float,
@@ -252,6 +202,8 @@ def conductor_melting_action_integral(
 
 
 if __name__ == "__main__":
+    from incidence import flash_incidence_to_structure, upward_flash_percentage
+
     print("Striking Distance vs Peak Current (Love/IEEE):")
     print(f"{'I (kA)':>8} {'r (m)':>8}")
     for i in [3, 5, 10, 20, 30, 50, 80, 100, 200]:
@@ -277,7 +229,7 @@ if __name__ == "__main__":
 
     print(
         f"\nFlash incidence to 100 m tower, Ng=10: "
-        f"{flash_incidence_eriksson(100, 10):.1f} flashes/yr"
+        f"{flash_incidence_to_structure(100, 10):.1f} flashes/yr"
     )
 
     print(f"Upward flash % for 200 m: {upward_flash_percentage(200):.0f}%")
