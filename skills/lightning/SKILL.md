@@ -39,6 +39,7 @@ from Rakov & Uman (2003) unless noted.
 | Lightning locating systems (NLDN, satellite)    | `references/locating-systems.md`           |
 | Protection methods, grounding, standards        | `references/protection-standards.md`       |
 | Human hazards, safety, ball lightning           | `references/human-hazards-unusual.md`      |
+| Cross-study statistical tables (Berger, Rakov)  | `references/detailed-statistical-tables.md`|
 
 ## Quick Reference: Key Parameters
 
