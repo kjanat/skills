@@ -206,6 +206,10 @@ if __name__ == "__main__":
         t = whistler_dispersion(f_hz, 30.0)
         print(f"  f={f_hz:6d} Hz → t={t:.3f} s")
 
-    print(f"\nPlasma frequency (n_e=10^12 m^-3): {plasma_frequency(1e12) / 1e6:.1f} MHz")
+    print(
+        f"\nPlasma frequency (n_e=10^12 m^-3): {plasma_frequency(1e12) / 1e6:.1f} MHz"
+    )
 
-    print(f"Cyclotron frequency (B=30 uT): {electron_cyclotron_frequency(30e-6) / 1e3:.0f} kHz")
+    print(
+        f"Cyclotron frequency (B=30 uT): {electron_cyclotron_frequency(30e-6) / 1e3:.0f} kHz"
+    )

@@ -99,7 +99,9 @@ def vertical_rod_resistance(
     Returns:
         R_gr: Grounding resistance (ohm).
     """
-    return (1.0 / (2.0 * math.pi * sigma * length)) * (math.log(8.0 * length / diameter) - 1.0)
+    return (1.0 / (2.0 * math.pi * sigma * length)) * (
+        math.log(8.0 * length / diameter) - 1.0
+    )
 
 
 # --- Step and Touch Voltage ---
@@ -269,7 +271,9 @@ if __name__ == "__main__":
         f"{step_voltage(20e3, 100, 9.5, 10.0):.0f} V"
     )
 
-    print(f"\nSoil breakdown radius: 30 kA, sigma=1e-3: {soil_breakdown_radius(30e3, 1e-3):.1f} m")
+    print(
+        f"\nSoil breakdown radius: 30 kA, sigma=1e-3: {soil_breakdown_radius(30e3, 1e-3):.1f} m"
+    )
 
     print(
         f"\nFlash incidence to 100 m tower, Ng=10: "

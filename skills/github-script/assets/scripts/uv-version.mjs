@@ -10,10 +10,10 @@ import { checkVersionAction } from './version-check-shared.mjs';
  * @returns {Promise<{ name: string, version: string, pypi_url: string }>}
  */
 export default async ({ core, context, exec }) => {
-  return checkVersionAction({
-    core,
-    context,
-    exec,
-    tagPrefixes: ['v'],
-  });
+	return checkVersionAction({
+		core,
+		context,
+		exec,
+		tagPrefixes: ['v'],
+	});
 };

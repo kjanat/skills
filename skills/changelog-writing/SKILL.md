@@ -25,14 +25,14 @@ Write changelogs for humans, not machines. Follow the
 
 Group changes under these headings, in this order:
 
-| Category     | Use for                                  |
-| ------------ | ---------------------------------------- |
-| `Added`      | New features                             |
-| `Changed`    | Changes to existing functionality        |
-| `Deprecated` | Features marked for future removal       |
-| `Removed`    | Features removed in this release         |
-| `Fixed`      | Bug fixes                                |
-| `Security`   | Vulnerability patches                    |
+| Category     | Use for                            |
+| ------------ | ---------------------------------- |
+| `Added`      | New features                       |
+| `Changed`    | Changes to existing functionality  |
+| `Deprecated` | Features marked for future removal |
+| `Removed`    | Features removed in this release   |
+| `Fixed`      | Bug fixes                          |
+| `Security`   | Vulnerability patches              |
 
 Omit empty categories. Never invent new category names.
 
@@ -74,13 +74,13 @@ At the bottom of the file, define diff links for every version:
 
 ## Anti-Patterns
 
-| Don't                      | Why                                          |
-| -------------------------- | -------------------------------------------- |
-| Dump git log as changelog  | Noise: merge commits, docs changes, typos    |
-| Skip deprecation notices   | Users can't prepare for breaking changes     |
-| Use regional date formats  | Ambiguous (`01/02/03`). Use ISO 8601         |
-| Document only some changes | Partial changelog is worse than none         |
-| Use GitHub Releases alone  | Non-portable, less discoverable than a file  |
+| Don't                      | Why                                         |
+| -------------------------- | ------------------------------------------- |
+| Dump git log as changelog  | Noise: merge commits, docs changes, typos   |
+| Skip deprecation notices   | Users can't prepare for breaking changes    |
+| Use regional date formats  | Ambiguous (`01/02/03`). Use ISO 8601        |
+| Document only some changes | Partial changelog is worse than none        |
+| Use GitHub Releases alone  | Non-portable, less discoverable than a file |
 
 ## Writing Style
 
@@ -91,15 +91,15 @@ At the bottom of the file, define diff links for every version:
 
 ## Reading Order
 
-| Task                   | Files to Read           |
-| ---------------------- | ----------------------- |
-| Create new CHANGELOG   | SKILL.md + example.md   |
-| Add release entries    | SKILL.md (categories)   |
-| Review format          | SKILL.md (format rules) |
-| See full example       | example.md              |
+| Task                 | Files to Read           |
+| -------------------- | ----------------------- |
+| Create new CHANGELOG | SKILL.md + example.md   |
+| Add release entries  | SKILL.md (categories)   |
+| Review format        | SKILL.md (format rules) |
+| See full example     | example.md              |
 
 ## In This Reference
 
-| File                                  | Purpose                    |
-| ------------------------------------- | -------------------------- |
-| [example.md](references/example.md)   | Complete example changelog |
+| File                                | Purpose                    |
+| ----------------------------------- | -------------------------- |
+| [example.md](references/example.md) | Complete example changelog |

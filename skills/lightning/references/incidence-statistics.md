@@ -91,3 +91,6 @@ Pu = 52.8*ln(Hs) - 230 (valid 78-518 m)
 | NH vs SH summer        | 1.4x more during NH summer              |
 | Mountains              | ~1.7x higher Ng                         |
 | Urban enhancement      | 40-85% increase over/downwind of cities |
+
+See `scripts/incidence.py` for Ng-Td formulas, structure incidence, and
+flash probability calculations.

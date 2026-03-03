@@ -38,6 +38,7 @@ TodoWrite([
   { id: "review", content: "Deduplicate, validate, trim", status: "pending", priority: "medium" }
 ])
 ```
+
 </critical>
 
 ---
@@ -134,6 +135,7 @@ Task(
 )
 // ... more based on calculation
 ```
+
 </dynamic-agents>
 
 ### Main Session: Concurrent Analysis

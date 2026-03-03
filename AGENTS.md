@@ -5,7 +5,7 @@ Pure content repo — no build system, no CI, no runtime code.
 
 ## STRUCTURE
 
-```
+```tree
 skills/
 ├── build-skill/             # Meta-skill: how to author new skills
 │   ├── SKILL.md
@@ -32,14 +32,14 @@ skills/
 
 ## WHERE TO LOOK
 
-| Task                        | Location                          |
-| --------------------------- | --------------------------------- |
-| Add a new skill             | `build-skill/` (read FIRST)       |
-| Validate a skill            | `build-skill/scripts/validate_skill.sh` |
-| Scaffold a skill            | `build-skill/scripts/init_skill.sh`     |
-| Package for distribution    | `build-skill/scripts/package_skill.sh`  |
-| Understand skill anatomy    | `build-skill/references/anatomy.md`     |
-| Frontmatter spec            | `build-skill/references/frontmatter.md` |
+| Task                     | Location                                |
+| ------------------------ | --------------------------------------- |
+| Add a new skill          | `build-skill/` (read FIRST)             |
+| Validate a skill         | `build-skill/scripts/validate_skill.sh` |
+| Scaffold a skill         | `build-skill/scripts/init_skill.sh`     |
+| Package for distribution | `build-skill/scripts/package_skill.sh`  |
+| Understand skill anatomy | `build-skill/references/anatomy.md`     |
+| Frontmatter spec         | `build-skill/references/frontmatter.md` |
 
 ## SKILL ANATOMY
 
@@ -82,7 +82,7 @@ metadata:                 # optional but conventional here
 
 ## CROSS-SKILL RELATIONSHIPS
 
-```
+```txt
 build-skill ──────> (all skills follow its conventions)
 github-docker-action <──> github-service-containers (mutual cross-refs)
 ```

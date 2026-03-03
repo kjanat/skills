@@ -80,15 +80,15 @@ Create a skill when:
 
 ## In This Reference
 
-| File                                                              | Purpose                        |
-| ----------------------------------------------------------------- | ------------------------------ |
-| [anatomy.md](references/anatomy.md)                               | Skill directory structures     |
-| [frontmatter.md](references/frontmatter.md)                       | YAML spec, naming, validation  |
-| [progressive-disclosure.md](references/progressive-disclosure.md) | Token-efficient design         |
-| [bundled-resources.md](references/bundled-resources.md)           | scripts/, references/, assets/ |
-| [patterns.md](references/patterns.md)                             | Real-world skill patterns      |
-| [gotchas.md](references/gotchas.md)                               | Common mistakes + fixes        |
-| [review-checklist.md](references/review-checklist.md)             | Post-creation review + dispatch|
+| File                                                              | Purpose                         |
+| ----------------------------------------------------------------- | ------------------------------- |
+| [anatomy.md](references/anatomy.md)                               | Skill directory structures      |
+| [frontmatter.md](references/frontmatter.md)                       | YAML spec, naming, validation   |
+| [progressive-disclosure.md](references/progressive-disclosure.md) | Token-efficient design          |
+| [bundled-resources.md](references/bundled-resources.md)           | scripts/, references/, assets/  |
+| [patterns.md](references/patterns.md)                             | Real-world skill patterns       |
+| [gotchas.md](references/gotchas.md)                               | Common mistakes + fixes         |
+| [review-checklist.md](references/review-checklist.md)             | Post-creation review + dispatch |
 
 ## Scripts
 

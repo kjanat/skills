@@ -1,18 +1,18 @@
 # Skills
 
-Collection of [Agent Skills](https://agentskills.io/) for AI coding agents.
+Collection of [Agent Skills] for AI coding agents.
 
 ## Available Skills
 
-| Skill                      | Purpose                                                        |
-| -------------------------- | -------------------------------------------------------------- |
-| `build-skill`              | How to author new skills — format, conventions, validation     |
-| `changelog-writing`        | Keep a Changelog convention for CHANGELOG.md                   |
-| `github-docker-action`     | Docker container GitHub Actions — Dockerfile, action.yml       |
-| `github-script`            | Secure `actions/github-script@v8` workflow steps               |
-| `github-service-containers`| Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
-| `index-knowledge`          | Generate hierarchical AGENTS.md knowledge bases                |
-| `uv-versioning`            | Version bumping workflows for uv Python projects               |
+| Skill                       | Purpose                                                        |
+| --------------------------- | -------------------------------------------------------------- |
+| `build-skill`               | How to author new skills — format, conventions, validation     |
+| `changelog-writing`         | Keep a Changelog convention for CHANGELOG.md                   |
+| `github-docker-action`      | Docker container GitHub Actions — Dockerfile, action.yml       |
+| `github-script`             | Secure `actions/github-script@v8` workflow steps               |
+| `github-service-containers` | Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
+| `index-knowledge`           | Generate hierarchical AGENTS.md knowledge bases                |
+| `uv-versioning`             | Version bumping workflows for uv Python projects               |
 
 ## Install with the [`skills` CLI](https://github.com/vercel-labs/skills)
 
@@ -54,4 +54,9 @@ cp -r skills/github-script ~/.config/opencode/skills/
 
 ## License
 
-[MIT](LICENSE)
+[MIT]
+
+<!--links-start-->
+
+[MIT]: LICENSE
+[Agent Skills]: https://agentskills.io/

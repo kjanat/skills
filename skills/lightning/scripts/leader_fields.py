@@ -188,6 +188,10 @@ if __name__ == "__main__":
         print(f"{dist:10d} {e:12.1f} {e / 1e3:12.3f}")
 
     print(f"\nClose approx at 30 m: {leader_e_field_close(30.0, RHO_L):.1f} V/m")
-    print(f"Full calc at 30 m:    {leader_e_field_uniform(30.0, 0.0, H_M, RHO_L):.1f} V/m")
+    print(
+        f"Full calc at 30 m:    {leader_e_field_uniform(30.0, 0.0, H_M, RHO_L):.1f} V/m"
+    )
 
-    print(f"\nB-field at 100 m for 1 kA leader: {leader_b_field(100.0, 1e3) * 1e6:.3f} uT")
+    print(
+        f"\nB-field at 100 m for 1 kA leader: {leader_b_field(100.0, 1e3) * 1e6:.3f} uT"
+    )

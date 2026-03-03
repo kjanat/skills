@@ -27,12 +27,12 @@ Reference: Rakov, V.A. & Uman, M.A. (2003). *Lightning: Physics and Effects*. Ca
 
 **Four types of cloud-to-ground lightning:**
 
-| Type | Direction | Polarity lowered | Estimated fraction |
-|------|-----------|------------------|--------------------|
-| (a) Downward negative | Downward leader | Negative | ~90% or more of CG |
-| (b) Upward negative | Upward leader | Negative | From tall objects (>100 m) |
-| (c) Downward positive | Downward leader | Positive | ≤10% of CG |
-| (d) Upward positive | Upward leader | Positive | From tall objects (>100 m) |
+| Type                  | Direction       | Polarity lowered | Estimated fraction         |
+| --------------------- | --------------- | ---------------- | -------------------------- |
+| (a) Downward negative | Downward leader | Negative         | ~90% or more of CG         |
+| (b) Upward negative   | Upward leader   | Negative         | From tall objects (>100 m) |
+| (c) Downward positive | Downward leader | Positive         | ≤10% of CG                 |
+| (d) Upward positive   | Upward leader   | Positive         | From tall objects (>100 m) |
 
 - ~75% of all lightning does not involve ground (cloud discharges / ICs)
 - Three modes of charge transfer in negative subsequent strokes:
@@ -48,80 +48,81 @@ Reference: Rakov, V.A. & Uman, M.A. (2003). *Lightning: Physics and Effects*. Ca
 
 #### Table 1.1: Characterization of Negative Cloud-to-Ground Lightning
 
-| Parameter | Typical Value |
-|-----------|---------------|
-| **Stepped leader** | |
-| Step length | 50 m |
-| Time interval between steps | 20–50 µs |
-| Step current | >1 kA |
-| Step charge | >1 mC |
-| Average propagation speed | 2 × 10⁵ m/s |
-| Overall duration | 35 ms |
-| Average current | 100–200 A |
-| Total charge | 5 C |
-| Electric potential | ~50 MV |
-| Channel temperature | ~10 000 K |
-| **First return stroke** | |
-| Peak current | 30 kA |
-| Maximum current rate of rise | ≥10–20 kA/µs |
-| Current risetime (10–90%) | 5 µs |
-| Current duration to half-peak | 70–80 µs |
-| Charge transfer | 5 C |
-| Propagation speed | (1–2) × 10⁸ m/s |
-| Channel radius | ~1–2 cm |
-| Channel temperature | ~30 000 K |
-| **Dart leader** | |
-| Speed | (1–2) × 10⁷ m/s |
-| Duration | 1–2 ms |
-| Charge | 1 C |
-| Current | 1 kA |
-| Electric potential | ~15 MV |
-| Channel temperature | ~20 000 K |
-| **Dart-stepped leader** | |
-| Step length | 10 m |
-| Time interval between steps | 5–10 µs |
-| Average propagation speed | (1–2) × 10⁶ m/s |
-| **Subsequent return stroke** | |
-| Peak current | 10–15 kA |
-| Maximum current rate of rise | 100 kA/µs |
-| 10–90% current rate of rise | 30–50 kA/µs |
-| Current risetime (10–90%) | 0.3–0.6 µs |
-| Current duration to half-peak | 30–40 µs |
-| Charge transfer | 1 C |
-| Propagation speed | (1–2) × 10⁸ m/s |
-| Channel radius | ~1–2 cm |
-| Channel temperature | ~30 000 K |
-| **Continuing current (>~40 ms)** | |
-| Magnitude | 100–200 A |
-| Duration | ~100 ms |
-| Charge transfer | 10–20 C |
-| **M-component** | |
-| Peak current | 100–200 A |
-| Current risetime (10–90%) | 300–500 µs |
-| Charge transfer | 0.1–0.2 C |
-| **Overall flash** | |
-| Duration | 200–300 ms |
-| Number of strokes per flash | 3–5 |
-| Interstroke interval | 60 ms |
-| Charge transfer | 20 C |
-| Energy | 10⁹–10¹⁰ J |
+| Parameter                        | Typical Value   |
+| -------------------------------- | --------------- |
+| **Stepped leader**               |                 |
+| Step length                      | 50 m            |
+| Time interval between steps      | 20–50 µs        |
+| Step current                     | >1 kA           |
+| Step charge                      | >1 mC           |
+| Average propagation speed        | 2 × 10⁵ m/s     |
+| Overall duration                 | 35 ms           |
+| Average current                  | 100–200 A       |
+| Total charge                     | 5 C             |
+| Electric potential               | ~50 MV          |
+| Channel temperature              | ~10 000 K       |
+| **First return stroke**          |                 |
+| Peak current                     | 30 kA           |
+| Maximum current rate of rise     | ≥10–20 kA/µs    |
+| Current risetime (10–90%)        | 5 µs            |
+| Current duration to half-peak    | 70–80 µs        |
+| Charge transfer                  | 5 C             |
+| Propagation speed                | (1–2) × 10⁸ m/s |
+| Channel radius                   | ~1–2 cm         |
+| Channel temperature              | ~30 000 K       |
+| **Dart leader**                  |                 |
+| Speed                            | (1–2) × 10⁷ m/s |
+| Duration                         | 1–2 ms          |
+| Charge                           | 1 C             |
+| Current                          | 1 kA            |
+| Electric potential               | ~15 MV          |
+| Channel temperature              | ~20 000 K       |
+| **Dart-stepped leader**          |                 |
+| Step length                      | 10 m            |
+| Time interval between steps      | 5–10 µs         |
+| Average propagation speed        | (1–2) × 10⁶ m/s |
+| **Subsequent return stroke**     |                 |
+| Peak current                     | 10–15 kA        |
+| Maximum current rate of rise     | 100 kA/µs       |
+| 10–90% current rate of rise      | 30–50 kA/µs     |
+| Current risetime (10–90%)        | 0.3–0.6 µs      |
+| Current duration to half-peak    | 30–40 µs        |
+| Charge transfer                  | 1 C             |
+| Propagation speed                | (1–2) × 10⁸ m/s |
+| Channel radius                   | ~1–2 cm         |
+| Channel temperature              | ~30 000 K       |
+| **Continuing current (>~40 ms)** |                 |
+| Magnitude                        | 100–200 A       |
+| Duration                         | ~100 ms         |
+| Charge transfer                  | 10–20 C         |
+| **M-component**                  |                 |
+| Peak current                     | 100–200 A       |
+| Current risetime (10–90%)        | 300–500 µs      |
+| Charge transfer                  | 0.1–0.2 C       |
+| **Overall flash**                |                 |
+| Duration                         | 200–300 ms      |
+| Number of strokes per flash      | 3–5             |
+| Interstroke interval             | 60 ms           |
+| Charge transfer                  | 20 C            |
+| Energy                           | 10⁹–10¹⁰ J      |
 
 - ~30–50% of flashes contain continuing currents >~40 ms
 - ~15–20% of flashes are single-stroke
 
 #### Table 1.2: Microsecond-Scale Electric Field Pulses
 
-| Pulse type | Dominant polarity (atm. elect.) | Total pulse duration (µs) | Interval between pulses (µs) | Comments |
-|------------|-------------------------------|--------------------------|----------------------------|----------|
-| Return stroke (neg CG) | positive | 30–90 (zero-crossing) | 60 × 10³ | 3–5 pulses per flash |
-| Stepped leader (neg CG) | positive | 1–2 | 15–25 | Within 200 µs before RS |
-| Dart-stepped leader (neg CG) | positive | 1–2 | 6–8 | Within 200 µs before RS |
-| Initial breakdown (neg CG) | positive | 20–40 | 70–130 | ms to tens of ms before 1st RS |
-| Initial breakdown (cloud) | negative | 50–80 | 600–800 | Largest pulses in a flash |
-| Regular pulse burst | — | 1–2 | 5–7 | 20–40 pulses per burst |
-| Narrow bipolar pulses | both | 10–20 | — | Assoc. with IC initial breakdown |
+| Pulse type                   | Dominant polarity (atm. elect.) | Total pulse duration (µs) | Interval between pulses (µs) | Comments                         |
+| ---------------------------- | ------------------------------- | ------------------------- | ---------------------------- | -------------------------------- |
+| Return stroke (neg CG)       | positive                        | 30–90 (zero-crossing)     | 60 × 10³                     | 3–5 pulses per flash             |
+| Stepped leader (neg CG)      | positive                        | 1–2                       | 15–25                        | Within 200 µs before RS          |
+| Dart-stepped leader (neg CG) | positive                        | 1–2                       | 6–8                          | Within 200 µs before RS          |
+| Initial breakdown (neg CG)   | positive                        | 20–40                     | 70–130                       | ms to tens of ms before 1st RS   |
+| Initial breakdown (cloud)    | negative                        | 50–80                     | 600–800                      | Largest pulses in a flash        |
+| Regular pulse burst          | —                               | 1–2                       | 5–7                          | 20–40 pulses per burst           |
+| Narrow bipolar pulses        | both                            | 10–20                     | —                            | Assoc. with IC initial breakdown |
 
 #### Radio-Frequency Spectrum
+
 - Peak at **5–10 kHz** (observed beyond ~50 km)
 - Spectral amplitude ∝ **1/f** from peak to ~10 MHz
 - Spectral amplitude ∝ **1/√f** from ~10 MHz to ~10 GHz
@@ -129,6 +130,7 @@ Reference: Rakov, V.A. & Uman, M.A. (2003). *Lightning: Physics and Effects*. Ca
 ### 1.4 The Global Electric Circuit
 
 #### 1.4.1 Atmospheric Conductivity
+
 - Fair-weather E-field near surface: **~100 V/m** (downward)
 - Conductivity at sea level: **~10⁻¹⁴ S/m**
 - Conductivity at 35 km: **>10⁻¹¹ S/m** (>1000× sea level)
@@ -145,9 +147,11 @@ Reference: Rakov, V.A. & Uman, M.A. (2003). *Lightning: Physics and Effects*. Ca
 #### 1.4.2 Fair-Weather Electric Field
 
 **Volland (1984) equation (Eq. 1.1):**
+
 ```
 E(z) = −[93.8 exp(−4.527z) + 44.4 exp(−0.375z) + 11.8 exp(−0.121z)]
 ```
+
 - E(z) in V/m, z in km; valid at mid-latitudes below ~60 km
 - E at ground: **150 V/m**
 - E at 10 km: **~3%** of ground value
@@ -155,6 +159,7 @@ E(z) = −[93.8 exp(−4.527z) + 44.4 exp(−0.375z) + 11.8 exp(−0.121z)]
 - E at 85 km: **~1 µV/m**
 
 #### 1.4.3 Classical View
+
 - Electrosphere potential: **~300 kV** (positive w.r.t. Earth)
 - Most voltage drop below 20 km
 - Earth's surface charge: **~5 × 10⁵ C** (negative)
@@ -170,15 +175,18 @@ E(z) = −[93.8 exp(−4.527z) + 44.4 exp(−0.375z) + 11.8 exp(−0.121z)]
 #### 1.4.4 Maxwell Current Density
 
 **Eq. 1.2:**
+
 ```
 J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 ```
+
 - Under active storms: **~10 nA/m²**
 - Under small Florida storms (no precipitation): **~1 nA/m²** or less
 - At 16–20 km: J_E typically >½ of J_M
 - At ground during active storms: displacement current dominates (below corona threshold of few kV/m)
 
 #### 1.4.5 Modeling of Global Circuit
+
 - Heights modeled up to 100–150 km
 - Cloud top voltages: −23 to +79 MV (Marshall & Stolzenburg 2001)
   - Average: **+25 MV** (all 13 soundings)
@@ -202,11 +210,13 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 ## Chapter 2: Incidence of Lightning
 
 ### 2.1 Introduction
+
 - Lightning is the most significant weather hazard to space vehicle launches (KSC experience)
 
 ### 2.2 Characterization of Individual Storms
 
 #### Multicell storms
+
 - Individual cell lifetime: ~1 hour
 - Convective cells: ~km in diameter
 - Updrafts: ≥10 m/s
@@ -214,12 +224,14 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 - Large frontal systems: persist >48 hours, move >2000 km
 
 #### Flash rates
+
 - Typical CG flash rates per storm: **1–10 flashes/min** for active storms
 - Peak: up to **20+ CG flashes/min** for severe storms
 - Total flash rates (including IC): can exceed **100 flashes/min** for intense storms
 - Typical: **3–4 times** the CG rate (roughly)
 
 #### Flash counting criteria
+
 - **Electric field change detection threshold** determines flash counts
 - Flash distinguished from stroke by time criterion: typically **>500 ms** separation → new flash
 - Optical transient duration typically **200–300 ms** per flash
@@ -245,10 +257,12 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 ### 2.5 Lightning Flash Density
 
 #### Ground flash density (Ng)
+
 - **Definition**: number of CG flashes per km² per year
 - Most useful measure of lightning incidence for engineering applications
 
 **Empirical relations:**
+
 - **Ng = 0.04 Td^1.25** (Anderson et al. 1984) — most widely used
 - **Ng = 0.023 Td^1.3** (Kuleshov et al. 2009 variant)
 - For Florida (80 Td/yr): Ng ≈ **10–15 flashes/km²/yr**
@@ -258,6 +272,7 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 - Over oceans: typically **0.1–1 flash/km²/yr** (factor 10 lower than land)
 
 #### Total flash density (Nt)
+
 - Nt = Nc + Ng (cloud + ground)
 - Typically Nt ≈ 3–4 × Ng
 
@@ -288,9 +303,11 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 ### 2.9 Lightning Incidence to Various Objects
 
 #### 2.9.1 Flat ground
+
 - Probability of strike to 1 m² per year depends on Ng
 
 #### 2.9.2 Tall structures
+
 - **Empirical formula (Eriksson 1987)**:
   ```
   N = Ng × 24 × (h/10)^2.05 × 10⁻⁶
@@ -303,12 +320,12 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 - **Example incidence rates**:
 
 | Height (m) | Ng = 1 | Ng = 10 |
-|------------|--------|---------|
-| 20 | 0.01 | 0.1 |
-| 60 | 0.1 | 1 |
-| 100 | 0.3 | 3 |
-| 200 | 1.2 | 12 |
-| 500 | 8 | 80 |
+| ---------- | ------ | ------- |
+| 20         | 0.01   | 0.1     |
+| 60         | 0.1    | 1       |
+| 100        | 0.3    | 3       |
+| 200        | 1.2    | 12      |
+| 500        | 8      | 80      |
 
 - Structures >100 m also initiate upward lightning
 - Empire State Building (443 m, NYC): struck **~23 times/year** (most are upward-initiated)
@@ -317,9 +334,11 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 - Monte San Salvatore towers (70 m, on 640 m mountain): **~100 flashes over 20+ years** (Berger)
 
 #### 2.9.3 Power lines
+
 - Typical: **10–20 flashes/100 km/year** for Ng = 5
 
 #### 2.9.4 Aircraft
+
 - ~1 strike per **1000–3000 flight hours** (discussed in Ch 10)
 
 ---
@@ -347,6 +366,7 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 #### 3.2.1 Idealized Gross Charge Distribution
 
 **Vertical tripole model** (Fig. 3.2a):
+
 - **Main positive charge**: near cloud top (~12 km AGL in example)
 - **Main negative charge**: middle (~7 km AGL in example)
 - **Lower positive charge**: near cloud base (~2 km AGL in example)
@@ -354,11 +374,13 @@ J_M = J_E + J_C + J_L + ε₀ ∂E/∂t
 - Lower positive charge may not always be present
 
 **Reversal distance** for positive dipole (Eq. 3.4):
+
 ```
 D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 ```
 
 **Electric field at ground due to negative charge and image** (Eq. 3.2):
+
 ```
 |E| = |Q|H / [2πε₀(H² + r²)^(3/2)]
 ```
@@ -372,6 +394,7 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 - Negative charge center altitude varies little flash-to-flash within a day, but varies day-to-day
 
 **Charge locations from multi-station measurements:**
+
 - Negative charge centers: layer **1–3 km thick**, lower boundary at **0 to −10 °C**
 - Specific New Mexico data (Krehbiel et al. 1979): charges at **4.5–6 km AGL** (one at 3.6 km), temperatures **−9 to −17 °C**
 - Florida (Jacobson & Krider 1976): charge from **6–9.5 km ASL**
@@ -379,10 +402,12 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 #### 3.2.3 Inferences from In-Situ (Balloon) Measurements
 
 **Simpson & Scrase (1937), Simpson & Robinson (1941) — England:**
+
 - Main negative charge: **−1 to −20 °C** temperature range
 - Main positive charge: above the negative charge
 
 **Marshall & Stolzenburg (multiple papers, 1990s):**
+
 - Found **4 to 10 charge layers** in convective regions (not just 3)
 - Updraft regions: typically **4 charge regions** (alternating polarity)
 - Outside updraft: up to **6–10 charge regions**
@@ -391,16 +416,17 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 - Charge regions: **0.3–2 km** thick
 
 **Key in-situ findings:**
+
 - Vertical electric field inside cloud can reach **>100 kV/m** (see 3.2.4)
 - Temperature of main negative charge center: consistently **−10 to −25 °C** across different geographic locations
 
 #### 3.2.4 Maximum Measured In-Cloud Electric Fields
 
-| Study | Location | Max E-field | Notes |
-|-------|----------|-------------|-------|
-| Winn et al. (1974) | New Mexico | 100 kV/m | Balloon; may not be true max |
-| Marshall et al. (1995) | Various | 100–186 kV/m | Several balloon soundings |
-| Stolzenburg et al. (2007) | Various | up to 200 kV/m | Close to breakdown threshold |
+| Study                     | Location   | Max E-field    | Notes                        |
+| ------------------------- | ---------- | -------------- | ---------------------------- |
+| Winn et al. (1974)        | New Mexico | 100 kV/m       | Balloon; may not be true max |
+| Marshall et al. (1995)    | Various    | 100–186 kV/m   | Several balloon soundings    |
+| Stolzenburg et al. (2007) | Various    | up to 200 kV/m | Close to breakdown threshold |
 
 - Conventional breakdown threshold at sea level: **~3 MV/m** (for uniform fields)
 - At cloud heights (~6 km): conventional breakdown **~1 MV/m** (adjusted for air density)
@@ -418,6 +444,7 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 #### 3.2.6 Electrification Mechanisms
 
 **Ice-ice collision (non-inductive / graupel-ice) mechanism:**
+
 - Most widely accepted mechanism for thundercloud electrification
 - Requires: **mixed-phase region** (supercooled water + ice crystals + graupel/rimed ice)
 - Charge separation per collision: **~1–100 fC** (10⁻¹⁵ C)
@@ -427,11 +454,13 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 - Time to produce ~40 C charge: **10–30 minutes**
 
 **Inductive mechanism:**
+
 - Requires pre-existing E-field to polarize particles
 - Contributes to but likely does not initiate electrification
 - Charge per collision can be higher than non-inductive (~100 fC to pC range)
 
 **Convective mechanism (Vonnegut):**
+
 - Corona ions from ground carried up by updrafts
 - Not generally accepted as primary mechanism
 
@@ -447,12 +476,14 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 ### 3.3 Non-Cumulonimbus Clouds
 
 #### Stratiform clouds
+
 - Can be electrically active (Marshall & Stolzenburg 2001)
 - Typical vertical field: **1–10 kV/m** (much less than Cb)
 - Cloud top voltages: **+32 MV** average for electrified stratiform clouds
 - Flash rates: typically **<0.1 per minute** (when lightning occurs)
 
 #### Other sources of lightning-like discharges
+
 - Volcanic eruptions
 - Sandstorms
 - Nuclear explosions
@@ -460,19 +491,19 @@ D₀ = (H_P × H_N)^(2/3) × (H_P^(2/3) + H_N^(2/3))^(1/2)
 
 ### 3.4 Summary of Key Quantitative Parameters
 
-| Parameter | Typical Value |
-|-----------|---------------|
-| Cloud vertical extent | 3–20 km |
-| Cloud horizontal dimension | 3 to >50 km |
-| Main negative charge altitude (temp.) | −10 to −25 °C |
-| Main negative charge magnitude | 20–300 C |
-| Main positive charge altitude | Above negative, near cloud top |
-| Lower positive charge | ~2–4 km AGL; ~3 C |
-| Max in-cloud E-field measured | 100–200 kV/m |
-| Conventional breakdown at 6 km | ~1 MV/m |
-| Charge density (main regions) | 0.5–5 nC/m³ |
-| Screening layer charge | 1–10 C |
-| Charge per ice-ice collision | 1–100 fC |
-| Electrification time | 10–30 min |
-| E-field beneath cloud at ground | 1–10 kV/m |
-| Charge per CG flash | 10–40 C (negative) |
+| Parameter                             | Typical Value                  |
+| ------------------------------------- | ------------------------------ |
+| Cloud vertical extent                 | 3–20 km                        |
+| Cloud horizontal dimension            | 3 to >50 km                    |
+| Main negative charge altitude (temp.) | −10 to −25 °C                  |
+| Main negative charge magnitude        | 20–300 C                       |
+| Main positive charge altitude         | Above negative, near cloud top |
+| Lower positive charge                 | ~2–4 km AGL; ~3 C              |
+| Max in-cloud E-field measured         | 100–200 kV/m                   |
+| Conventional breakdown at 6 km        | ~1 MV/m                        |
+| Charge density (main regions)         | 0.5–5 nC/m³                    |
+| Screening layer charge                | 1–10 C                         |
+| Charge per ice-ice collision          | 1–100 fC                       |
+| Electrification time                  | 10–30 min                      |
+| E-field beneath cloud at ground       | 1–10 kV/m                      |
+| Charge per CG flash                   | 10–40 C (negative)             |

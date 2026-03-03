@@ -125,6 +125,20 @@ from Rakov & Uman (2003) unless noted.
 | M-component        | Current/luminosity surge during continuing current              |
 | ICC                | Initial continuous current (upward/triggered lightning)         |
 
+## Computational Tools
+
+| Script                            | Contents                                                              |
+| --------------------------------- | --------------------------------------------------------------------- |
+| `scripts/leader_fields.py`        | Stepped-leader E/B field (Eq 4.1-4.7), retarded height                |
+| `scripts/return_stroke_models.py` | Engineering models (TL/MTLL/MTLE/BG/TCS), Heidler, Braginskii         |
+| `scripts/thunder.py`              | Few's theory (R_0, f_m), flash-to-bang, N-wave overpressure           |
+| `scripts/schumann.py`             | Schumann resonance frequencies, whistler dispersion, Wait-Spies       |
+| `scripts/protection.py`           | Striking distance, rolling sphere, grounding resistance, step voltage |
+| `scripts/m_component.py`          | M-component two-wave model (Eq 12.7-12.8), source pulse               |
+| `scripts/incidence.py`            | Ng-Td/Th formulas, structure incidence, Poisson probability           |
+
+All scripts use stdlib only (`math`, `enum`). Each has a `__main__` demo block.
+
 ## Three Modes of Charge Transfer to Ground
 
 1. **Leader-return-stroke**: Leader deposits charge; return stroke neutralizes.
