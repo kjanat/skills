@@ -1,6 +1,7 @@
 ---
 name: index-knowledge
 description: Generate hierarchical AGENTS.md knowledge base for a codebase. Creates root + complexity-scored subdirectory documentation.
+compatibility: OpenCode
 ---
 
 # index-knowledge
@@ -38,7 +39,6 @@ TodoWrite([
   { id: "review", content: "Deduplicate, validate, trim", status: "pending", priority: "medium" }
 ])
 ```
-
 </critical>
 
 ---
@@ -76,7 +76,7 @@ Task(
 Task(
   description="anti-patterns",
   subagent_type="explore",
-  prompt="Anti-patterns: FIND 'DO NOT', 'NEVER', 'ALWAYS', 'DEPRECATED' comments → LIST forbidden patterns"
+  prompt="Anti-patterns: FIND 'DO NOT', 'NEVER', 'ALWAYS', 'DEPRECATED' comments + INFER code quality/style conventions enforced consistently → LIST forbidden patterns. Feature/scope boundaries ('only uses X', 'currently supports Y') belong in NOTES, not ANTI-PATTERNS."
 )
 
 Task(
@@ -135,7 +135,6 @@ Task(
 )
 // ... more based on calculation
 ```
-
 </dynamic-agents>
 
 ### Main Session: Concurrent Analysis
@@ -250,7 +249,7 @@ AGENTS_LOCATIONS = [
 
 ## STRUCTURE
 
-\`\`\` {root}/ ├── {dir}/ # {non-obvious purpose only} └── {entry} \`\`\`
+\`\`\`tree {root}/ ├── {dir}/ # {non-obvious purpose only} └── {entry} \`\`\`
 
 ## WHERE TO LOOK
 
@@ -269,7 +268,7 @@ AGENTS_LOCATIONS = [
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
-{Explicitly forbidden here}
+{Code quality/style rules only — not feature/scope boundaries}
 
 ## UNIQUE STYLES
 
@@ -330,6 +329,7 @@ For each generated file:
 - Remove parent duplicates
 - Trim to size limits
 - Verify telegraphic style
+- Scope ≠ style: feature/scope observations ("only uses X") → NOTES, not ANTI-PATTERNS
 
 **Mark "review" as completed.**
 
@@ -366,3 +366,4 @@ Hierarchy:
 - **Redundancy**: Child never repeats parent
 - **Generic content**: Remove anything that applies to ALL projects
 - **Verbose style**: Telegraphic or die
+- **Scope-as-rule**: Current state ("only uses X") is not a prohibition — belongs in NOTES
