@@ -1,0 +1,21 @@
+<script lang="ts">
+	import { Canvas } from '@threlte/core';
+	import { WebGLRenderer } from 'three';
+	import Scene from './Scene.svelte';
+</script>
+
+<div>
+	<Canvas
+		createRenderer={(canvas) => {
+			return new WebGLRenderer({ canvas, stencil: true });
+		}}
+	>
+		<Scene />
+	</Canvas>
+</div>
+
+<style>
+	div {
+		height: 100%;
+	}
+</style>
