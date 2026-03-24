@@ -26,8 +26,14 @@ skills/
 │   └── references/          # postgres, redis
 ├── index-knowledge/         # Generate AGENTS.md knowledge bases
 │   └── SKILL.md
-└── uv-versioning/           # uv version bump workflows
-    └── SKILL.md
+├── uv-versioning/           # uv version bump workflows
+│   └── SKILL.md
+└── xstate/                  # XState v5 state machines + actors
+    ├── SKILL.md
+    ├── references/          # cheatsheet, routing-map, gotchas, source-index
+    ├── scripts/             # sync-docs.sh (vendor docs + API types)
+    ├── docs/                # vendored MDX from statelyai/docs (~112 files)
+    └── api/                 # vendored .d.ts from xstate npm (~58 files)
 ```
 
 ## WHERE TO LOOK
@@ -87,16 +93,23 @@ build-skill ──────> (all skills follow its conventions)
 github-docker-action <──> github-service-containers (mutual cross-refs)
 ```
 
-## VALIDATION
+## MAINTENANCE
 
 ```bash
-# Validate a skill (from build-skill)
+# Project-level maintenance (root script)
+./scripts/maintain.sh                       # sync + validate + status
+./scripts/maintain.sh sync                  # sync all vendored skills
+./scripts/maintain.sh sync xstate           # sync one skill
+./scripts/maintain.sh sync xstate --dry-run # preview what would change
+./scripts/maintain.sh validate              # validate all skills
+./scripts/maintain.sh validate xstate       # validate one skill
+./scripts/maintain.sh status                # show vendored content freshness
+```
+
+```bash
+# Per-skill scripts (from build-skill)
 bash skills/build-skill/scripts/validate_skill.sh skills/<skill-name>
-
-# Package a skill for distribution
 bash skills/build-skill/scripts/package_skill.sh skills/<skill-name>
-
-# Scaffold a new skill
 bash skills/build-skill/scripts/init_skill.sh <skill-name> [standard|minimal|reference-heavy|script-heavy]
 ```
 
@@ -106,4 +119,5 @@ bash skills/build-skill/scripts/init_skill.sh <skill-name> [standard|minimal|ref
 - `index-knowledge` SKILL.md is 366 lines — exceeds the 200-line guideline; should split to references
 - `build-skill` and `index-knowledge` lack `license`/`metadata` frontmatter fields
 - `github-script/assets/` is the only skill using the assets directory
+- `xstate` vendors external content via `sync-docs.sh` — first skill with auto-vendoring pattern
 - No `.gitignore`, no CI, no linting config at repo level — intentionally pure content

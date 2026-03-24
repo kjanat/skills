@@ -1,14 +1,27 @@
 {
 	"lineWidth": 120,
 	"extends": "https://raw.githubusercontent.com/kjanat/kjanat/master/configs/dprint.remote.json",
-	"excludes": ["**/dist", "**/node_modules", "**/coverage"],
+	"excludes": [
+		"**/dist",
+		"**/node_modules",
+		"**/coverage",
+		"**/examples",
+	],
 	"exec": {
 		"commands": [
 			{
 				"command": "shfmt -i 0 -ln bash -bn -ci -filename {{file_path}}",
-				"exts": ["sh", "bash"],
+				"exts": [
+					"sh",
+					"bash",
+				],
 			},
-			{ "command": "bunx sort-package-json --stdin", "fileNames": ["package.json"] },
+			{
+				"command": "bunx sort-package-json --stdin",
+				"fileNames": [
+					"package.json",
+				],
+			},
 		],
 	},
 	"plugins": [
