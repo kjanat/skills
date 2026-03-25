@@ -37,9 +37,20 @@ find_all_skills() {
 # ── Commands ─────────────────────────────────────────────────────────
 
 cmd_sync() {
-	local filter="${1:-}"
-	shift || true
-	local -a extra_args=("$@")
+	local filter=""
+	local -a extra_args=()
+
+	# Separate skill name from flags
+	for arg in "$@"; do
+		if [[ "${arg}" == --* ]]; then
+			extra_args+=("${arg}")
+		elif [[ -z "${filter}" ]]; then
+			filter="${arg}"
+		else
+			extra_args+=("${arg}")
+		fi
+	done
+
 	local synced=0 failed=0
 
 	if [[ -n "${filter}" ]]; then
