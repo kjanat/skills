@@ -1,35 +1,35 @@
 <script lang="ts">
-	import { useStage, useTask, useThrelte } from '@threlte/core';
-	import { WaveformMonitor } from 'svelte-tweakpane-ui';
+  import { useStage, useTask, useThrelte } from '@threlte/core'
+  import { WaveformMonitor } from 'svelte-tweakpane-ui'
 
-	const { shouldRender, renderStage } = useThrelte();
+  const { shouldRender, renderStage } = useThrelte()
 
-	const afterRenderStage = useStage('after-render', {
-		after: renderStage,
-	});
+  const afterRenderStage = useStage('after-render', {
+    after: renderStage
+  })
 
-	let log = Array(200).fill(0);
+  let log = Array(200).fill(0)
 
-	useTask(
-		() => {
-			log = update(log);
-		},
-		{
-			autoInvalidate: false,
-			stage: afterRenderStage,
-		},
-	);
+  useTask(
+    () => {
+      log = update(log)
+    },
+    {
+      autoInvalidate: false,
+      stage: afterRenderStage
+    }
+  )
 
-	function update(log: number[]) {
-		log.shift();
-		log.push(shouldRender() ? 1 : 0);
-		return log;
-	}
+  function update(log: number[]) {
+    log.shift()
+    log.push(shouldRender() ? 1 : 0)
+    return log
+  }
 </script>
 
 <WaveformMonitor
-	label="Render Activity"
-	value={log}
-	min={-1}
-	max={2}
+  label="Render Activity"
+  value={log}
+  min={-1}
+  max={2}
 />

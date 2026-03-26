@@ -1,8 +1,8 @@
 <script>
-	import { T } from '@threlte/core';
+  import { T } from '@threlte/core'
 </script>
 
 <T.Mesh>
-	<T.BoxGeometry />
-	<T.MeshBasicMaterial />
+  <T.BoxGeometry />
+  <T.MeshBasicMaterial />
 </T.Mesh>

@@ -1,31 +1,31 @@
 <script
-	lang="ts"
-	module
+  lang="ts"
+  module
 >
-	const vertexShader = `
+  const vertexShader = `
 		varying vec2 vUv;
 
 		void main() {
 			vUv = uv;
 			gl_Position = vec4(position, 1.0);
 		}
-`;
+`
 </script>
 
 <script lang="ts">
-	import { T, useTask, useThrelte } from '@threlte/core';
-	import { Environment, OrbitControls, useFBO, useGltf } from '@threlte/extras';
-	import { ShaderMaterial, Uniform } from 'three';
-	import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
+  import { Environment, OrbitControls, useFBO, useGltf } from '@threlte/extras'
+  import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
+  import { ShaderMaterial, Uniform } from 'three'
+  import { T, useTask, useThrelte } from '@threlte/core'
 
-	const { camera, renderStage, renderer, scene } = useThrelte();
+  const { camera, renderStage, renderer, scene } = useThrelte()
 
-	const target = useFBO();
+  const target = useFBO()
 
-	/**
-	 * put your interesting effects in this shader.
-	 */
-	const fragmentShader = `
+  /**
+   * put your interesting effects in this shader.
+   */
+  const fragmentShader = `
 		uniform sampler2D uScene;
 		uniform float uTime;
 
@@ -43,63 +43,63 @@
 				gl_FragColor = texture2D(uScene, vUv);
 			}
 		}
-	`;
+	`
 
-	const gltf = useGltf('/models/spaceships/Bob.gltf');
+  const gltf = useGltf('/models/spaceships/Bob.gltf')
 
-	const uScene = new Uniform(target.texture);
+  const uScene = new Uniform(target.texture)
 
-	const uTime = new Uniform(0);
+  const uTime = new Uniform(0)
 
-	useTask((delta) => {
-		uTime.value += delta;
-	});
+  useTask((delta) => {
+    uTime.value += delta
+  })
 
-	const material = new ShaderMaterial({
-		fragmentShader,
-		uniforms: {
-			uScene,
-			uTime,
-		},
-		vertexShader,
-	});
+  const material = new ShaderMaterial({
+    fragmentShader,
+    uniforms: {
+      uScene,
+      uTime
+    },
+    vertexShader
+  })
 
-	const quad = new FullScreenQuad(material);
+  const quad = new FullScreenQuad(material)
 
-	// not using the <T> component so we need to clean up after ourselves
-	$effect(() => {
-		return () => {
-			quad.dispose();
-			material.dispose();
-		};
-	});
+  // not using the <T> component so we need to clean up after ourselves
+  $effect(() => {
+    return () => {
+      quad.dispose()
+      material.dispose()
+    }
+  })
 
-	useTask(
-		() => {
-			const last = renderer.getRenderTarget();
-			renderer.setRenderTarget(target);
-			renderer.render(scene, camera.current);
-			renderer.setRenderTarget(last);
-			quad.render(renderer);
-		},
-		{
-			stage: renderStage,
-		},
-	);
+  useTask(
+    () => {
+      const last = renderer.getRenderTarget()
+      renderer.setRenderTarget(target)
+      renderer.render(scene, camera.current)
+      renderer.setRenderTarget(last)
+      quad.render(renderer)
+    },
+    {
+      stage: renderStage
+    }
+  )
 </script>
 
 <T.PerspectiveCamera
-	makeDefault
-	position={5}
+  makeDefault
+  position={5}
 >
-	<OrbitControls />
+  <OrbitControls />
 </T.PerspectiveCamera>
 
 {#await gltf then { scene }}
-	<T is={scene} />
+  <T is={scene} />
 {/await}
 
 <Environment
-	url="/textures/equirectangular/hdr/shanghai_riverside_1k.hdr"
-	isBackground
+  url="/textures/equirectangular/hdr/shanghai_riverside_1k.hdr"
+  isBackground
 />

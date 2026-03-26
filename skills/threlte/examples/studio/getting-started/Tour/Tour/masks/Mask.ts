@@ -3,30 +3,30 @@
  * The mask can be used to block pointer events and darken the background.
  */
 export interface Mask {
-	initialize?(): void;
+  initialize?(): void
 
-	update?(): void;
+  update?(): void
 
-	/**
-	 * If no spotlight is provided, the mask will block pointer events and darken
-	 * the background but will not draw a spotlight.
-	 */
-	spotlight?: {
-		visible?: boolean;
-		shape: 'circle' | 'rectangle';
-		padding: number;
-		left: number;
-		top: number;
-		width: number;
-		height: number;
-	};
+  /**
+   * If no spotlight is provided, the mask will block pointer events and darken
+   * the background but will not draw a spotlight.
+   */
+  spotlight?: {
+    visible?: boolean
+    shape: 'circle' | 'rectangle'
+    padding: number
+    left: number
+    top: number
+    width: number
+    height: number
+  }
 
-	darkenBackground: boolean;
+  darkenBackground: boolean
 
-	/**
-	 * If true, pointer events will be blocked completely.
-	 * If 'mask', pointer events will be blocked only outside the mask.
-	 * If false, pointer events will not be blocked.
-	 */
-	blockPointer: 'mask' | boolean;
+  /**
+   * If true, pointer events will be blocked completely.
+   * If 'mask', pointer events will be blocked only outside the mask.
+   * If false, pointer events will not be blocked.
+   */
+  blockPointer: 'mask' | boolean
 }

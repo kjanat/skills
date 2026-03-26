@@ -26,7 +26,10 @@
   >
     <p class="loading">Loading</p>
     <div class="bar-wrapper">
-      <div class="bar" style="width: {progressWidth}%"></div>
+      <div
+        class="bar"
+        style="width: {progressWidth}%"
+      ></div>
     </div>
   </div>
 {/if}

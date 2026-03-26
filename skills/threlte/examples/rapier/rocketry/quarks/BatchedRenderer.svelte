@@ -1,4 +1,4 @@
 <script lang="ts">
-	import { useBatchedRenderer } from './useBatchedRenderer';
-	useBatchedRenderer();
+  import { useBatchedRenderer } from './useBatchedRenderer'
+  useBatchedRenderer()
 </script>

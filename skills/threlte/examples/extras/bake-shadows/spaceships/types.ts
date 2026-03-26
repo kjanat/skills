@@ -1,1 +1,1 @@
-export type { SpaceshipProps } from '../../suspense/types';
+export type { SpaceshipProps } from '../../suspense/types'

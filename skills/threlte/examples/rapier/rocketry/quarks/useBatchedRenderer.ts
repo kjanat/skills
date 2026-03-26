@@ -1,26 +1,26 @@
-import { useTask, useThrelte, useThrelteUserContext } from '@threlte/core';
-import { BatchedRenderer } from 'three.quarks';
+import { useTask, useThrelte, useThrelteUserContext } from '@threlte/core'
+import { BatchedRenderer } from 'three.quarks'
 
 export const useBatchedRenderer = () => {
-	return useThrelteUserContext('quarks-renderer', () => {
-		console.log('RENDERER');
+  return useThrelteUserContext('quarks-renderer', () => {
+    console.log('RENDERER')
 
-		const { autoRenderTask, scene } = useThrelte();
-		const renderer = new BatchedRenderer();
+    const { autoRenderTask, scene } = useThrelte()
+    const renderer = new BatchedRenderer()
 
-		scene.add(renderer);
+    scene.add(renderer)
 
-		useTask(
-			(delta) => {
-				renderer.update(delta);
-			},
-			{
-				before: autoRenderTask,
-			},
-		);
+    useTask(
+      (delta) => {
+        renderer.update(delta)
+      },
+      {
+        before: autoRenderTask
+      }
+    )
 
-		return {
-			renderer,
-		};
-	});
-};
+    return {
+      renderer
+    }
+  })
+}

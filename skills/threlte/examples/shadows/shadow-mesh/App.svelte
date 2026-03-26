@@ -1,28 +1,28 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
-	import { Pane, Slider } from 'svelte-tweakpane-ui';
-	import { WebGLRenderer } from 'three';
-	import Scene from './Scene.svelte';
+  import Scene from './Scene.svelte'
+  import { Canvas } from '@threlte/core'
+  import { Pane, Slider } from 'svelte-tweakpane-ui'
+  import { WebGLRenderer } from 'three'
 
-	let w = $state(0.01);
+  let w = $state(0.01)
 </script>
 
 <Canvas
-	createRenderer={(canvas) => {
-		return new WebGLRenderer({ antialias: true, canvas, stencil: true });
-	}}
+  createRenderer={(canvas) => {
+    return new WebGLRenderer({ antialias: true, canvas, stencil: true })
+  }}
 >
-	<Scene {w} />
+  <Scene {w} />
 </Canvas>
 
 <Pane
-	title="shadow mesh"
-	position="fixed"
+  title="shadow mesh"
+  position="fixed"
 >
-	<Slider
-		bind:value={w}
-		label="light position.w"
-		min={0.1}
-		max={0.9}
-	/>
+  <Slider
+    bind:value={w}
+    label="light position.w"
+    min={0.1}
+    max={0.9}
+  />
 </Pane>

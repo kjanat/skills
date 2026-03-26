@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
-	import Scene from './Scene.svelte';
+  import Scene from './Scene.svelte'
+  import { Canvas } from '@threlte/core'
 </script>
 
 <div>
-	<Canvas>
-		<Scene />
-	</Canvas>
+  <Canvas>
+    <Scene />
+  </Canvas>
 </div>
 
 <style>
-	div {
-		height: 100%;
-	}
+  div {
+    height: 100%;
+  }
 </style>

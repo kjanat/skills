@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
-	import { Checkbox, Pane } from 'svelte-tweakpane-ui';
-	import Scene from './Scene.svelte';
+  import Scene from './Scene.svelte'
+  import { Canvas } from '@threlte/core'
+  import { Pane, Checkbox } from 'svelte-tweakpane-ui'
 
-	let follow = $state(true);
+  let follow = $state(true)
 </script>
 
 <Pane
-	title="Billboard"
-	position="fixed"
+  title="Billboard"
+  position="fixed"
 >
-	<Checkbox
-		label="follow"
-		bind:value={follow}
-	/>
+  <Checkbox
+    label="follow"
+    bind:value={follow}
+  />
 </Pane>
 
 <Canvas>
-	<Scene {follow} />
+  <Scene {follow} />
 </Canvas>

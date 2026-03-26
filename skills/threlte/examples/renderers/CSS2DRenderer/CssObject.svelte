@@ -1,35 +1,35 @@
 <script lang="ts">
-	import type { Props } from '@threlte/core';
-	import { T } from '@threlte/core';
-	import type { Snippet } from 'svelte';
-	import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+  import type { Props } from '@threlte/core'
+  import type { Snippet } from 'svelte'
+  import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+  import { T } from '@threlte/core'
 
-	type CssObjectProps = Props<typeof CSS2DObject> & {
-		content?: Snippet;
-		pointerEvents?: boolean;
-	};
+  type CssObjectProps = Props<typeof CSS2DObject> & {
+    content?: Snippet
+    pointerEvents?: boolean
+  }
 
-	let { content, pointerEvents = false, children, ...props }: CssObjectProps = $props();
+  let { content, pointerEvents = false, children, ...props }: CssObjectProps = $props()
 
-	let element = $state<HTMLElement>();
+  let element = $state<HTMLElement>()
 </script>
 
 <div
-	bind:this={element}
-	style:pointer-events={pointerEvents ? 'auto' : 'none !important'}
-	style:will-change="transform"
+  bind:this={element}
+  style:pointer-events={pointerEvents ? 'auto' : 'none !important'}
+  style:will-change="transform"
 >
-	{@render content?.()}
+  {@render content?.()}
 </div>
 
 {#if element !== undefined}
-	<T
-		{...props}
-		is={CSS2DObject}
-		args={[element]}
-	>
-		{#snippet children({ ref })}
-			{@render children?.({ ref })}
-		{/snippet}
-	</T>
+  <T
+    {...props}
+    is={CSS2DObject}
+    args={[element]}
+  >
+    {#snippet children({ ref })}
+      {@render children?.({ ref })}
+    {/snippet}
+  </T>
 {/if}

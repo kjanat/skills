@@ -1,30 +1,34 @@
 # Source Index
 
-Canonical sources for this skill.
+Canonical sources and version pins for vendored content.
 
-## Freshness
+## Provenance
 
-- Guidance is pinned to commit `ebb4f7e28ee4db71d19109656cba80fb10eabe2c`.
-- It is only as up to date as that commit SHA.
+| Source                                                | Ref    | Resolved       | Date       |
+| ----------------------------------------------------- | ------ | -------------- | ---------- |
+| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `e55924df0bf7` | 2026-03-26 |
 
-## Source set
+## External references (not vendored)
 
-- Site: `https://threlte.xyz/`
-- Repo root: `https://github.com/threlte/threlte`
-- Docs app at commit:
-  - `https://github.com/threlte/threlte/tree/ebb4f7e28ee4db71d19109656cba80fb10eabe2c/apps/docs`
-- Docs content root at commit:
-  - `https://github.com/threlte/threlte/tree/ebb4f7e28ee4db71d19109656cba80fb10eabe2c/apps/docs/src/content`
+- [threlte.xyz](https://threlte.xyz/) — official docs site
+- [GitHub repo](https://github.com/threlte/threlte) — source code
 
-## Schema anchors
+## Re-sync
 
-- Collections/categories schema:
-  - `apps/docs/src/content.config.ts`
-- Sidebar package order and navigation behavior:
-  - `apps/docs/src/components/Menu/LeftSidebar/getLeftSidebarMenu.ts`
-  - `apps/docs/src/layouts/DocsLayout.astro`
+```bash
+# Update to latest
+bash scripts/sync-docs.sh
 
-## Package order used in docs
+# Pin specific commit
+bash scripts/sync-docs.sh --ref e55924df0bf7
+```
+
+## Vendored layout
+
+- `docs/` — narrative MDX from apps/docs/src/content/ (237 files)
+- `examples/` — Svelte example components from apps/docs/src/examples/ (542 files)
+
+## Package order (from docs navigation)
 
 1. `@threlte/core`
 2. `@threlte/extras`
@@ -34,17 +38,11 @@ Canonical sources for this skill.
 6. `@threlte/xr`
 7. `@threlte/flex`
 8. `@threlte/studio`
-9. `Documentation`
 
-## Recency handling rule
+## Freshness rule
 
-When user asks about new APIs, migration changes, or "latest" behavior:
+Guidance is pinned to versions above. When user asks about newer APIs:
 
-1. Answer with commit-pinned guidance first.
-2. State recency limit explicitly.
-3. Recommend checking latest docs/repo history.
-
-## Mirror maintenance
-
-- Mirrored example root: `skills/threlte/examples/`
-- Keep workflow links pointing to paths that exist in that mirror.
+1. Answer with pinned guidance first
+2. State version limit
+3. Recommend checking latest docs
