@@ -1,3 +1,5 @@
+# Skills CLI Help
+
 ```sh
 Usage: skills <command> [options]
 

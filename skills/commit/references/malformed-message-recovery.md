@@ -12,9 +12,12 @@ Examples: literal `\n` in message, heredoc terminator mistake, accidental shell 
 - Requires clean worktree before amend (`git status --short` must be empty).
 - If `HEAD` is already on any remote branch, stop and report; do not force-push implicitly.
 - If upstream already contains the intended message and local `HEAD` is the malformed rewrite, restore local to upstream instead of creating another amend.
-- If chaining is needed around heredoc amend, always use grouping: `{ ...; } && ...`.
-- Never use `git commit --amend -F - <<'EOF' && ...` in this skill.
-- Never append anything to heredoc `EOF` line.
+- Heredoc hard-stop override from `SKILL.md` is highest priority.
+- If `git commit --amend -F - <<'EOF'` is used, run it in an isolated shell call only.
+- Never chain on the heredoc opener line or after the `EOF` line.
+- Closing delimiter must be exactly `EOF` with no trailing text.
+- If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
+- Run verification and push commands in separate shell calls only.
 
 ## Flow
 

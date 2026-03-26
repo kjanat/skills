@@ -4,7 +4,7 @@ description: Commits changes with strict safety gates and high-signal commit mes
 license: MIT
 metadata:
   author: kjanat
-  version: "1.3"
+  version: "1.4"
 ---
 
 # commit
@@ -34,6 +34,12 @@ Git-only skill. If `.jj/` exists, do not run this flow.
 - Never run `git commit --amend` unless `amend` was explicit.
 - Only amend exception: immediate message-only self-fix for malformed message the agent created in this same run.
 - Never use `--no-verify` unless `no-verify` was explicit.
+- Heredoc hard-stop override (highest priority):
+  - Overrides any generic guidance to chain dependent commands.
+  - If a commit or amend command uses `<<'EOF'`, run it in an isolated shell call.
+  - Closing delimiter line must be exactly `EOF`.
+  - If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
+  - Run verification commands in separate shell calls only.
 - Message-interpretation gate:
   - Direct user corrections about commit-message wording or formatting override generic defaults.
   - If a commit-message file is created for the flow, treat that file as the commit-message source of truth.
@@ -115,38 +121,30 @@ git commit -m "type(scope): subject"
 
 ## Heredoc Safety Rules
 
+- Heredoc hard-stop override is highest priority in this skill.
 - Closing delimiter must be exactly `EOF` on its own line.
 - Never append anything on the `EOF` line.
-- Policy for this skill: if chaining after heredoc, ALWAYS use grouping.
-- Never place `&&`/`||` on heredoc opener line in this skill.
-- Never start a fresh line with `&&`/`||` after `EOF`.
-
-Use this exact template when chaining after a heredoc commit:
-
-```bash
-{
-  git commit -F - <<'EOF'
-<type>[optional scope]: <description>
-
-<body>
-
-[optional footer(s)]
-EOF
-} && git push
-```
+- Never place `&&`/`||`/`;` on heredoc opener line.
+- Never start a fresh line with `&&`/`||`/`;` after `EOF`.
+- If using heredoc for `git commit -F -` or `git commit --amend -F -`, run that command in its own shell call only.
+- Run follow-up commands (`git log ...`, `git status ...`, `git push`) in separate shell calls only.
+- If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
 
 Good:
 
 ```bash
-{
-  git commit -F - <<'EOF'
+git commit -F - <<'EOF'
 feat(parser): tighten svg filter constraints
 
 Reject invalid filter primitive/type combinations and keep valid
 defs + text-link structures parseable so AST consumers can trust
 structure for linting and transforms.
 EOF
-} && git log -1 --format=%B && git status --short --branch
+```
+
+```bash
+git log -1 --format=%B
+git status --short --branch
 ```
 
 Bad:

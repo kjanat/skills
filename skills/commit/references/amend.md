@@ -78,8 +78,11 @@ If `amend` was not explicit, do not amend.
 
 ## Guardrails
 
-- If chaining is needed around heredoc amend, always use grouping: `{ ...; } && ...`.
-- Never use `git commit --amend -F - <<'EOF' && ...` in this skill.
-- Never append anything to heredoc `EOF` line.
+- Heredoc hard-stop override from `SKILL.md` is highest priority.
+- If `git commit --amend -F - <<'EOF'` is used, run it in an isolated shell call only.
+- Never chain on the heredoc opener line or after the `EOF` line.
+- Closing delimiter must be exactly `EOF` with no trailing text.
+- If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
+- Run verification and push commands in separate shell calls only.
 - Do not run a second amend unless it is same-run malformed-message recovery from `references/malformed-message-recovery.md`.
 - Do not improvise another amend when local/upstream comparison shows the intended message is already on upstream.
