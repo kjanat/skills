@@ -142,7 +142,7 @@ if __name__ == "__main__":
     print(f"Time to reach ground: {t_ground * 1e3:.2f} ms")
     print(f"Ground-level peak current: {2 * 150:.0f} A (2x source)")
 
-    print(f"\nSource pulse shape (I_peak=150 A):")
+    print("\nSource pulse shape (I_peak=150 A):")
     print(f"{'t (us)':>10} {'I_source (A)':>14} {'I_ground (A)':>14}")
     for t_us in [0, 100, 250, 500, 750, 1000, 1500, 2000, 3000, 5000]:
         t_s = t_us * 1e-6

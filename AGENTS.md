@@ -1,123 +1,83 @@
 # PROJECT KNOWLEDGE BASE
 
-Collection of [Agent Skills](https://agentskills.io/) for AI coding agents.
-Pure content repo — no build system, no CI, no runtime code.
+Generated: 2026-03-26 Commit: `19c66b6` Branch: `master`
+
+Collection of [Agent Skills](https://agentskills.io/). Content repo only: docs,
+references, and maintenance scripts.
+
+## OVERVIEW
+
+- Primary payload under `skills/`; each subdir is one installable skill.
+- No runtime app here. Work is content curation, routing maps, vendored docs, and validation.
+- Read `skills/AGENTS.md` before changing any skill.
 
 ## STRUCTURE
 
 ```tree
-skills/
-├── build-skill/             # Meta-skill: how to author new skills
-│   ├── SKILL.md
-│   ├── references/          # 7 deep-dive docs (anatomy, frontmatter, patterns, etc.)
-│   └── scripts/             # init, validate, package shell scripts
-├── changelog-writing/       # Keep a Changelog convention
-│   ├── SKILL.md
-│   └── references/          # example.md
-├── github-docker-action/    # Docker container GitHub Actions
-│   ├── SKILL.md
-│   └── references/          # Dockerfile, action.yml, entrypoint, testing
-├── github-script/           # actions/github-script@v8 workflows
-│   ├── SKILL.md
-│   ├── references/          # examples, security, external files, runtime
-│   └── assets/              # reusable workflow YAMLs, ESM scripts, tsconfig
-├── github-service-containers/ # Docker sidecar services in CI
-│   ├── SKILL.md
-│   └── references/          # postgres, redis
-├── index-knowledge/         # Generate AGENTS.md knowledge bases
-│   └── SKILL.md
-├── uv-versioning/           # uv version bump workflows
-│   └── SKILL.md
-└── xstate/                  # XState v5 state machines + actors
-    ├── SKILL.md
-    ├── references/          # cheatsheet, routing-map, gotchas, source-index
-    ├── scripts/             # sync-docs.sh (vendor docs + API types)
-    ├── docs/                # vendored MDX from statelyai/docs (~112 files)
-    └── api/                 # vendored .d.ts from xstate npm (~58 files)
+skills/     # Root of all skill content (repo root)
+├── AGENTS.md
+├── README.md
+├── scripts/
+│   └── maintain.sh
+└── skills/
+    ├── AGENTS.md
+    ├── build-skill/
+    ├── changelog-writing/
+    ├── commit/
+    ├── github-docker-action/
+    ├── github-script/
+    ├── github-service-containers/
+    ├── index-knowledge/
+    ├── lightning/
+    ├── threlte/
+    ├── uv-versioning/
+    ├── xstate/
+    └── zod/
 ```
 
 ## WHERE TO LOOK
 
-| Task                     | Location                                |
-| ------------------------ | --------------------------------------- |
-| Add a new skill          | `build-skill/` (read FIRST)             |
-| Validate a skill         | `build-skill/scripts/validate_skill.sh` |
-| Scaffold a skill         | `build-skill/scripts/init_skill.sh`     |
-| Package for distribution | `build-skill/scripts/package_skill.sh`  |
-| Understand skill anatomy | `build-skill/references/anatomy.md`     |
-| Frontmatter spec         | `build-skill/references/frontmatter.md` |
+| Task                   | Location                                       | Notes                                  |
+| ---------------------- | ---------------------------------------------- | -------------------------------------- |
+| Route to a skill       | `skills/AGENTS.md`                             | Canonical skill index and boundaries   |
+| Add or edit any skill  | `skills/build-skill/AGENTS.md`                 | Meta-rules and validator workflow      |
+| Run maintenance all-up | `scripts/maintain.sh`                          | `sync`, `validate`, `status`           |
+| Validate one skill     | `skills/build-skill/scripts/validate_skill.sh` | Structural checks                      |
+| Refresh vendored docs  | `scripts/maintain.sh sync <skill>`             | Uses each skill `scripts/sync-docs.sh` |
 
-## SKILL ANATOMY
+## CONVENTIONS
 
-Every skill follows this convention (defined by `build-skill`):
+- Skill dirs: `SKILL.md` entrypoint, optional `references/`, `scripts/`, `assets/`.
+- Keep `SKILL.md` concise; push depth to `references/`.
+- Child AGENTS files own local rules; avoid duplicating parent guidance.
+- Prefer deterministic sync scripts for vendored content (`xstate`, `threlte`, `zod`).
 
-- **`SKILL.md`** — entry point, YAML frontmatter + instructions. Target ~200 lines, max 500.
-- **`references/`** — deep-dive markdown docs, loaded on demand. Target ~150 lines, max 200.
-- **`scripts/`** — executable code the agent runs (shell, JS).
-- **`assets/`** — output files (templates, configs). Not loaded into context.
+## ANTI-PATTERNS (THIS PROJECT)
 
-### Frontmatter requirements
+- Never inline `${{ ... }}` inside `github-script` `script:` bodies; use `env` boundary.
+- Never use Docker image `:latest` in docker-action examples.
+- Do not duplicate long reference content in `SKILL.md`.
+- Do not edit vendored docs/api manually when a sync script is the source of truth.
 
-```yaml
----
-name: skill-name          # must match directory, ^[a-z0-9]+(-[a-z0-9]+)*$
-description: >-           # what it does + when to use ("Use when...")
-  ...
-license: MIT              # optional but conventional here
-metadata:                 # optional but conventional here
-  author: kjanat
-  version: "1.0"
----
+## COMMANDS
+
+```bash
+./scripts/maintain.sh
+./scripts/maintain.sh sync
+./scripts/maintain.sh sync xstate --dry-run
+./scripts/maintain.sh validate
+./scripts/maintain.sh status
 ```
 
-### Content conventions
-
-- "Reading Order" table maps tasks to files (progressive disclosure)
-- "In This Reference" table links all bundled reference files
-- Cross-skill references use callout blocks (see `github-docker-action` <-> `github-service-containers`)
-- Description uses third person ("Processes X" not "I process X")
-
-## ANTI-PATTERNS
-
-- **Expression injection**: NEVER inline `${{ }}` in `script:` body (`github-script`). Use `env:` boundary.
-- **Content duplication**: link to references, don't copy content into SKILL.md.
-- **Verbose skills**: telegraphic style. Overflow goes to `references/`.
-- **Dead references**: remove any reference file not accessed by SKILL.md.
-- **Unpinned images**: never use `:latest` tags in Dockerfiles (`github-docker-action`).
-- **Generic advice**: skills contain only project-specific knowledge, not universal truths.
-
-## CROSS-SKILL RELATIONSHIPS
+## HIERARCHY
 
 ```txt
-build-skill ──────> (all skills follow its conventions)
-github-docker-action <──> github-service-containers (mutual cross-refs)
+./AGENTS.md
+└── ./skills/AGENTS.md
+    ├── ./skills/build-skill/AGENTS.md
+    ├── ./skills/github-script/AGENTS.md
+    ├── ./skills/lightning/AGENTS.md
+    ├── ./skills/threlte/AGENTS.md
+    ├── ./skills/xstate/AGENTS.md
+    └── ./skills/zod/AGENTS.md
 ```
-
-## MAINTENANCE
-
-```bash
-# Project-level maintenance (root script)
-./scripts/maintain.sh                       # sync + validate + status
-./scripts/maintain.sh sync                  # sync all vendored skills
-./scripts/maintain.sh sync xstate           # sync one skill
-./scripts/maintain.sh sync xstate --dry-run # preview what would change
-./scripts/maintain.sh validate              # validate all skills
-./scripts/maintain.sh validate xstate       # validate one skill
-./scripts/maintain.sh status                # show vendored content freshness
-```
-
-```bash
-# Per-skill scripts (from build-skill)
-bash skills/build-skill/scripts/validate_skill.sh skills/<skill-name>
-bash skills/build-skill/scripts/package_skill.sh skills/<skill-name>
-bash skills/build-skill/scripts/init_skill.sh <skill-name> [standard|minimal|reference-heavy|script-heavy]
-```
-
-## NOTES
-
-- All skills authored by `kjanat`, all at version `1.0`, MIT licensed
-- `index-knowledge` SKILL.md is 366 lines — exceeds the 200-line guideline; should split to references
-- `build-skill` and `index-knowledge` lack `license`/`metadata` frontmatter fields
-- `github-script/assets/` is the only skill using the assets directory
-- `xstate` vendors external content via `sync-docs.sh` — first skill with auto-vendoring pattern
-- No `.gitignore`, no CI, no linting config at repo level — intentionally pure content
