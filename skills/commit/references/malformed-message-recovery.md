@@ -2,7 +2,7 @@
 
 Use only when the agent just created a malformed commit message in this same run.
 
-Examples: literal `\n` in message, heredoc terminator mistake, accidental shell text in commit body.
+Examples: literal `\n` in message, heredoc terminator mistake, accidental shell text in commit body, or wrong message formatting/content caused by the agent misreading a user correction in this same run.
 
 ## Rules
 
@@ -11,37 +11,42 @@ Examples: literal `\n` in message, heredoc terminator mistake, accidental shell 
 - One immediate amend max.
 - Requires clean worktree before amend (`git status --short` must be empty).
 - If `HEAD` is already on any remote branch, stop and report; do not force-push implicitly.
+- If upstream already contains the intended message and local `HEAD` is the malformed rewrite, restore local to upstream instead of creating another amend.
+- If chaining is needed around heredoc amend, always use grouping: `{ ...; } && ...`.
+- Never use `git commit --amend -F - <<'EOF' && ...` in this skill.
+- Never append anything to heredoc `EOF` line.
 
 ## Flow
 
 1. Inspect latest message:
 
-```bash
-git log -1 --format=%B
-git --no-pager status --short
-git --no-pager branch -r --contains HEAD
-```
+   ```bash
+   git log -1 --format=%B
+   git --no-pager status --short
+   git --no-pager branch -r --contains HEAD
+   ```
 
 2. If `git status --short` output is non-empty, stop and report.
 3. If `git branch -r --contains HEAD` output is non-empty, stop and report.
-4. Rewrite message via message-only amend:
+4. If upstream already has the intended message, restore local to upstream and stop.
+5. Otherwise rewrite message via message-only amend:
 
-```bash
-git commit --amend -F - <<'EOF'
-type(scope): subject
+   ```bash
+   git commit --amend -F - <<'EOF'
+   type(scope): subject
 
-Explain the intended user impact with real newlines.
-EOF
-```
+   Explain the intended user impact with real newlines.
+   EOF
+   ```
 
-5. Verify:
+6. Verify:
 
-```bash
-git log -1 --format=%B
-git status --short --branch
-```
+   ```bash
+   git log -1 --format=%B
+   git status --short --branch
+   ```
 
-6. Stop. No extra mutation in this invocation.
+7. Stop. No extra mutation in this invocation.
 
 ## Do Not Use For
 
