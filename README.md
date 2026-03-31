@@ -8,6 +8,7 @@ Collection of [Agent Skills] for AI coding agents.
 | --------------------------- | -------------------------------------------------------------- |
 | `build-skill`               | How to author new skills — format, conventions, validation     |
 | `changelog-writing`         | Keep a Changelog convention for CHANGELOG.md                   |
+| `discoveries-writing`       | Agent memory files for repo-specific gotchas in DISCOVERIES.md |
 | `ezelsbruggen-schrijven`    | Write short Dutch mnemonics and recall hooks                   |
 | `github-docker-action`      | Docker container GitHub Actions — Dockerfile, action.yml       |
 | `github-script`             | Secure `actions/github-script@v8` workflow steps               |
