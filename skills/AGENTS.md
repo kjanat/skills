@@ -12,6 +12,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `build-skill`               | authoring/validation meta-skill      | yes          |
 | `changelog-writing`         | Keep a Changelog edits               | no           |
 | `commit`                    | safe commit workflow                 | no           |
+| `ezelsbruggen-schrijven`    | Dutch mnemonics and recall hooks     | no           |
 | `github-docker-action`      | Docker container actions             | no           |
 | `github-script`             | secure `actions/github-script` usage | yes          |
 | `github-service-containers` | CI sidecar services                  | no           |
@@ -25,6 +26,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 ## HOW TO ROUTE
 
 - Building or modifying skills: start at `build-skill/SKILL.md`.
+- Dutch mnemonics or recall hooks: use `ezelsbruggen-schrijven/SKILL.md`.
 - GitHub Actions inline JS: use `github-script/SKILL.md`.
 - Vendored docs lookup: prefer `threlte`, `xstate`, or `zod` skill lanes.
 - Domain science question (lightning): use `lightning/SKILL.md`.
