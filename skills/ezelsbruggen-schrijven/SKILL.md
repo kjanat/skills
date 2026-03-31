@@ -136,7 +136,7 @@ Gebruik de hard-case lane bij:
 
 - afkortingen met weinig natuurlijke beeldkracht
 - labels die niet klinken als het concept
-- officiele termen waarvan de betekenis niet uit de vorm blijkt
+- officiële termen waarvan de betekenis niet uit de vorm blijkt
 
 Interne werkwijze:
 
@@ -191,7 +191,7 @@ Schrijf niet:
 
 ## Werkwijze per taaktype
 
-- Matchvragen en categorieen: lees `references/taakvormen.md`
+- Matchvragen en categorieën: lees `references/taakvormen.md`
 - Voorbeelden en outputpatronen: lees `references/voorbeelden.md`
 - Zelfcheck, scoring en herschrijven: lees `references/kwaliteitscheck.md`
 

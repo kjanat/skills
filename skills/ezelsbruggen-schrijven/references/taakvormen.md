@@ -31,7 +31,7 @@ Praktisch:
 - `Zvw = zorg thuis via verzekering`
 - `Wlz`: vaak beter via contrast of beslisregel dan via een geforceerde slogan
 
-## 2. Verwarrende begrippen of categorieen
+## 2. Verwarrende begrippen of categorieën
 
 Gebruik dit bij:
 
@@ -152,7 +152,7 @@ Gebruik dit bij:
 
 - afkortingen als `Wlz`
 - labels die niet klinken als het concept
-- officiele termen met weinig natuurlijke beeldkracht
+- officiële termen met weinig natuurlijke beeldkracht
 
 Trigger deze lane als:
 

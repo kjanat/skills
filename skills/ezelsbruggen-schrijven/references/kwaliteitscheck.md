@@ -62,7 +62,7 @@ Beslissing:
 2. vervang vage woorden door 1 hard ankerwoord
 3. maak het verschil concreet met plek, richting, tijd of handeling
 4. test op zelfstandige oproepbaarheid
-5. als dat faalt: maak 3 kandidaten uit verschillende strategieen
+5. als dat faalt: maak 3 kandidaten uit verschillende strategieën
 6. scoreer alle kandidaten
 7. kies de beste of val terug op een beslisregel
 
