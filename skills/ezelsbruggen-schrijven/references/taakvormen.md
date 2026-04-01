@@ -27,9 +27,9 @@ Aanpak:
 
 Praktisch:
 
-- `Wmo = gemeente helpt thuis`
-- `Zvw = zorg thuis via verzekering`
-- `Wlz`: vaak beter via contrast of beslisregel dan via een geforceerde slogan
+- `Wmo`: de **M** → mop → huishoudelijke hulp
+- `Zvw`: de **V** → verzorging → persoonlijke zorg
+- `Wlz`: de **L** → liggen → verpleeghuis
 
 ## 2. Verwarrende begrippen of categorieën
 
@@ -169,11 +169,17 @@ Output:
 - `Kortste versie`
 - optioneel `Beslisregel`
 
+Verplichte eerste stap bij afkortingen:
+
+1. vouw de afkorting uit en geef de volledige naam
+2. zoek het onderscheidende kernwoord in de volledige naam
+3. test of dat kernwoord zelfstandig al naar het juiste concept trekt
+
 Kandidaatklassen:
 
-- contrast-first
-- letter/klank-first
-- beeld/scenario-first
+- kernwoord-uit-naam (onderscheidend woord uit de volledige naam)
+- letter-hook (letter → concreet woord → concept)
+- contrast of beeld/scenario
 
 Werkwijze:
 

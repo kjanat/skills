@@ -72,13 +72,26 @@ Beslissing:
 
 Zwak:
 
-- `Wlz = langdurige zorg`
+- `Wlz = langdurige zorg` (zonder context of volledige naam)
 
 Waarom fout:
 
 - bijna letterlijk de naam
 - geen extra haak
 - geen onderscheid met andere zorglabels
+
+Uitzondering — **transparant, niet tautologisch**:
+
+Als de student de volledige naam niet kent, is het kernwoord uit de naam wél
+een haak. `Wlz → langdurig` is pas tautologisch als de student al weet dat
+Wlz staat voor Wet langdurige zorg. Voor iemand die `Wlz` als drie dode
+letters ziet, is `langdurig` nieuwe informatie die het label levend maakt.
+
+Beter:
+
+- vouw eerst uit: `Wlz = Wet **langdurige** zorg`
+- gebruik het kernwoord als onderscheidende haak: `langdurig → verpleeghuis`
+- koppel terug: `huishouden → ondersteuning → Wmo, verzorging → verzekering → Zvw, verpleeghuis → langdurig → Wlz`
 
 ### Probleem: retrieval-zwak ondanks concreet beeld
 
@@ -91,6 +104,11 @@ Waarom fout:
 - er is wel een beeld, maar het label `Wlz` krijgt er zelf geen sterke haak van
 - de uitleg moet nog steeds vertellen waarom dit bij `Wlz` hoort
 - concreetheid alleen is dus niet genoeg
+
+Beter:
+
+- koppel het beeld aan een letter: `Wlz: de **L** → liggen → bed → verpleeghuis`
+- nu trekt de letter het beeld op, niet alleen de uitleg
 
 ### Probleem: te vaag
 
@@ -128,9 +146,12 @@ Waarom beter:
 Doe dat niet als:
 
 - het feit zelf onzeker is
-- het label weinig natuurlijke beeldkracht heeft
-- alle kandidaten onder de sterktegrens blijven
+- alle kandidaten onder de sterktegrens blijven **én** de afkorting al is
+  uitgevouwen en het kernwoord is geprobeerd
 - een beslisregel betrouwbaarder is dan een slogan
+
+Bij afkortingen: probeer altijd eerst het kernwoord uit de volledige naam.
+Geef pas op als dat kernwoord ook geen onderscheid maakt.
 
 Gebruik dan:
 

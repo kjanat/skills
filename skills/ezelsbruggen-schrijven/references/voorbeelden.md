@@ -25,30 +25,47 @@ Opties:
 - Persoonlijke verzorging thuis -> **Zvw**
 - Verblijf in een verpleeghuis -> **Wlz**
 
+**Feit**
+
+- Wmo = Wet maatschappelijke **ondersteuning**
+- Zvw = **Zorgverzekerings**wet
+- Wlz = Wet **langdurige** zorg
+
 **Kandidaten**
 
-- **Wlz = bed in het verpleeghuis** -> middelmatig: concreet, maar de label-haak is nog zwak
-- **Wlz = wonen, langdurig, zwaar** -> zwak: werkt pas als je de uitleg al kent
-- **Wlz = niet meer thuis** -> middelmatig: contrast is bruikbaar, maar de letters helpen nog niet mee
+- **ondersteuning, verzekering, langdurig** -> sterk: elk kernwoord uit de
+  volledige naam trekt direct naar de juiste voorziening
+- **M**op, **V**erzorging, **L**iggen -> middelmatig: letter-hooks koppelen
+  letters aan beelden, maar vragen een extra vertaalstap
+- Thuis helpen, thuis verzorgen, niet meer thuis -> middelmatig: goed
+  contrast, maar de afkortingen haken niet mee
 
 **Beste keuze**
 
-- **Geen sterke losse ezelsbrug**
+- **ondersteuning, verzekering, langdurig**
 
 **Waarom deze wint**
 
-- geen van de drie kandidaten trekt vanzelf van `Wlz` naar het juiste concept
-- hier is een beslisregel betrouwbaarder dan een geforceerde slogan
+- **ondersteuning** trekt naar huishoudelijke hulp thuis
+- **verzekering** trekt naar persoonlijke zorg via je polis
+- **langdurig** trekt naar blijvend verblijf in verpleeghuis
+- elk woord komt uit de volledige naam — je leert de afkorting tegelijk
 
 **Kortste versie**
 
-- **Thuis helpen = Wmo, thuis verzorgen = Zvw, niet meer thuis = Wlz**
+- **ondersteuning = Wmo, verzekering = Zvw, langdurig = Wlz**
+
+**Stampversie**
+
+- huishouden → ondersteuning → Wmo
+- verzorging → verzekering → Zvw
+- verpleeghuis → langdurig → Wlz
 
 **Beslisregel**
 
-- Is het hulp om thuis te functioneren? -> **Wmo**
-- Is het verzorging of verpleging thuis? -> **Zvw**
-- Is het blijvend verblijf of 24-uurszorg? -> **Wlz**
+- Hulp thuis? → **Wmo**
+- Verzorging thuis? → **Zvw**
+- Verblijf / 24-uurszorg? → **Wlz**
 
 ## 2. Begrippencontrast: bruto en netto
 

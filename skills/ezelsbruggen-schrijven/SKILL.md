@@ -30,16 +30,19 @@ Als de tekst alleen de definitie herschrijft, is het geen ezelsbrug.
 ## Workflow
 
 1. Geef eerst het juiste antwoord, feit, verschil of de juiste volgorde.
-2. Zoek per optie of item het onderscheidende ankerwoord.
-3. Test de eerste brug met deze vraag:
+2. Bij afkortingen: vouw de afkorting eerst uit en geef de volledige naam.
+   Zoek het onderscheidende woord in de volledige naam — dat is vaak het
+   sterkste anker.
+3. Zoek per optie of item het onderscheidende ankerwoord.
+4. Test de eerste brug met deze vraag:
    `Roept dit zelfstandig iets op voordat de uitleg gelezen wordt?`
-4. Als het antwoord `ja` is, gebruik de standaardoutput.
-5. Als het antwoord `nee` is, schakel naar de hard-case lane:
+5. Als het antwoord `ja` is, gebruik de standaardoutput.
+6. Als het antwoord `nee` is, schakel naar de hard-case lane:
    - genereer 3 kandidaten
    - vergelijk ze met de rubric in `kwaliteitscheck.md`
    - kies de beste of val terug op een beslisregel
-6. Voeg een korte zichtbare uitleg toe.
-7. Kort in tot zo weinig mogelijk woorden.
+7. Voeg een korte zichtbare uitleg toe.
+8. Kort in tot zo weinig mogelijk woorden.
 
 ## Brugvormen
 
@@ -110,6 +113,10 @@ Gebruik deze vorm bij moeilijke labels, afkortingen, en zwakke eerste vondsten:
 
 - ...
 
+**Stampversie** (optioneel, bij afkortingen)
+
+- [concept] → [kernwoord] → [afkorting]
+
 **Beslisregel**
 
 - ...
@@ -140,20 +147,27 @@ Gebruik de hard-case lane bij:
 
 Interne werkwijze:
 
-1. maak 3 kandidaten vanuit verschillende hoeken:
-   - contrast-first
-   - letter/klank-first
-   - beeld/scenario-first
-2. als de runtime subagents of parallelle interne verkenning ondersteunt,
+1. vouw de afkorting uit en geef de volledige naam
+2. zoek het onderscheidende kernwoord in de volledige naam — dat is vaak
+   al voldoende als haak (bijv. Wmo → **ondersteuning**, Wlz → **langdurig**)
+3. als het kernwoord alleen niet sterk genoeg is, zoek per letter een
+   concreet woord dat aan die letter vastzit en zelfstandig een beeld oproept
+4. maak 3 kandidaten vanuit verschillende hoeken:
+   - kernwoord-uit-naam (het onderscheidende woord uit de volledige naam)
+   - letter-hook (letter → concreet woord → concept)
+   - contrast of beeld/scenario
+5. als de runtime subagents of parallelle interne verkenning ondersteunt,
    gebruik die om kandidaten naast elkaar te testen
-3. als dat niet kan, voer dezelfde 3-kandidatenvergelijking lokaal uit
-4. scoreer alle kandidaten met de rubric in `references/kwaliteitscheck.md`
-5. kies de beste kandidaat alleen als die de sterktegrens haalt
-6. haal je de grens niet, forceer dan geen slogan en gebruik een beslisregel
+6. als dat niet kan, voer dezelfde 3-kandidatenvergelijking lokaal uit
+7. scoreer alle kandidaten met de rubric in `references/kwaliteitscheck.md`
+8. kies de beste kandidaat alleen als die de sterktegrens haalt
+9. haal je de grens niet, forceer dan geen slogan en gebruik een beslisregel
 
 ## Guardrails
 
 - Als de feitelijke juistheid niet vaststaat, vraag eerst om verduidelijking.
+- Bij afkortingen: geef altijd eerst de volledige naam voordat je een brug
+  maakt.
 - Verzin geen afkortinguitleg die niet echt klopt.
 - Gebruik geen wollige uitleg voor het antwoord.
 - Geef nooit alleen een brug zonder koppeling naar de stof.
@@ -170,6 +184,7 @@ Interne werkwijze:
 - een uitleg geven die de brug moet redden
 - brave, nietszeggende taal
 - creativiteit die juistheid beschadigt
+- afkortingen niet uitvouwen voordat je een brug maakt
 
 ## Stijlregels
 
