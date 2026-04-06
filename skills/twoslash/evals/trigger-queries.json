@@ -1,0 +1,42 @@
+[
+	{
+		"query": "Can you rewrite this `ts twoslash` fence so the setup import is hidden but the types still work?",
+		"should_trigger": true
+	},
+	{
+		"query": "I need a docs example that shows the inferred type under a variable with `^?`.",
+		"should_trigger": true
+	},
+	{
+		"query": "How do I show completions for `console.e` in Twoslash?",
+		"should_trigger": true
+	},
+	{
+		"query": "Can you make this documentation snippet use virtual files with `@filename` so an import resolves correctly?",
+		"should_trigger": true
+	},
+	{
+		"query": "Need a `ts twoslash` example that renders the emitted `.d.ts` instead of the source.",
+		"should_trigger": true
+	},
+	{
+		"query": "Can you explain what TypeScript's `infer` keyword does?",
+		"should_trigger": false
+	},
+	{
+		"query": "Write a TypeScript example with two files where one imports the other and logs the value.",
+		"should_trigger": false
+	},
+	{
+		"query": "My VitePress page has syntax highlighting issues in normal code fences.",
+		"should_trigger": false
+	},
+	{
+		"query": "Can you show autocomplete results in a Monaco editor demo?",
+		"should_trigger": false
+	},
+	{
+		"query": "I need to hide setup code from readers in a plain Markdown code block, but it is not a Twoslash snippet.",
+		"should_trigger": false
+	}
+]
