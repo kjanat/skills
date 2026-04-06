@@ -1,6 +1,7 @@
 ---
 name: twoslash
 description: Guides authoring and review of Twoslash-powered TypeScript docs examples, including hidden setup, type queries, completions, diagnostics, and multi-file snippets. Use when writing or reviewing `ts twoslash` fences or when docs examples need `---cut---`, `^?`, `^|`, `@filename`, or exact error assertions.
+compatibility: Requires Claude Code CLI for eval runs. `scripts/run-evals.py` uses `uv run` with Python 3.14.
 license: MIT
 metadata:
   author: kjanat
@@ -75,7 +76,14 @@ What does the user need?
 | Pick the right directive                  | [`references/notations.md`]                                               |
 | Hide fixtures or multi-file setup         | [`references/patterns.md`]                                                |
 | Explain lesser-used options or provenance | [`references/source-index.md`]                                            |
+| Run or inspect evals                      | [`evals/README.md`] -> [`scripts/run-evals.py`]                           |
 | Review a noisy or broken snippet          | [`references/patterns.md`] -> [`references/notations.md`]                 |
+
+## Scripts
+
+| Script                   | Purpose                                                                   |
+| ------------------------ | ------------------------------------------------------------------------- |
+| [`scripts/run-evals.py`] | Runs response-quality evals and trigger checks against the Twoslash skill |
 
 ## In This Reference
 
@@ -84,8 +92,11 @@ What does the user need?
 | [`references/notations.md`]    | Exact notation names, flags, and when to use them               |
 | [`references/patterns.md`]     | Authoring defaults, hidden-setup patterns, and review checklist |
 | [`references/source-index.md`] | Upstream source URLs and provenance notes                       |
+| [`evals/README.md`]            | How to run the regression harness and read its outputs          |
 
 [`references/notations.md`]: ./references/notations.md
 [`references/patterns.md`]: ./references/patterns.md
 [`references/source-index.md`]: ./references/source-index.md
+[`evals/README.md`]: ./evals/README.md
+[`scripts/run-evals.py`]: ./scripts/run-evals.py
 [`SKILL.md`]: ./SKILL.md

@@ -20,7 +20,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `index-knowledge`           | generate hierarchical AGENTS docs    | no           |
 | `lightning`                 | lightning physics reference corpus   | yes          |
 | `threlte`                   | Threlte docs routing and examples    | yes          |
-| `twoslash`                  | Twoslash docs snippets and notations | no           |
+| `twoslash`                  | Twoslash docs snippets and notations | yes          |
 | `uv-versioning`             | uv version bump planning             | no           |
 | `xstate`                    | XState v5 docs + API types           | yes          |
 | `zod`                       | Zod v4 docs routing + API guidance   | yes          |
@@ -33,6 +33,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - GitHub Actions inline JS: use `github-script/SKILL.md`.
 - Vendored docs lookup: prefer `threlte`, `xstate`, or `zod` skill lanes.
 - Twoslash docs snippets or `ts twoslash` fences: use `twoslash/SKILL.md`.
+- Twoslash eval harness or trigger checks: read `twoslash/AGENTS.md` first.
 - Domain science question (lightning): use `lightning/SKILL.md`.
 - Repo maintenance: use `../scripts/maintain.sh`.
 
@@ -59,6 +60,7 @@ skills/AGENTS.md
 ├── skills/github-script/AGENTS.md
 ├── skills/lightning/AGENTS.md
 ├── skills/threlte/AGENTS.md
+├── skills/twoslash/AGENTS.md
 ├── skills/xstate/AGENTS.md
 └── skills/zod/AGENTS.md
 ```

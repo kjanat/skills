@@ -3,7 +3,7 @@
 	"evals": [
 		{
 			"id": 1,
-			"prompt": "I'm writing a VitePress `ts twoslash` example. It needs `import { helper } from './docs/.vitepress/twoslash/testing-fixtures.ts'` for type checking, but readers should only see `const result = helper('eu-west-1')`. Can you rewrite the snippet the Twoslash way?",
+			"prompt": "I'm writing a VitePress `ts twoslash` example. Please rewrite this so the import stays available to TypeScript but readers only see the call site.\n\n```ts\nimport { helper } from './docs/.vitepress/twoslash/testing-fixtures.ts';\nconst result = helper('eu-west-1');\n```",
 			"expected_output": "A Twoslash snippet that keeps the helper import for type checking and hides it from the rendered docs with a cut directive.",
 			"assertions": [
 				"The response uses `// ---cut---` or `// ---cut-before---` to hide setup above the visible example.",

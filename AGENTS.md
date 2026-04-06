@@ -30,6 +30,7 @@ skills/     # Root of all skill content (repo root)
     ├── index-knowledge/
     ├── lightning/
     ├── threlte/
+    ├── twoslash/
     ├── uv-versioning/
     ├── xstate/
     └── zod/
@@ -41,6 +42,7 @@ skills/     # Root of all skill content (repo root)
 | ---------------------- | ---------------------------------------------- | -------------------------------------- |
 | Route to a skill       | `skills/AGENTS.md`                             | Canonical skill index and boundaries   |
 | Add or edit any skill  | `skills/build-skill/AGENTS.md`                 | Meta-rules and validator workflow      |
+| Run Twoslash evals     | `skills/twoslash/AGENTS.md`                    | Harness, trigger modes, output layout  |
 | Run maintenance all-up | `scripts/maintain.sh`                          | `sync`, `validate`, `status`           |
 | Validate one skill     | `skills/build-skill/scripts/validate_skill.sh` | Structural checks                      |
 | Refresh vendored docs  | `scripts/maintain.sh sync <skill>`             | Uses each skill `scripts/sync-docs.sh` |
@@ -50,6 +52,7 @@ skills/     # Root of all skill content (repo root)
 - Skill dirs: `SKILL.md` entrypoint, optional `references/`, `scripts/`, `assets/`.
 - Keep `SKILL.md` concise; push depth to `references/`.
 - Child AGENTS files own local rules; avoid duplicating parent guidance.
+- Eval harnesses should write generated artifacts under skill-local ignored paths, not the repo root.
 - Prefer deterministic sync scripts for vendored content (`xstate`, `threlte`, `zod`).
 
 ## ANTI-PATTERNS (THIS PROJECT)
@@ -78,6 +81,7 @@ skills/     # Root of all skill content (repo root)
     ├── ./skills/github-script/AGENTS.md
     ├── ./skills/lightning/AGENTS.md
     ├── ./skills/threlte/AGENTS.md
+    ├── ./skills/twoslash/AGENTS.md
     ├── ./skills/xstate/AGENTS.md
     └── ./skills/zod/AGENTS.md
 ```
