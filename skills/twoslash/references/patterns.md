@@ -69,7 +69,7 @@ Before shipping a Twoslash snippet, check these:
 
 1. The visible snippet teaches one thing, not three.
 2. Hidden setup exists only to satisfy TypeScript or editor metadata.
-3. Query markers point at the intended line above them.
+3. Query markers point at the intended line above them, verified with a real column counter instead of guessed spaces.
 4. Error flags are as narrow as possible.
 5. Multi-file examples use `@filename:` instead of unexplained imports.
 6. Emit mode is only used when the emitted file is the thing being taught.
@@ -80,7 +80,7 @@ Use this loop for new or edited snippets:
 
 1. Write the full snippet so TypeScript has the context it needs.
 2. Cut away setup that is not part of the lesson.
-3. Verify each marker still points at the intended previous line.
+3. Verify each marker still points at the intended previous line with `uv run scripts/inspect-markers.py <file>` or another column-aware tool.
 4. Verify the chosen error mode is the narrowest one that works.
 5. Verify the rendered file is the one the reader should see.
 6. Re-check whether any visible `@filename:` lines are still pedagogically useful.
@@ -88,6 +88,7 @@ Use this loop for new or edited snippets:
 ## Common mistakes
 
 - Forgetting that `^?`, `^|`, and `^^^` always refer to the previous line.
+- Eyeballing marker spaces like `//       ^|` instead of counting the real column.
 - Using `@showEmittedFile` without `@showEmit`.
 - Leaving `@filename:` visible when a cut directive should hide it.
 - Removing helper code instead of cutting it, then wondering why the sample no longer type-checks.

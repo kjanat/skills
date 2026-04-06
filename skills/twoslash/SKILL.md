@@ -25,6 +25,7 @@ Use for docs examples powered by Twoslash.
 ## Gotchas
 
 - `^?`, `^|`, and `^^^` always apply to the previous line.
+- Do not eyeball marker spacing like `//       ^|`; use `uv run scripts/inspect-markers.py <file>` or another column-aware tool to count columns.
 - Hidden code still participates in type checking and editor metadata; prefer cutting setup over deleting it.
 - `@filename:` stays visible unless you cut it away on purpose.
 - `@showEmittedFile` is only meaningful together with `@showEmit`.
@@ -74,9 +75,11 @@ What does the user need?
 | ----------------------------------------- | ------------------------------------------------------------------------- |
 | New to Twoslash authoring                 | [`SKILL.md`] -> [`references/notations.md`] -> [`references/patterns.md`] |
 | Pick the right directive                  | [`references/notations.md`]                                               |
+| Copy a known-good shape                   | [`references/examples.md`]                                                |
 | Hide fixtures or multi-file setup         | [`references/patterns.md`]                                                |
 | Explain lesser-used options or provenance | [`references/source-index.md`]                                            |
 | Run or inspect evals                      | [`evals/README.md`] -> [`scripts/run-evals.py`]                           |
+| Check marker alignment                    | [`scripts/inspect-markers.py`]                                            |
 | Review a noisy or broken snippet          | [`references/patterns.md`] -> [`references/notations.md`]                 |
 
 ## Scripts
@@ -84,19 +87,23 @@ What does the user need?
 | Script                   | Purpose                                                                   |
 | ------------------------ | ------------------------------------------------------------------------- |
 | [`scripts/run-evals.py`] | Runs response-quality evals and trigger checks against the Twoslash skill |
+| [`scripts/inspect-markers.py`] | Prints real line/column counts for `^?`, `^|`, and `^^^` markers |
 
 ## In This Reference
 
 | File                           | Purpose                                                         |
 | ------------------------------ | --------------------------------------------------------------- |
 | [`references/notations.md`]    | Exact notation names, flags, and when to use them               |
+| [`references/examples.md`]     | Small copy-paste examples for common Twoslash patterns          |
 | [`references/patterns.md`]     | Authoring defaults, hidden-setup patterns, and review checklist |
 | [`references/source-index.md`] | Upstream source URLs and provenance notes                       |
 | [`evals/README.md`]            | How to run the regression harness and read its outputs          |
 
 [`references/notations.md`]: ./references/notations.md
+[`references/examples.md`]: ./references/examples.md
 [`references/patterns.md`]: ./references/patterns.md
 [`references/source-index.md`]: ./references/source-index.md
 [`evals/README.md`]: ./evals/README.md
 [`scripts/run-evals.py`]: ./scripts/run-evals.py
+[`scripts/inspect-markers.py`]: ./scripts/inspect-markers.py
 [`SKILL.md`]: ./SKILL.md
