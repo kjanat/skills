@@ -20,6 +20,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `index-knowledge`           | generate hierarchical AGENTS docs    | no           |
 | `lightning`                 | lightning physics reference corpus   | yes          |
 | `threlte`                   | Threlte docs routing and examples    | yes          |
+| `twoslash`                  | Twoslash docs snippets and notations | no           |
 | `uv-versioning`             | uv version bump planning             | no           |
 | `xstate`                    | XState v5 docs + API types           | yes          |
 | `zod`                       | Zod v4 docs routing + API guidance   | yes          |
@@ -31,6 +32,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - Dutch mnemonics or recall hooks: use `ezelsbruggen-schrijven/SKILL.md`.
 - GitHub Actions inline JS: use `github-script/SKILL.md`.
 - Vendored docs lookup: prefer `threlte`, `xstate`, or `zod` skill lanes.
+- Twoslash docs snippets or `ts twoslash` fences: use `twoslash/SKILL.md`.
 - Domain science question (lightning): use `lightning/SKILL.md`.
 - Repo maintenance: use `../scripts/maintain.sh`.
 
