@@ -11,9 +11,9 @@ When editing marker lines like `//       ^|`, verify the real caret column with 
 Use when TypeScript needs setup code but readers should only see the teaching line.
 
 ```ts
-const level: string = 'Danger'
+const level: string = 'Danger';
 // ---cut---
-console.log(level)
+console.log(level);
 ```
 
 Source: `docs/refs/notations.md` `cut-before` example.
@@ -24,7 +24,7 @@ Use when the expression is intentionally incomplete and the goal is to show comp
 
 ```ts
 // @noErrors
-console.e
+console.e;
 //       ^|
 ```
 
@@ -36,12 +36,12 @@ Use when a snippet needs another virtual file for imports or ambient types.
 
 ```ts
 // @filename: a.ts
-export const helloWorld: string = 'Hi'
+export const helloWorld: string = 'Hi';
 // ---cut---
 // @filename: b.ts
-import { helloWorld } from './a'
+import { helloWorld } from './a';
 
-console.log(helloWorld)
+console.log(helloWorld);
 ```
 
 Use `---cut---` when the setup file is only there to make the visible file compile.
@@ -54,8 +54,8 @@ Use when the error itself is part of the lesson and the docs should fail if diag
 
 ```ts
 // @errors: 2322 2588
-const str: string = 1
-str = 'Hello'
+const str: string = 1;
+str = 'Hello';
 ```
 
 Prefer this over `@noErrors` when you care about the exact TypeScript errors.
@@ -68,9 +68,9 @@ Use when the visible snippet should stay clean but hidden setup or teardown is i
 
 ```ts
 // @noErrorsCutted
-const hello = 'world'
+const hello = 'world';
 // ---cut-after---
-hello = 'hi'
+hello = 'hi';
 ```
 
 Source: `docs/refs/options.md` `noErrorsCutted` example.
@@ -83,7 +83,7 @@ Use when the emitted file is the teaching target instead of the TypeScript sourc
 // @declaration
 // @showEmit
 // @showEmittedFile: index.d.ts
-export const hello = 'world'
+export const hello = 'world';
 ```
 
 Source: `docs/refs/notations.md` `showEmittedFile` `.d.ts` example.

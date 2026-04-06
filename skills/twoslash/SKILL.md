@@ -78,16 +78,17 @@ What does the user need?
 | Copy a known-good shape                   | [`references/examples.md`]                                                |
 | Hide fixtures or multi-file setup         | [`references/patterns.md`]                                                |
 | Explain lesser-used options or provenance | [`references/source-index.md`]                                            |
+| Do a wider upstream docs sweep            | [`example-docs.txt`] -> [`references/source-index.md`]                    |
 | Run or inspect evals                      | [`evals/README.md`] -> [`scripts/run-evals.py`]                           |
 | Check marker alignment                    | [`scripts/inspect-markers.py`]                                            |
 | Review a noisy or broken snippet          | [`references/patterns.md`] -> [`references/notations.md`]                 |
 
 ## Scripts
 
-| Script                   | Purpose                                                                   |
-| ------------------------ | ------------------------------------------------------------------------- |
-| [`scripts/run-evals.py`] | Runs response-quality evals and trigger checks against the Twoslash skill |
-| [`scripts/inspect-markers.py`] | Prints real line/column counts for `^?`, `^|`, and `^^^` markers |
+| Script                         | Purpose                                                                                                                                             |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`scripts/run-evals.py`]       | Runs response-quality evals and trigger checks against the Twoslash skill                                                                           |
+| [`scripts/inspect-markers.py`] | Prints real line/column counts for `^?`, `^^^`, `^\|` markers. (NOTE: IN , `^\|` THE SLASH IN FRONT OF THE PIPE IS ONLY HERE FOR MARKDOWN ESCAPING) |
 
 ## In This Reference
 
@@ -97,12 +98,14 @@ What does the user need?
 | [`references/examples.md`]     | Small copy-paste examples for common Twoslash patterns          |
 | [`references/patterns.md`]     | Authoring defaults, hidden-setup patterns, and review checklist |
 | [`references/source-index.md`] | Upstream source URLs and provenance notes                       |
+| [`example-docs.txt`]           | Local `gitingest` snapshot of upstream Twoslash docs            |
 | [`evals/README.md`]            | How to run the regression harness and read its outputs          |
 
 [`references/notations.md`]: ./references/notations.md
 [`references/examples.md`]: ./references/examples.md
 [`references/patterns.md`]: ./references/patterns.md
 [`references/source-index.md`]: ./references/source-index.md
+[`example-docs.txt`]: ./example-docs.txt
 [`evals/README.md`]: ./evals/README.md
 [`scripts/run-evals.py`]: ./scripts/run-evals.py
 [`scripts/inspect-markers.py`]: ./scripts/inspect-markers.py
