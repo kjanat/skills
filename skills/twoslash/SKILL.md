@@ -1,6 +1,6 @@
 ---
 name: twoslash
-description: Guides Twoslash-authored TypeScript documentation snippets, notation choice, and hidden fixture setup. Use when writing or reviewing `ts twoslash` code fences, `^?` queries, `^|` completions, `---cut---` directives, error assertions, or multi-file virtual examples.
+description: Guides authoring and review of Twoslash-powered TypeScript docs examples, including hidden setup, type queries, completions, diagnostics, and multi-file snippets. Use when writing or reviewing `ts twoslash` fences or when docs examples need `---cut---`, `^?`, `^|`, `@filename`, or exact error assertions.
 license: MIT
 metadata:
   author: kjanat
@@ -19,6 +19,14 @@ Use for docs examples powered by Twoslash.
 - Prefer `// @noErrors` only when the snippet is intentionally incomplete for some other reason, such as completion demos.
 - Prefer `// @filename:` for multi-file context instead of explaining missing imports in prose.
 - Prefer `// @showEmit` only when the emitted JS, `.d.ts`, or map file is the teaching target.
+- Do not reach for this skill for plain TypeScript snippets that do not rely on Twoslash behavior.
+
+## Gotchas
+
+- `^?`, `^|`, and `^^^` always apply to the previous line.
+- Hidden code still participates in type checking and editor metadata; prefer cutting setup over deleting it.
+- `@filename:` stays visible unless you cut it away on purpose.
+- `@showEmittedFile` is only meaningful together with `@showEmit`.
 
 ## Fast triage
 
@@ -42,12 +50,13 @@ What does the user need?
 
 ## Response workflow
 
-1. Identify the teaching goal: type, completion, highlight, hidden setup, diagnostics, or emit.
-2. Keep the rendered sample minimal; move scaffolding into cut regions or virtual files.
-3. Add the smallest directive set that proves the point.
-4. If errors are intentional, prefer exact validation with `@errors` over blanket suppression.
-5. If the snippet is multi-file or emit-focused, verify the visible file is the one the reader actually needs.
-6. Name the exact directives in the answer so the user can copy them directly.
+1. Identify whether this is new authoring or review of an existing snippet.
+2. Identify the teaching goal: type, completion, highlight, hidden setup, diagnostics, or emit.
+3. Keep the rendered sample minimal; move scaffolding into cut regions or virtual files.
+4. Add the smallest directive set that proves the point.
+5. If errors are intentional, prefer exact validation with `@errors` over blanket suppression.
+6. If the snippet is multi-file or emit-focused, verify the visible file is the one the reader actually needs.
+7. Name the exact directives in the answer so the user can copy them directly.
 
 ## Authoring defaults
 

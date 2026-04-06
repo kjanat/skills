@@ -4,11 +4,9 @@ Use this file for exact directive names and the shortest correct explanation of 
 
 ## Query markers
 
-| Notation | Use                                                    | Notes                                                                                                                                                                                                              |
-| -------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `// ^?`  | Show type info for the identifier on the previous line | Best for inferred or expanded types.                                                                                                                                                                               |
-| `// ^\|` | Show completions at the caret on the previous line     | Twoslash asks TypeScript for completions, filters by the typed prefix, and shows up to 5 results inline. Often pair with `// @noErrors`. <br> Do not include a `\` character before the pipe character and the `^` |
-| `// ^^^` | Highlight a range on the previous line                 | Styling depends on the renderer or site theme.                                                                                                                                                                     |
+- `// ^?` shows type info for the identifier on the previous line. Best for inferred or expanded types.
+- `// ^|` shows completions at the caret on the previous line. Twoslash asks TypeScript for completions, filters by the typed prefix, and shows up to 5 results inline. Often pair with `// @noErrors`.
+- `// ^^^` highlights a range on the previous line. Styling depends on the renderer or site theme.
 
 ## Cut directives
 
