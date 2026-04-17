@@ -4,7 +4,7 @@ description: Commits changes with strict safety gates and high-signal commit mes
 license: MIT
 metadata:
   author: kjanat
-  version: "1.5"
+  version: "1.6"
 ---
 
 # commit
@@ -34,11 +34,12 @@ Git-only skill. If `.jj/` exists, do not run this flow.
 - Never run `git commit --amend` unless `amend` was explicit.
 - Only amend exception: immediate message-only self-fix for malformed message the agent created in this same run.
 - Never use `--no-verify` unless `no-verify` was explicit.
-- Heredoc message-build override (highest priority):
-  - Multiline commit/amend messages must use `git commit -m "$(cat <<'EOF'` ... `EOF` ... `)"` syntax.
+- Shell-specific message-build override (highest priority):
+  - In Bash/zsh, multiline commit/amend messages must use `git commit -m "$(cat <<'EOF'` ... `EOF` ... `)"` syntax.
+  - In PowerShell, multiline commit/amend messages must use a here-string variable passed to `git commit -m "$msg"`.
   - Do not use `git commit -F -`, `git commit --amend -F -`, or newline escapes in `-m`.
-  - Closing delimiter line must be exactly `EOF`.
-  - If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
+  - Bash/zsh closing delimiter line must be exactly `EOF`.
+  - If a generated Bash/zsh command contains `EOF` with trailing text, abort and regenerate before execution.
 - Message-interpretation gate:
   - Direct user corrections about commit-message wording or formatting override generic defaults.
   - If a commit-message file is created for the flow, treat that file as the commit-message source of truth.
@@ -114,7 +115,7 @@ Git-only skill. If `.jj/` exists, do not run this flow.
 git commit -m "type(scope): subject"
 ```
 
-- Multiline form must use command substitution inside `-m`.
+- Multiline form is shell-specific.
 - Never encode newlines as `\n`.
 - Never use `-F` for multiline commit messages.
 
@@ -129,14 +130,33 @@ EOF
 )"
 ```
 
+```powershell
+$msg = @"
+feat(parser): tighten svg filter constraints
+
+Reject invalid filter primitive/type combinations and keep valid
+defs + text-link structures parseable so AST consumers can trust
+structure for linting and transforms.
+"@
+
+git commit -m "$msg"
+```
+
 ## Heredoc Safety Rules
 
-- Heredoc message-build override is highest priority in this skill.
+- Shell-specific message-build override is highest priority in this skill.
 - Closing delimiter must be exactly `EOF` on its own line.
 - Never append anything on the `EOF` line.
 - The opener must be exactly `$(cat <<'EOF'` inside the quoted `-m` value.
 - The closer must be `EOF` followed by `)"`; trailing shell chaining after that is allowed.
 - If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
+
+## PowerShell Here-String Rules
+
+- Use a here-string variable, then pass it via `git commit -m "$msg"`.
+- Keep `@"` and `"@` on dedicated lines.
+- Preserve blank lines in the message body.
+- Avoid inline here-strings inside the `git commit` command.
 
 Good:
 
@@ -159,6 +179,17 @@ chore(release): 0.4.0 - collision fix + exec/run unification
 - Explain the breaking CLI change and the fallback allocation fix.
 EOF
 )" && sleep 2 && OTHER_TASK && ANOTHER_ONE
+```
+
+```powershell
+$msg = @"
+chore(release): 0.4.0 - collision fix + exec/run unification
+
+- Bump `runner` to 0.4.0 and fill in the CHANGELOG section.
+- Explain the breaking CLI change and the fallback allocation fix.
+"@
+
+git commit -m "$msg"
 ```
 
 ```bash
@@ -188,6 +219,12 @@ EOF
 git commit -m "$(cat <<'EOF'
 ...
 EOF trailing-text
+```
+
+```powershell
+git commit -m @"
+...
+"@
 ```
 
 ## Operational Notes
