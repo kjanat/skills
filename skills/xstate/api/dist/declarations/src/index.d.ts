@@ -3,6 +3,7 @@ export * from "./actors/index.js";
 export { assertEvent } from "./assert.js";
 export { Actor, createActor, interpret, type Interpreter, type RequiredActorOptionsKeys as RequiredActorOptionsKeys } from "./createActor.js";
 export { createMachine } from "./createMachine.js";
+export { mapState } from "./mapState.js";
 export { getInitialSnapshot, getNextSnapshot } from "./getNextSnapshot.js";
 export { and, not, or, stateIn } from "./guards.js";
 export type { GuardPredicate, GuardArgs } from "./guards.js";

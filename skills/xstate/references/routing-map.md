@@ -41,6 +41,7 @@ Load the file matching the user's question.
 | Promise actors                           | `docs/promise-actors.mdx`                 |
 | Pure transition functions                | `docs/pure-transitions.mdx`               |
 | Quick start                              | `docs/quick-start.mdx`                    |
+| Self-hosting                             | `docs/self-hosting.mdx`                   |
 | Setup                                    | `docs/setup.mdx`                          |
 | Spawn                                    | `docs/spawn.mdx`                          |
 | State                                    | `docs/states.mdx`                         |

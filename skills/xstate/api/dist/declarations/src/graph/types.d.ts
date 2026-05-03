@@ -71,9 +71,10 @@ export interface SerializationConfig<TSnapshot extends Snapshot<unknown>, TEvent
 type SerializationOptions<TSnapshot extends Snapshot<unknown>, TEvent extends EventObject> = Partial<Pick<SerializationConfig<TSnapshot, TEvent>, 'serializeState' | 'serializeEvent'>>;
 export type TraversalOptions<TSnapshot extends Snapshot<unknown>, TEvent extends EventObject, TInput> = {
     input?: TInput;
-} & SerializationOptions<TSnapshot, TEvent> & Partial<Pick<TraversalConfig<TSnapshot, TEvent>, 'events' | 'limit' | 'fromState' | 'stopWhen' | 'toState'>>;
+} & SerializationOptions<TSnapshot, TEvent> & Partial<Pick<TraversalConfig<TSnapshot, TEvent>, 'events' | 'filterEvents' | 'limit' | 'fromState' | 'stopWhen' | 'toState'>>;
 export interface TraversalConfig<TSnapshot extends Snapshot<unknown>, TEvent extends EventObject> extends SerializationConfig<TSnapshot, TEvent> {
     events: readonly TEvent[] | ((state: TSnapshot) => readonly TEvent[]);
+    filterEvents: ((snapshot: TSnapshot, event: TEvent) => boolean) | undefined;
     /**
      * The maximum number of traversals to perform when calculating the state
      * transition adjacency map.

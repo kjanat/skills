@@ -2,8 +2,7 @@
   import { Environment, OrbitControls } from '@threlte/extras'
   import { T } from '@threlte/core'
 
-  type Props = {
-    autoRotateCamera?: boolean
+  interface Props {
     environmentUrl: string
     environmentIsBackground?: boolean
     isBackground?: boolean
@@ -13,7 +12,6 @@
   }
 
   let {
-    autoRotateCamera = false,
     environmentUrl,
     environmentIsBackground = true,
     materialMetalness = 1,
@@ -26,7 +24,10 @@
   makeDefault
   position.z={5}
 >
-  <OrbitControls autoRotate={autoRotateCamera} />
+  <OrbitControls
+    enableZoom={false}
+    enableDamping
+  />
 </T.PerspectiveCamera>
 
 <T.Mesh>

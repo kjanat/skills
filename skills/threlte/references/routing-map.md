@@ -3,7 +3,7 @@
 Auto-generated from vendored doc frontmatter. Topic → doc file.
 Load the file matching the user's question.
 
-Pinned to commit `e55924df0bf7`.
+Pinned to commit `94cac1d7547f`.
 
 ## Learn: Getting Started
 
@@ -108,6 +108,7 @@ Pinned to commit `e55924df0bf7`.
 | <RadialGradientTexture>  | `docs/reference/extras/radial-gradient-texture.mdx`  |
 | <Resize>                 | `docs/reference/extras/resize.mdx`                   |
 | <RoundedBoxGeometry>     | `docs/reference/extras/rounded-box-geometry.mdx`     |
+| <ShadowAlpha>            | `docs/reference/extras/shadow-alpha.mdx`             |
 | <ShadowMaterial>         | `docs/reference/extras/shadow-material.mdx`          |
 | <Sky>                    | `docs/reference/extras/sky.mdx`                      |
 | <SoftShadows>            | `docs/reference/extras/soft-shadows.mdx`             |
@@ -123,13 +124,17 @@ Pinned to commit `e55924df0bf7`.
 | useAudioListener         | `docs/reference/extras/use-audio-listener.mdx`       |
 | useCursor                | `docs/reference/extras/use-cursor.mdx`               |
 | useFBO                   | `docs/reference/extras/use-fbo.mdx`                  |
+| useFollow                | `docs/reference/extras/use-follow.mdx`               |
 | useGamepad               | `docs/reference/extras/use-gamepad.mdx`              |
 | useGltf                  | `docs/reference/extras/use-gltf.mdx`                 |
 | useGltfAnimations        | `docs/reference/extras/use-gltf-animations.mdx`      |
+| useInputMap              | `docs/reference/extras/use-input-map.mdx`            |
+| useKeyboard              | `docs/reference/extras/use-keyboard.mdx`             |
 | useProgress              | `docs/reference/extras/use-progress.mdx`             |
 | useSuspense              | `docs/reference/extras/use-suspense.mdx`             |
 | useTexture               | `docs/reference/extras/use-texture.mdx`              |
 | useThrelteAudio          | `docs/reference/extras/use-threlte-audio.mdx`        |
+| useTrailTexture          | `docs/reference/extras/use-trail-texture.mdx`        |
 | useViewport              | `docs/reference/extras/use-viewport.mdx`             |
 | <UvMaterial>             | `docs/reference/extras/uv-material.mdx`              |
 | <View>                   | `docs/reference/extras/view.mdx`                     |
@@ -207,6 +212,7 @@ Pinned to commit `e55924df0bf7`.
 | Hooks            | `docs/reference/xr/hooks.mdx`             |
 | pointerControls  | `docs/reference/xr/pointer-controls.mdx`  |
 | teleportControls | `docs/reference/xr/teleport-controls.mdx` |
+| touchControls    | `docs/reference/xr/touch-controls.mdx`    |
 | useController    | `docs/reference/xr/use-controller.mdx`    |
 | useHand          | `docs/reference/xr/use-hand.mdx`          |
 | useHandJoint     | `docs/reference/xr/use-hand-joint.mdx`    |
@@ -214,9 +220,11 @@ Pinned to commit `e55924df0bf7`.
 | useHitTest       | `docs/reference/xr/use-hit-test.mdx`      |
 | useTeleport      | `docs/reference/xr/use-teleport.mdx`      |
 | useXR            | `docs/reference/xr/use-xr.mdx`            |
+| useXROrigin      | `docs/reference/xr/use-xr-origin.mdx`     |
 | <VRButton>       | `docs/reference/xr/button-vr.mdx`         |
 | <XR>             | `docs/reference/xr/xr.mdx`                |
 | <XRButton>       | `docs/reference/xr/button-xr.mdx`         |
+| <XROrigin>       | `docs/reference/xr/xr-origin.mdx`         |
 
 ## @threlte/flex
 

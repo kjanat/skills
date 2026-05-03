@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { BufferGeometry, Vector3, type Mesh } from 'three'
+  import { BufferGeometry, Vector3, Mesh } from 'three'
   import { T, useTask } from '@threlte/core'
   import { Text, interactivity } from '@threlte/extras'
   import { Spring } from 'svelte/motion'
@@ -13,8 +13,16 @@
 
   let text = $state('')
   let debug = $state(false)
-  let happy = $state(false)
-  let ref = $state.raw<Mesh>()
+
+  // Each XR controller/hand dispatches pointer events independently, so tracking a
+  // single shared `happy` flag would be clobbered when one hand leaves while the
+  // other is still hovering. Track per-source and aggregate.
+  const hovering = $state({ left: false, right: false, desktop: false })
+  const happy = $derived(hovering.left || hovering.right || hovering.desktop)
+
+  const sourceOf = (event: { handedness?: 'left' | 'right' }) => event.handedness ?? 'desktop'
+
+  const mesh = new Mesh()
 
   let lookAt = new Vector3()
   let point = new Vector3()
@@ -33,13 +41,13 @@
           return
         }
         case 'pointerenter': {
-          happy = true
+          hovering[sourceOf(event)] = true
           scale.set(1.1)
           return
         }
         case 'pointerleave': {
-          happy = false
-          scale.set(1)
+          hovering[sourceOf(event)] = false
+          if (!happy) scale.set(1)
           return
         }
         case 'pointermissed': {
@@ -59,7 +67,7 @@
 
   useTask(() => {
     lookAt.lerp(point, happy ? 0.5 : 0.2)
-    ref?.lookAt(lookAt.x, lookAt.y, 1)
+    mesh.lookAt(lookAt.x, lookAt.y, 1)
   })
 
   interactivity()
@@ -114,8 +122,8 @@
   position.z={-0.5}
   scale={$isPresenting ? 0.1 : 1}
 >
-  <T.Mesh
-    bind:ref
+  <T
+    is={mesh}
     onclick={handleEvent('click')}
     onpointerdown={handleEvent('pointerdown')}
     onpointerup={handleEvent('pointerup')}
@@ -169,5 +177,5 @@
       <T.MeshStandardMaterial color="#444" />
       <T.CylinderGeometry args={[0.15, 0.15, 0.1]} />
     </T.Mesh>
-  </T.Mesh>
+  </T>
 </T.Group>

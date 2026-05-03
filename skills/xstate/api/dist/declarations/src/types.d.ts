@@ -455,11 +455,38 @@ export type ContextFactory<TContext extends MachineContext, TActor extends Provi
     StateValue, string, unknown, TODO, // TMeta
     TODO>, TEvent, AnyEventObject>;
 }) => TContext;
+/**
+ * Runtime options for state machine execution.
+ *
+ * @example
+ *
+ * ```ts
+ * const machine = createMachine({
+ *   // ... machine config
+ *   options: {
+ *     maxIterations: 5000
+ *     // other runtime options can be added here
+ *   }
+ * });
+ * ```
+ */
+export interface MachineOptions {
+    /**
+     * Maximum number of microsteps allowed before throwing an infinite loop
+     * error. Defaults to `Infinity` (no limit). Set to a finite number to enable
+     * infinite loop detection.
+     *
+     * @default Infinity
+     */
+    maxIterations?: number;
+}
 export type MachineConfig<TContext extends MachineContext, TEvent extends EventObject, TActor extends ProvidedActor = ProvidedActor, TAction extends ParameterizedObject = ParameterizedObject, TGuard extends ParameterizedObject = ParameterizedObject, TDelay extends string = string, TTag extends string = string, TInput = any, TOutput = unknown, TEmitted extends EventObject = EventObject, TMeta extends MetaObject = MetaObject> = (Omit<StateNodeConfig<DoNotInfer<TContext>, DoNotInfer<TEvent>, DoNotInfer<TActor>, DoNotInfer<TAction>, DoNotInfer<TGuard>, DoNotInfer<TDelay>, DoNotInfer<TTag>, DoNotInfer<TOutput>, DoNotInfer<TEmitted>, DoNotInfer<TMeta>>, 'output'> & {
     /** The initial context (extended state) */
     /** The machine's own version. */
     version?: string;
     output?: Mapper<TContext, DoneStateEvent, TOutput, TEvent> | TOutput;
+    /** Runtime options for machine execution. */
+    options?: MachineOptions;
 }) & (MachineContext extends TContext ? {
     context?: InitialContext<LowInfer<TContext>, TActor, TInput, TEvent>;
 } : {
@@ -736,6 +763,9 @@ export type Observer<T> = {
 export interface Subscription {
     unsubscribe(): void;
 }
+export interface Readable<T> extends Subscribable<T> {
+    get: () => T;
+}
 export interface InteropObservable<T> {
     [Symbol.observable]: () => InteropSubscribable<T>;
 }
@@ -770,6 +800,7 @@ export interface ActorRef<TSnapshot extends Snapshot<unknown>, TEvent extends Ev
     on: <TType extends TEmitted['type'] | '*'>(type: TType, handler: (emitted: TEmitted & (TType extends '*' ? unknown : {
         type: TType;
     })) => void) => Subscription;
+    select<TSelected>(selector: (snapshot: TSnapshot) => TSelected, equalityFn?: (a: TSelected, b: TSelected) => boolean): Readable<TSelected>;
 }
 export type AnyActorRef = ActorRef<any, any, // TODO: shouldn't this be AnyEventObject?
 any>;
@@ -929,6 +960,7 @@ export type StateSchema = {
     tags?: unknown;
     description?: unknown;
 };
+export type StateSchemaFrom<T extends AnyStateMachine> = T extends StateMachine<infer _TContext, infer _TEvent, infer _TChildren, infer _TActor, infer _TAction, infer _TGuard, infer _TDelay, infer _TStateValue, infer _TTag, infer _TInput, infer _TOutput, infer _TEmitted, infer _TMeta, infer TStateSchema> ? TStateSchema : never;
 export type StateId<TSchema extends StateSchema, TKey extends string = '(machine)', TParentKey extends string | null = null> = (TSchema extends {
     id: string;
 } ? TSchema['id'] : TParentKey extends null ? TKey : `${TParentKey}.${TKey}`) | (TSchema['states'] extends Record<string, any> ? Values<{

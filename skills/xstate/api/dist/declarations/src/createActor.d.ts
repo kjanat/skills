@@ -1,7 +1,7 @@
 import { symbolObservable } from "./symbolObservable.js";
 import { AnyActorSystem, Clock } from "./system.js";
 export declare let executingCustomAction: boolean;
-import type { AnyActorLogic, AnyActorRef, ConditionalRequired, EmittedFrom, EventFromLogic, InputFrom, IsNotNever, Snapshot, SnapshotFrom } from "./types.js";
+import type { AnyActorLogic, AnyActorRef, ConditionalRequired, EmittedFrom, EventFromLogic, InputFrom, IsNotNever, Readable, Snapshot, SnapshotFrom } from "./types.js";
 import { ActorOptions, ActorRef, InteropSubscribable, Observer, Subscription } from "./types.js";
 export declare const $$ACTOR_TYPE = 1;
 export declare enum ProcessingStatus {
@@ -115,6 +115,7 @@ export declare class Actor<TLogic extends AnyActorLogic> implements ActorRef<Sna
     on<TType extends EmittedFrom<TLogic>['type'] | '*'>(type: TType, handler: (emitted: EmittedFrom<TLogic> & (TType extends '*' ? unknown : {
         type: TType;
     })) => void): Subscription;
+    select<TSelected>(selector: (snapshot: SnapshotFrom<TLogic>) => TSelected, equalityFn?: (a: TSelected, b: TSelected) => boolean): Readable<TSelected>;
     /** Starts the Actor from the initial state */
     start(): this;
     private _process;

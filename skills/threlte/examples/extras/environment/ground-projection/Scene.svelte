@@ -3,7 +3,7 @@
   import { GroundedSkybox } from 'three/examples/jsm/Addons.js'
   import { T } from '@threlte/core'
 
-  type Props = {
+  interface Props {
     useGround?: boolean
   }
 
@@ -34,6 +34,8 @@
     <OrbitControls
       maxDistance={20}
       maxPolarAngle={0.5 * Math.PI}
+      enableDamping
+      enableZoom={false}
     />
   </T.PerspectiveCamera>
 

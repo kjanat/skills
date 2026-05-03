@@ -1,7 +1,7 @@
 import { MachineSnapshot } from "./State.js";
 import { StateNode } from "./StateNode.js";
 import { AnyActorSystem } from "./system.js";
-import type { ActorLogic, ActorScope, AnyActorRef, AnyActorScope, DoNotInfer, Equals, EventDescriptor, EventObject, HistoryValue, InternalMachineImplementations, MachineConfig, MachineContext, MachineImplementationsSimplified, MetaObject, ParameterizedObject, ProvidedActor, Snapshot, StateMachineDefinition, StateValue, TransitionDefinition, ResolvedStateMachineTypes, StateSchema, SnapshotStatus } from "./types.js";
+import type { ActorLogic, ActorScope, AnyActorRef, AnyActorScope, DoNotInfer, Equals, EventDescriptor, EventObject, HistoryValue, InternalMachineImplementations, MachineConfig, MachineContext, MachineImplementationsSimplified, MachineOptions, MetaObject, ParameterizedObject, ProvidedActor, Snapshot, StateMachineDefinition, StateValue, TransitionDefinition, ResolvedStateMachineTypes, StateSchema, SnapshotStatus } from "./types.js";
 export declare class StateMachine<TContext extends MachineContext, TEvent extends EventObject, TChildren extends Record<string, AnyActorRef | undefined>, TActor extends ProvidedActor, TAction extends ParameterizedObject, TGuard extends ParameterizedObject, TDelay extends string, TStateValue extends StateValue, TTag extends string, TInput, TOutput, TEmitted extends EventObject, TMeta extends MetaObject, TStateSchema extends StateSchema> implements ActorLogic<MachineSnapshot<TContext, TEvent, TChildren, TStateValue, TTag, TOutput, TMeta, TStateSchema>, TEvent, TInput, AnyActorSystem, TEmitted> {
     /** The raw config used to create the machine. */
     config: MachineConfig<TContext, TEvent, any, any, any, any, any, any, TOutput, any, // TEmitted
@@ -12,6 +12,8 @@ export declare class StateMachine<TContext extends MachineContext, TEvent extend
     version?: string;
     schemas: unknown;
     implementations: MachineImplementationsSimplified<TContext, TEvent>;
+    /** Runtime options for machine execution. */
+    options: MachineOptions;
     root: StateNode<TContext, TEvent>;
     id: string;
     states: StateNode<TContext, TEvent>['states'];
