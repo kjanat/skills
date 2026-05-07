@@ -14,6 +14,7 @@ Collection of [Agent Skills] for AI coding agents.
 | `github-script`             | Secure `actions/github-script@v8` workflow steps               |
 | `github-service-containers` | Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
 | `index-knowledge`           | Generate hierarchical AGENTS.md knowledge bases                |
+| `statute-proxy`             | Go config-as-code reverse proxy DSL — explain/scaffold/review  |
 | `uv-versioning`             | Version bumping workflows for uv Python projects               |
 
 ## Install with the [`skills` CLI](https://github.com/vercel-labs/skills)

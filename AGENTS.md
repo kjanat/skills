@@ -29,6 +29,7 @@ skills/     # Root of all skill content (repo root)
     ├── github-service-containers/
     ├── index-knowledge/
     ├── lightning/
+    ├── statute-proxy/
     ├── threlte/
     ├── twoslash/
     ├── uv-versioning/

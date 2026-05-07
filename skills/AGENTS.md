@@ -19,6 +19,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `github-service-containers` | CI sidecar services                  | no           |
 | `index-knowledge`           | generate hierarchical AGENTS docs    | no           |
 | `lightning`                 | lightning physics reference corpus   | yes          |
+| `statute-proxy`             | Go config-as-code reverse proxy DSL  | no           |
 | `threlte`                   | Threlte docs routing and examples    | yes          |
 | `twoslash`                  | Twoslash docs snippets and notations | yes          |
 | `uv-versioning`             | uv version bump planning             | no           |
@@ -35,6 +36,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - Twoslash docs snippets or `ts twoslash` fences: use `twoslash/SKILL.md`.
 - Twoslash eval harness or trigger checks: read `twoslash/AGENTS.md` first.
 - Domain science question (lightning): use `lightning/SKILL.md`.
+- Go reverse proxy / edge HTTP infra (statute, nginx-replacement-in-Go, TLS/ACME, HTTP/2/3, QUIC): use `statute-proxy/SKILL.md`.
 - Repo maintenance: use `../scripts/maintain.sh`.
 
 ## SHARED CONVENTIONS
