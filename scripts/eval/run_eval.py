@@ -1,8 +1,4 @@
-#!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.14"
-# dependencies = ["jsonschema>=4.21"]
-# ///
+#!/usr/bin/env -S uv run
 """Generic skill-eval runner.
 
 Drives `claude -p --output-format json --json-schema ...` against each case in
@@ -430,7 +426,9 @@ def run_case(
                 raw_result_text=result_text,
                 error=f"no structured_output and result not valid JSON: {err}",
             )
-    (case_dir / "structured.json").write_text(json.dumps(structured, indent=2) + "\n")
+    _ = (case_dir / "structured.json").write_text(
+        json.dumps(structured, indent=2) + "\n"
+    )
     schema_errors = [
         e.message
         for e in jsonschema.Draft202012Validator(case.json_schema).iter_errors(
@@ -438,22 +436,21 @@ def run_case(
         )
     ]
     if schema_errors:
-        (case_dir / "schema_errors.json").write_text(
+        _ = (case_dir / "schema_errors.json").write_text(
             json.dumps(schema_errors, indent=2) + "\n"
         )
-    assertion_results: list[AssertionResult] = []
-    for err in schema_errors:
-        assertion_results.append(
-            AssertionResult(
-                name=f"schema: {err[:60]}",
-                path="",
-                op="schema",
-                expected=case.json_schema,
-                actual=None,
-                passed=False,
-                note=err,
-            )
+    assertion_results: list[AssertionResult] = [
+        AssertionResult(
+            name=f"schema: {err[:60]}",
+            path="",
+            op="schema",
+            expected=case.json_schema,
+            actual=None,
+            passed=False,
+            note=err,
         )
+        for err in schema_errors
+    ]
     assertion_results.extend(evaluate_assertion(structured, a) for a in case.assertions)
     case_result = CaseResult(
         case=case,

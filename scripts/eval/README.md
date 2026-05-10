@@ -8,9 +8,10 @@ self-reporting.
 ## Usage
 
 ```sh
-uv run scripts/eval/run_eval.py <skill-name>
-uv run scripts/eval/run_eval.py github-script --verbose
-uv run scripts/eval/run_eval.py twoslash --only case-a,case-b --model sonnet
+uv sync                       # one-time: installs the `run-eval` entry point
+uv run run-eval <skill-name>
+uv run run-eval github-script --verbose
+uv run run-eval twoslash --only case-a,case-b --model sonnet
 ```
 
 Artifacts land in `skills/<skill>/evals/runs/<UTC-timestamp>/`:
@@ -40,7 +41,8 @@ skill's eval file so editors / CI validate the structure:
 The runner validates each case's `json_schema` field as a real JSON Schema
 (Draft 2020-12) at load time, and validates the agent's structured response
 against that schema after every run — schema violations surface as failed
-assertions in `benchmark.md`.
+assertions in `benchmark.md`. The `$schema` reference also lights up
+editor / CI validation while authoring `evals.json`.
 
 ```json
 {
