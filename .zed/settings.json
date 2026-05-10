@@ -1,0 +1,24 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
+{
+  "formatter": [{ "external": { "command": "dprint", "arguments": ["fmt", "--stdin", "{buffer_path}"] } }],
+  "prettier": { "allowed": false },
+  "wrap_guides": [120],
+  "languages": {
+    "GitHub Actions": {
+      "language_servers": ["actions-language-server", "actup-lsp", "..."] // "yaml-language-server",
+    },
+    "Markdown": { "language_servers": ["rumdl", "!markdownlint"] }
+  },
+  "file_types": {
+    "GitHub Actions": [
+      ".github/workflows/*.yml",
+      ".github/workflows/*.yaml",
+      ".github/actions/*.yml",
+      ".github/actions/*.yaml"
+    ]
+  },
+  "lsp": { "actup-lsp": { "binary": { "path": "actup-lsp" } } }
+}
