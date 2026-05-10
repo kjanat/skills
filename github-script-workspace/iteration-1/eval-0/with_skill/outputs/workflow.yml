@@ -1,0 +1,38 @@
+name: Triage and cross-repo dispatch
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  triage-and-dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label and dispatch
+        uses: actions/github-script@v9
+        env:
+          CROSS_ORG_PAT: ${{ secrets.CROSS_ORG_PAT }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // (1) Label the issue/PR that triggered this run using the workflow's GITHUB_TOKEN.
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['triage'],
+            })
+
+            // (2) Build a secondary client with the cross-org PAT and dispatch a repository_dispatch event.
+            const crossOrg = getOctokit(process.env.CROSS_ORG_PAT)
+            await crossOrg.rest.repos.createDispatchEvent({
+              owner: 'my-org',
+              repo: 'another-repo',
+              event_type: 'trigger-deploy',
+            })

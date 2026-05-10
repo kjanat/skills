@@ -1,0 +1,13 @@
+{
+	"eval_id": 0,
+	"eval_name": "cross-org-getoctokit",
+	"prompt": "Write a GitHub Actions workflow step that uses actions/github-script to do two things in one script: (1) using the workflow's GITHUB_TOKEN, add the label 'triage' to the issue/PR that triggered the run; (2) using a separate PAT stored as the secret CROSS_ORG_PAT, dispatch a 'trigger-deploy' repository_dispatch event to my-org/another-repo. Show the complete workflow step (just the step, not a full workflow) and explain briefly why you chose that approach for the second client.",
+	"assertions": [
+		"Pins actions/github-script@v9",
+		"Uses injected getOctokit factory (not github.getOctokit, not require)",
+		"Does not call require('@actions/github')",
+		"Passes cross-org PAT via env: instead of inlining ${{ }} in script body",
+		"Notes mention v9 ESM-only / multi-token rationale for getOctokit",
+		"Step performs both addLabels and createDispatchEvent"
+	]
+}

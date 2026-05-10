@@ -1,0 +1,11 @@
+{
+	"eval_id": 2,
+	"eval_name": "pr-title-comment",
+	"prompt": "Write a GitHub Actions workflow step using actions/github-script that, when a pull request is opened, posts a comment back to the PR saying 'Thanks for opening: <PR title>'. Make sure it handles the PR title safely.",
+	"assertions": [
+		"Pins actions/github-script@v9",
+		"Reads PR title from context.payload (no inline ${{ }} in script body)",
+		"Uses github.rest.issues.createComment",
+		"No CommonJS require / module.exports in inline script"
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"eval_id": 1,
+	"eval_name": "migrate-v8-to-v9",
+	"prompt": "Update a v8 actions/github-script workflow that uses const { getOctokit } = require('@actions/github') to the latest version recommended by the skill.",
+	"assertions": [
+		"Updates pin from @v8 to @v9",
+		"Removes require('@actions/github')",
+		"Uses injected getOctokit directly without const/let shadowing",
+		"Notes explain why require fails (@actions/github ESM-only in v9)",
+		"Notes warn about getOctokit shadowing (const/let SyntaxError)"
+	]
+}

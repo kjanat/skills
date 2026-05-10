@@ -1,0 +1,23 @@
+{
+	"skill_name": "github-script",
+	"evals": [
+		{
+			"id": 0,
+			"name": "cross-org-getoctokit",
+			"prompt": "Write a GitHub Actions workflow step that uses actions/github-script to do two things in one script: (1) using the workflow's GITHUB_TOKEN, add the label 'triage' to the issue/PR that triggered the run; (2) using a separate PAT stored as the secret CROSS_ORG_PAT, dispatch a 'trigger-deploy' repository_dispatch event to my-org/another-repo. Show the complete workflow step (just the step, not a full workflow) and explain briefly why you chose that approach for the second client. Save the YAML to step.yml and the explanation to notes.md.",
+			"files": []
+		},
+		{
+			"id": 1,
+			"name": "migrate-v8-to-v9",
+			"prompt": "Update the workflow step below from actions/github-script@v8 conventions to the latest version. List the changes you made and why. Save the updated YAML to step.yml and the change notes to notes.md.\n\n```yaml\n- uses: actions/github-script@v8\n  env:\n    APP_TOKEN: ${{ secrets.APP_TOKEN }}\n  with:\n    script: |\n      const { getOctokit } = require('@actions/github')\n      const appOctokit = getOctokit(process.env.APP_TOKEN)\n      await appOctokit.rest.repos.createDispatchEvent({\n        owner: 'my-org',\n        repo: 'service',\n        event_type: 'deploy'\n      })\n```",
+			"files": []
+		},
+		{
+			"id": 2,
+			"name": "pr-title-comment",
+			"prompt": "Write a GitHub Actions workflow step using actions/github-script that, when a pull request is opened, posts a comment back to the PR saying 'Thanks for opening: <PR title>'. Make sure it handles the PR title safely. Save just the step (not a full workflow) to step.yml.",
+			"files": []
+		}
+	]
+}

@@ -1,0 +1,24 @@
+name: PR Opened Greeting
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on opened PR
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const title = context.payload.pull_request?.title ?? ''
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Thanks for opening: ${title}`,
+            })
