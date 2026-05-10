@@ -14,20 +14,20 @@ npm install xstate
 import { assign, createActor, setup } from 'xstate';
 
 const machine = setup({
-	/* types, actions, guards, actors */
+  /* types, actions, guards, actors */
 }).createMachine({
-	id: 'toggle',
-	initial: 'active',
-	context: { count: 0 },
-	states: {
-		active: {
-			entry: assign({ count: ({ context }) => context.count + 1 }),
-			on: { toggle: { target: 'inactive' } },
-		},
-		inactive: {
-			on: { toggle: { target: 'active' } },
-		},
-	},
+  id: 'toggle',
+  initial: 'active',
+  context: { count: 0 },
+  states: {
+    active: {
+      entry: assign({ count: ({ context }) => context.count + 1 }),
+      on: { toggle: { target: 'inactive' } },
+    },
+    inactive: {
+      on: { toggle: { target: 'active' } },
+    },
+  },
 });
 
 const actor = createActor(machine);
@@ -44,8 +44,8 @@ actor.send({ type: 'toggle' });
 import { createActor, fromPromise } from 'xstate';
 
 const logic = fromPromise(async () => {
-	const res = await fetch('https://api.example.com/data');
-	return res.json();
+  const res = await fetch('https://api.example.com/data');
+  return res.json();
 });
 ```
 
@@ -55,15 +55,15 @@ const logic = fromPromise(async () => {
 import { createActor, fromTransition } from 'xstate';
 
 const logic = fromTransition(
-	(state, event) => {
-		switch (event.type) {
-			case 'inc':
-				return { ...state, count: state.count + 1 };
-			default:
-				return state;
-		}
-	},
-	{ count: 0 },
+  (state, event) => {
+    switch (event.type) {
+      case 'inc':
+        return { ...state, count: state.count + 1 };
+      default:
+        return state;
+    }
+  },
+  { count: 0 },
 );
 ```
 
@@ -81,11 +81,11 @@ const logic = fromObservable(() => interval(1000));
 import { fromCallback } from 'xstate';
 
 const logic = fromCallback(({ sendBack, receive }) => {
-	const i = setTimeout(() => sendBack({ type: 'timeout' }), 1000);
-	receive((event) => {
-		if (event.type === 'cancel') clearTimeout(i);
-	});
-	return () => clearTimeout(i);
+  const i = setTimeout(() => sendBack({ type: 'timeout' }), 1000);
+  receive((event) => {
+    if (event.type === 'cancel') clearTimeout(i);
+  });
+  return () => clearTimeout(i);
 });
 ```
 
@@ -111,23 +111,23 @@ Define in `setup()`, reference by name:
 
 ```ts
 const machine = setup({
-	actions: {
-		activate: () => {/* ... */},
-		notify: (_, params: { message: string }) => {/* ... */},
-	},
+  actions: {
+    activate: () => {/* ... */},
+    notify: (_, params: { message: string }) => {/* ... */},
+  },
 }).createMachine({
-	states: {
-		active: {
-			entry: { type: 'activate' },
-			exit: { type: 'deactivate' },
-			on: {
-				toggle: {
-					target: 'inactive',
-					actions: [{ type: 'notify', params: { message: 'Toggled' } }],
-				},
-			},
-		},
-	},
+  states: {
+    active: {
+      entry: { type: 'activate' },
+      exit: { type: 'deactivate' },
+      on: {
+        toggle: {
+          target: 'inactive',
+          actions: [{ type: 'notify', params: { message: 'Toggled' } }],
+        },
+      },
+    },
+  },
 });
 ```
 
@@ -135,33 +135,33 @@ const machine = setup({
 
 ```ts
 const machine = setup({
-	guards: {
-		canToggle: ({ context }) => context.canActivate,
-		isAfterTime: (_, params: { time: string }) => {
-			const [h, m] = params.time.split(':');
-			const now = new Date();
-			return now.getHours() > +h && now.getMinutes() > +m;
-		},
-	},
+  guards: {
+    canToggle: ({ context }) => context.canActivate,
+    isAfterTime: (_, params: { time: string }) => {
+      const [h, m] = params.time.split(':');
+      const now = new Date();
+      return now.getHours() > +h && now.getMinutes() > +m;
+    },
+  },
 }).createMachine({
-	states: {
-		inactive: {
-			on: {
-				toggle: [
-					{ target: 'active', guard: 'canToggle' },
-					{ actions: 'notifyBlocked' },
-				],
-			},
-		},
-		active: {
-			on: {
-				toggle: {
-					guard: { type: 'isAfterTime', params: { time: '16:00' } },
-					target: 'inactive',
-				},
-			},
-		},
-	},
+  states: {
+    inactive: {
+      on: {
+        toggle: [
+          { target: 'active', guard: 'canToggle' },
+          { actions: 'notifyBlocked' },
+        ],
+      },
+    },
+    active: {
+      on: {
+        toggle: {
+          guard: { type: 'isAfterTime', params: { time: '16:00' } },
+          target: 'inactive',
+        },
+      },
+    },
+  },
 });
 ```
 
@@ -169,21 +169,21 @@ const machine = setup({
 
 ```ts
 const machine = setup({
-	actors: { loadUser: fromPromise(async () => {/* ... */}) },
+  actors: { loadUser: fromPromise(async () => {/* ... */}) },
 }).createMachine({
-	states: {
-		loading: {
-			invoke: {
-				id: 'loadUser',
-				src: 'loadUser',
-				onDone: {
-					target: 'success',
-					actions: assign({ user: ({ event }) => event.output }),
-				},
-				onError: { target: 'failure' },
-			},
-		},
-	},
+  states: {
+    loading: {
+      invoke: {
+        id: 'loadUser',
+        src: 'loadUser',
+        onDone: {
+          target: 'success',
+          actions: assign({ user: ({ event }) => event.output }),
+        },
+        onError: { target: 'failure' },
+      },
+    },
+  },
 });
 ```
 
@@ -203,12 +203,12 @@ on: {
 
 ```ts
 const machine = setup({
-	types: {
-		context: {} as { message: string },
-		input: {} as { name: string },
-	},
+  types: {
+    context: {} as { message: string },
+    input: {} as { name: string },
+  },
 }).createMachine({
-	context: ({ input }) => ({ message: `Hello, ${input.name}` }),
+  context: ({ input }) => ({ message: `Hello, ${input.name}` }),
 });
 
 const actor = createActor(machine, { input: { name: 'World' } });
@@ -228,23 +228,23 @@ invoke: {
 
 ```ts
 setup({
-	types: {
-		context: {} as { count: number },
-		events: {} as
-			| { type: 'inc' }
-			| { type: 'dec' }
-			| { type: 'incBy'; amount: number },
-		actions: {} as
-			| { type: 'notify'; params: { message: string } }
-			| { type: 'handleChange' },
-		guards: {} as
-			| { type: 'canToggle' }
-			| { type: 'isAfterTime'; params: { time: string } },
-		children: {} as { promise1: 'someSrc' },
-		delays: 'shortTimeout' | 'longTimeout',
-		tags: 'loading' | 'error',
-		input: number,
-		output: string,
-	},
+  types: {
+    context: {} as { count: number },
+    events: {} as
+      | { type: 'inc' }
+      | { type: 'dec' }
+      | { type: 'incBy'; amount: number },
+    actions: {} as
+      | { type: 'notify'; params: { message: string } }
+      | { type: 'handleChange' },
+    guards: {} as
+      | { type: 'canToggle' }
+      | { type: 'isAfterTime'; params: { time: string } },
+    children: {} as { promise1: 'someSrc' },
+    delays: 'shortTimeout' | 'longTimeout',
+    tags: 'loading' | 'error',
+    input: number,
+    output: string,
+  },
 });
 ```

@@ -1,24 +1,24 @@
 {
-	"$schema": "https://opencode.ai/config.json",
-	"formatter": {
-		"dprint": {
-			"command": ["bunx", "dprint", "fmt", "$FILE"],
-			"extensions": [
-				".js",
-				".ts",
-				".cjs",
-				".cts",
-				".mjs",
-				".mts",
-				".jsx",
-				".tsx",
-				".json",
-				".jsonc",
-				".md",
-				".yml",
-				".yaml",
-				".py",
-			],
-		},
-	},
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "dprint": {
+      "command": ["bunx", "dprint", "fmt", "$FILE"],
+      "extensions": [
+        ".js",
+        ".ts",
+        ".cjs",
+        ".cts",
+        ".mjs",
+        ".mts",
+        ".jsx",
+        ".tsx",
+        ".json",
+        ".jsonc",
+        ".md",
+        ".yml",
+        ".yaml",
+        ".py",
+      ],
+    },
+  },
 }

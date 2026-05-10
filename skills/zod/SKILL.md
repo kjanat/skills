@@ -88,82 +88,82 @@ Use a single inbound schema at the request boundary, then pass parsed output dee
 import * as z from 'zod';
 
 const AddressSchema = z.object({
-	line1: z.string().min(1, { error: 'Address line is required' }),
-	city: z.string().min(1, { error: 'City is required' }),
-	country: z.string().length(2, { error: 'Use a 2-letter country code' }),
+  line1: z.string().min(1, { error: 'Address line is required' }),
+  city: z.string().min(1, { error: 'City is required' }),
+  country: z.string().length(2, { error: 'Use a 2-letter country code' }),
 });
 
 const CreateUserSchema = z.object({
-	email: z.email({ error: 'Valid email required' }).transform((value) => value.toLowerCase()),
-	age: z.coerce.number().int().min(18, { error: 'Must be 18 or older' }),
-	plan: z.enum(['free', 'pro']).default('free'),
-	marketingOptIn: z.coerce.boolean().default(false),
-	address: AddressSchema,
-	tags: z.array(z.string().min(1)).max(5).default([]),
-	referralCode: z.string().trim().optional(),
-	username: z
-		.string()
-		.min(3)
-		.check(z.minLength(3), z.maxLength(20)),
+  email: z.email({ error: 'Valid email required' }).transform((value) => value.toLowerCase()),
+  age: z.coerce.number().int().min(18, { error: 'Must be 18 or older' }),
+  plan: z.enum(['free', 'pro']).default('free'),
+  marketingOptIn: z.coerce.boolean().default(false),
+  address: AddressSchema,
+  tags: z.array(z.string().min(1)).max(5).default([]),
+  referralCode: z.string().trim().optional(),
+  username: z
+    .string()
+    .min(3)
+    .check(z.minLength(3), z.maxLength(20)),
 });
 
 const UserIdCodec = z.codec(
-	z.string().uuid(),
-	z.object({ value: z.string().uuid() }),
-	{
-		decode: (value) => ({ value }),
-		encode: (value) => value.value,
-	},
+  z.string().uuid(),
+  z.object({ value: z.string().uuid() }),
+  {
+    decode: (value) => ({ value }),
+    encode: (value) => value.value,
+  },
 );
 
 const RegistrationEnvelopeSchema = z.object({
-	requestId: UserIdCodec,
-	user: CreateUserSchema,
+  requestId: UserIdCodec,
+  user: CreateUserSchema,
 });
 
 type RegistrationEnvelopeInput = z.input<typeof RegistrationEnvelopeSchema>;
 type RegistrationEnvelope = z.output<typeof RegistrationEnvelopeSchema>;
 
 async function saveUser(user: RegistrationEnvelope['user']) {
-	return {
-		id: crypto.randomUUID(),
-		email: user.email,
-		plan: user.plan,
-	};
+  return {
+    id: crypto.randomUUID(),
+    email: user.email,
+    plan: user.plan,
+  };
 }
 
 export async function handleRegistration(body: unknown) {
-	const result = await RegistrationEnvelopeSchema.safeParseAsync(body);
+  const result = await RegistrationEnvelopeSchema.safeParseAsync(body);
 
-	if (!result.success) {
-		const formatted = z.treeifyError(result.error);
-		return {
-			status: 400,
-			error: formatted,
-		};
-	}
+  if (!result.success) {
+    const formatted = z.treeifyError(result.error);
+    return {
+      status: 400,
+      error: formatted,
+    };
+  }
 
-	const data = result.data;
-	const saved = await saveUser(data.user);
+  const data = result.data;
+  const saved = await saveUser(data.user);
 
-	return {
-		status: 201,
-		requestId: data.requestId.value,
-		user: saved,
-	};
+  return {
+    status: 201,
+    requestId: data.requestId.value,
+    user: saved,
+  };
 }
 
 const incoming: RegistrationEnvelopeInput = {
-	requestId: '550e8400-e29b-41d4-a716-446655440000',
-	user: {
-		email: 'USER@EXAMPLE.COM',
-		age: '21',
-		address: {
-			line1: '1 Main St',
-			city: 'Amsterdam',
-			country: 'NL',
-		},
-	},
+  requestId: '550e8400-e29b-41d4-a716-446655440000',
+  user: {
+    email: 'USER@EXAMPLE.COM',
+    age: '21',
+    address: {
+      line1: '1 Main St',
+      city: 'Amsterdam',
+      country: 'NL',
+    },
+  },
 };
 ```
 

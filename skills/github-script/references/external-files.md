@@ -37,8 +37,8 @@ Use JSDoc in script modules:
 // @ts-check
 /** @param {import('@actions/github-script').AsyncFunctionArguments} args */
 export default async ({ core, context }) => {
-	core.debug('Running something at the moment');
-	return context.actor;
+  core.debug('Running something at the moment');
+  return context.actor;
 };
 ```
 
@@ -61,18 +61,18 @@ See bundled config/examples in `assets/package.json`, `assets/tsconfig.json`, an
 // @ts-check
 /** @param {import('@actions/github-script').AsyncFunctionArguments} args */
 export default async function run({ github, context, core }) {
-	const title = context.payload.pull_request?.title ?? '';
-	if (!title) {
-		core.info('No PR title in event payload');
-		return;
-	}
+  const title = context.payload.pull_request?.title ?? '';
+  if (!title) {
+    core.info('No PR title in event payload');
+    return;
+  }
 
-	await github.rest.issues.createComment({
-		issue_number: context.issue.number,
-		owner: context.repo.owner,
-		repo: context.repo.repo,
-		body: `Saw title: ${title}`,
-	});
+  await github.rest.issues.createComment({
+    issue_number: context.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    body: `Saw title: ${title}`,
+  });
 }
 ```
 
@@ -98,18 +98,18 @@ Assumes `scripts/package.json` has `build` and emits `scripts/dist/*.mjs`.
 import type { AsyncFunctionArguments } from '@actions/github-script';
 
 export default async function run({ github, context, core }: AsyncFunctionArguments): Promise<void> {
-	const title = context.payload.pull_request?.title ?? '';
-	if (!title) {
-		core.info('No PR title in event payload');
-		return;
-	}
+  const title = context.payload.pull_request?.title ?? '';
+  if (!title) {
+    core.info('No PR title in event payload');
+    return;
+  }
 
-	await github.rest.issues.createComment({
-		issue_number: context.issue.number,
-		owner: context.repo.owner,
-		repo: context.repo.repo,
-		body: `Saw title: ${title}`,
-	});
+  await github.rest.issues.createComment({
+    issue_number: context.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    body: `Saw title: ${title}`,
+  });
 }
 ```
 

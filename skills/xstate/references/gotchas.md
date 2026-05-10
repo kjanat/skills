@@ -31,12 +31,12 @@ Common mistakes and v4 → v5 migration pitfalls.
 ```ts
 // WRONG — no type inference for actions/guards
 const machine = createMachine({
-	actions: { foo: () => {} }, // won't type-check params
+  actions: { foo: () => {} }, // won't type-check params
 });
 
 // RIGHT
 const machine = setup({
-	actions: { foo: (_, params: { x: number }) => {} },
+  actions: { foo: (_, params: { x: number }) => {} },
 }).createMachine({/* ... */});
 ```
 

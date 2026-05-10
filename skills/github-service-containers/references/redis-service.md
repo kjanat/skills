@@ -117,25 +117,25 @@ Uses the `redis` npm package. Add to your repository as `client.js`:
 const redis = require('redis');
 
 const redisClient = redis.createClient({
-	url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 });
 
 redisClient.on('error', (err) => console.log('Error', err));
 
 (async () => {
-	await redisClient.connect();
+  await redisClient.connect();
 
-	const setReply = await redisClient.set('octocat', 'Mona the Octocat');
-	console.log('Reply: ' + setReply);
+  const setReply = await redisClient.set('octocat', 'Mona the Octocat');
+  console.log('Reply: ' + setReply);
 
-	const hashReply = await redisClient.hSet('species', 'octocat', 'Cat and Octopus');
-	console.log('Reply: ' + hashReply);
+  const hashReply = await redisClient.hSet('species', 'octocat', 'Cat and Octopus');
+  console.log('Reply: ' + hashReply);
 
-	const keys = await redisClient.hKeys('species');
-	console.log(keys.length + ' replies:');
-	keys.forEach((key, i) => console.log('    ' + i + ': ' + key));
+  const keys = await redisClient.hKeys('species');
+  console.log(keys.length + ' replies:');
+  keys.forEach((key, i) => console.log('    ' + i + ': ' + key));
 
-	await redisClient.quit();
+  await redisClient.quit();
 })();
 ```
 

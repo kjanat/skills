@@ -1,55 +1,55 @@
 {
-	"skill_name": "twoslash",
-	"evals": [
-		{
-			"id": 1,
-			"prompt": "I'm writing a VitePress `ts twoslash` example. Please rewrite this so the import stays available to TypeScript but readers only see the call site.\n\n```ts\nimport { helper } from './docs/.vitepress/twoslash/testing-fixtures.ts';\nconst result = helper('eu-west-1');\n```",
-			"expected_output": "A Twoslash snippet that keeps the helper import for type checking and hides it from the rendered docs with a cut directive.",
-			"assertions": [
-				"The response uses `// ---cut---` or `// ---cut-before---` to hide setup above the visible example.",
-				"The response keeps the helper import or equivalent setup available to TypeScript instead of deleting it.",
-				"The response presents a `ts twoslash`-appropriate snippet rather than plain TypeScript with no Twoslash directives."
-			]
-		},
-		{
-			"id": 2,
-			"prompt": "Need docs to show completions for `console.e` in a `ts twoslash` block. Which directives should I use, and what should the snippet look like?",
-			"expected_output": "A Twoslash example that uses `// @noErrors` with `// ^|` to show completions for an intentionally incomplete expression.",
-			"assertions": [
-				"The response includes `// ^|` for the completion query.",
-				"The response includes `// @noErrors` as the default way to suppress incidental diagnostics for the incomplete expression.",
-				"The response does not treat `@errors` as the primary mechanism for this completion demo."
-			]
-		},
-		{
-			"id": 3,
-			"prompt": "I want a Twoslash example where `b.ts` imports `helloWorld` from `a.ts`, but the reader should mainly focus on `b.ts`. Show me the shape I should use.",
-			"expected_output": "A Twoslash snippet that models multiple virtual files with `@filename:` and either keeps or cuts file boundaries intentionally.",
-			"assertions": [
-				"The response uses `// @filename:` to model the multi-file example.",
-				"The response includes both `a.ts` and `b.ts` or clearly explains the two-file virtual setup.",
-				"The response explains or demonstrates when to keep `@filename:` visible versus cutting setup away."
-			]
-		},
-		{
-			"id": 4,
-			"prompt": "I'm documenting a deliberate type mismatch and I want the docs build to fail if the wrong TypeScript diagnostic appears later. How should I write the Twoslash snippet?",
-			"expected_output": "A Twoslash snippet that uses `// @errors:` with explicit numeric error codes instead of broad error suppression.",
-			"assertions": [
-				"The response uses `// @errors:` with one or more numeric TypeScript error codes.",
-				"The response prefers exact error validation over `@noErrors` for this case.",
-				"The response explains that exact error assertions protect the snippet against diagnostic drift."
-			]
-		},
-		{
-			"id": 5,
-			"prompt": "I need the docs to show the emitted `.d.ts` from a tiny Twoslash example instead of the TypeScript source. What should the snippet include?",
-			"expected_output": "A Twoslash example that uses `// @showEmit` with `// @showEmittedFile: index.d.ts` and any needed compiler flags.",
-			"assertions": [
-				"The response includes `// @showEmit`.",
-				"The response includes `// @showEmittedFile: index.d.ts` or an equivalent emitted declaration file selection.",
-				"The response treats emit mode as appropriate because the emitted file, not the source, is the teaching target."
-			]
-		}
-	]
+  "skill_name": "twoslash",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm writing a VitePress `ts twoslash` example. Please rewrite this so the import stays available to TypeScript but readers only see the call site.\n\n```ts\nimport { helper } from './docs/.vitepress/twoslash/testing-fixtures.ts';\nconst result = helper('eu-west-1');\n```",
+      "expected_output": "A Twoslash snippet that keeps the helper import for type checking and hides it from the rendered docs with a cut directive.",
+      "assertions": [
+        "The response uses `// ---cut---` or `// ---cut-before---` to hide setup above the visible example.",
+        "The response keeps the helper import or equivalent setup available to TypeScript instead of deleting it.",
+        "The response presents a `ts twoslash`-appropriate snippet rather than plain TypeScript with no Twoslash directives."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Need docs to show completions for `console.e` in a `ts twoslash` block. Which directives should I use, and what should the snippet look like?",
+      "expected_output": "A Twoslash example that uses `// @noErrors` with `// ^|` to show completions for an intentionally incomplete expression.",
+      "assertions": [
+        "The response includes `// ^|` for the completion query.",
+        "The response includes `// @noErrors` as the default way to suppress incidental diagnostics for the incomplete expression.",
+        "The response does not treat `@errors` as the primary mechanism for this completion demo."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want a Twoslash example where `b.ts` imports `helloWorld` from `a.ts`, but the reader should mainly focus on `b.ts`. Show me the shape I should use.",
+      "expected_output": "A Twoslash snippet that models multiple virtual files with `@filename:` and either keeps or cuts file boundaries intentionally.",
+      "assertions": [
+        "The response uses `// @filename:` to model the multi-file example.",
+        "The response includes both `a.ts` and `b.ts` or clearly explains the two-file virtual setup.",
+        "The response explains or demonstrates when to keep `@filename:` visible versus cutting setup away."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm documenting a deliberate type mismatch and I want the docs build to fail if the wrong TypeScript diagnostic appears later. How should I write the Twoslash snippet?",
+      "expected_output": "A Twoslash snippet that uses `// @errors:` with explicit numeric error codes instead of broad error suppression.",
+      "assertions": [
+        "The response uses `// @errors:` with one or more numeric TypeScript error codes.",
+        "The response prefers exact error validation over `@noErrors` for this case.",
+        "The response explains that exact error assertions protect the snippet against diagnostic drift."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I need the docs to show the emitted `.d.ts` from a tiny Twoslash example instead of the TypeScript source. What should the snippet include?",
+      "expected_output": "A Twoslash example that uses `// @showEmit` with `// @showEmittedFile: index.d.ts` and any needed compiler flags.",
+      "assertions": [
+        "The response includes `// @showEmit`.",
+        "The response includes `// @showEmittedFile: index.d.ts` or an equivalent emitted declaration file selection.",
+        "The response treats emit mode as appropriate because the emitted file, not the source, is the teaching target."
+      ]
+    }
+  ]
 }

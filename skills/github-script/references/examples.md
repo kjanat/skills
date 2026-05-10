@@ -95,13 +95,13 @@ jobs:
 // @ts-check
 /** @param {import('@actions/github-script').AsyncFunctionArguments} args */
 export default async function run({ github, context, core }) {
-	const issue = await github.rest.issues.get({
-		issue_number: context.issue.number,
-		owner: context.repo.owner,
-		repo: context.repo.repo,
-	});
+  const issue = await github.rest.issues.get({
+    issue_number: context.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+  });
 
-	core.info(`Issue title: ${issue.data.title}`);
+  core.info(`Issue title: ${issue.data.title}`);
 }
 ```
 
@@ -127,13 +127,13 @@ Compile TS first; import compiled JS in workflow:
 import type { AsyncFunctionArguments } from '@actions/github-script';
 
 export default async function run({ github, context, core }: AsyncFunctionArguments): Promise<void> {
-	const issue = await github.rest.issues.get({
-		issue_number: context.issue.number,
-		owner: context.repo.owner,
-		repo: context.repo.repo,
-	});
+  const issue = await github.rest.issues.get({
+    issue_number: context.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+  });
 
-	core.info(`Issue title: ${issue.data.title}`);
+  core.info(`Issue title: ${issue.data.title}`);
 }
 ```
 

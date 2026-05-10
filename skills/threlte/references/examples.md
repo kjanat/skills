@@ -13,7 +13,7 @@ Source: `apps/docs/src/content/learn/getting-started/your-first-scene.mdx`
 ```svelte
 <script>
 	import { Canvas } from '@threlte/core';
-	import Scene from './Scene.svelte';
+  import Scene from './Scene.svelte';
 </script>
 
 <Canvas>
@@ -54,12 +54,12 @@ Source: `apps/docs/src/content/reference/extras/interactivity.mdx`
 ```svelte
 <script>
 	import { interactivity } from '@threlte/extras';
-	interactivity();
+  interactivity();
 </script>
 
 <T.Mesh
 	onclick={() => {
-		console.log('clicked');
+	  console.log('clicked');
 	}}
 >
 	<T.BoxGeometry />
@@ -74,14 +74,14 @@ Source: `apps/docs/src/content/reference/core/use-task.mdx`
 ```svelte
 <script lang="ts">
 	import { T, useTask } from '@threlte/core';
-	import { Mesh } from 'svelte-three';
+  import { Mesh } from 'svelte-three';
 
-	let mesh = $state.raw<Mesh>();
+  let mesh = $state.raw<Mesh>();
 
-	useTask((delta) => {
-		if (!mesh) return;
-		mesh.rotation.y += delta * 0.5;
-	});
+  useTask((delta) => {
+    if (!mesh) return;
+    mesh.rotation.y += delta * 0.5;
+  });
 </script>
 
 <T.Mesh bind:ref={mesh}>
@@ -96,9 +96,9 @@ Source: `apps/docs/src/content/reference/core/use-loader.mdx`
 ```svelte
 <script>
 	import { useLoader } from '@threlte/core';
-	import { TextureLoader } from 'three';
+  import { TextureLoader } from 'three';
 
-	const texture = useLoader(TextureLoader).load('path/to/texture.png');
+  const texture = useLoader(TextureLoader).load('path/to/texture.png');
 </script>
 ```
 
@@ -109,9 +109,9 @@ Source: `apps/docs/src/content/reference/extras/use-gltf.mdx`
 ```svelte
 <script lang="ts">
 	import { T } from '@threlte/core';
-	import { useGltf } from '@threlte/extras';
+  import { useGltf } from '@threlte/extras';
 
-	const gltf = useGltf('/path/to/model.glb');
+  const gltf = useGltf('/path/to/model.glb');
 </script>
 
 {#if $gltf}
@@ -126,8 +126,8 @@ Source: `apps/docs/src/content/reference/extras/suspense.mdx`
 ```svelte
 <script>
 	import { Suspense } from '@threlte/extras';
-	import Fallback from './Fallback.svelte';
-	import Model from './Model.svelte';
+  import Fallback from './Fallback.svelte';
+  import Model from './Model.svelte';
 </script>
 
 <Suspense>
@@ -146,7 +146,7 @@ Source: `apps/docs/src/content/reference/extras/orbit-controls.mdx`
 ```svelte
 <script>
 	import { T } from '@threlte/core';
-	import { OrbitControls } from '@threlte/extras';
+  import { OrbitControls } from '@threlte/extras';
 </script>
 
 <T.PerspectiveCamera
@@ -181,8 +181,8 @@ Source: `apps/docs/src/content/reference/theatre/getting-started.mdx`
 ```svelte
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
-	import { Theatre } from '@threlte/theatre';
-	import Scene from './Scene.svelte';
+  import { Theatre } from '@threlte/theatre';
+  import Scene from './Scene.svelte';
 </script>
 
 <Canvas>
