@@ -1,4 +1,5 @@
 {
+	"$schema": "../../../scripts/eval/schema.json",
 	"skill_name": "github-script",
 	"evals": [
 		{

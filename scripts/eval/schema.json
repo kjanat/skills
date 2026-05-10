@@ -1,0 +1,128 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://kjanat.github.io/skills/eval-config.schema.json",
+	"title": "Skill Eval Config",
+	"description": "Schema for skills/<name>/evals/evals.json — the input to scripts/eval/run_eval.py.",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["skill_name", "evals"],
+	"properties": {
+		"$schema": { "type": "string", "format": "uri" },
+		"skill_name": {
+			"type": "string",
+			"description": "Must match the skill's frontmatter name and the skills/<name>/ directory.",
+			"minLength": 1
+		},
+		"evals": {
+			"type": "array",
+			"description": "Eval cases — each one is one claude -p invocation.",
+			"minItems": 1,
+			"items": { "$ref": "#/$defs/EvalCase" }
+		}
+	},
+	"$defs": {
+		"EvalCase": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["id", "prompt", "json_schema"],
+			"properties": {
+				"id": {
+					"type": "integer",
+					"minimum": 1,
+					"description": "Unique integer id within this file."
+				},
+				"name": {
+					"type": "string",
+					"description": "Slug used as the case directory name. Defaults to `eval-<id>`.",
+					"pattern": "^[a-z0-9][a-z0-9-]*$"
+				},
+				"prompt": {
+					"type": "string",
+					"minLength": 1,
+					"description": "User-facing task prompt passed to claude as the positional arg."
+				},
+				"system_prompt": {
+					"type": "string",
+					"description": "Optional override for the system prompt. When omitted the runner injects a default that points at SKILL.md."
+				},
+				"json_schema": {
+					"$ref": "https://json-schema.org/draft/2020-12/schema",
+					"description": "JSON Schema passed to `claude --json-schema`. Constrains the structured output the agent must produce. Validated as a real JSON Schema (Draft 2020-12)."
+				},
+				"assertions": {
+					"type": "array",
+					"description": "Mechanical checks against the structured response. Empty is allowed but useless.",
+					"items": { "$ref": "#/$defs/Assertion" }
+				}
+			}
+		},
+		"Assertion": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["op", "path"],
+			"properties": {
+				"name": {
+					"type": "string",
+					"description": "Human-readable label shown in benchmark output."
+				},
+				"path": {
+					"type": "string",
+					"description": "Dotted path into the structured response. Integer segments index into lists. Empty string targets the root."
+				},
+				"op": {
+					"type": "string",
+					"enum": [
+						"equals",
+						"not_equals",
+						"contains",
+						"not_contains",
+						"matches",
+						"not_matches",
+						"truthy",
+						"falsy",
+						"length_gte",
+						"length_lte"
+					]
+				},
+				"value": {
+					"description": "Comparison value. Required for all ops except `truthy`/`falsy`. For `matches`/`not_matches` it is a Python regex string. For `length_gte`/`length_lte` it must be an integer."
+				}
+			},
+			"allOf": [
+				{
+					"if": { "properties": { "op": { "const": "truthy" } }, "required": ["op"] },
+					"then": { "not": { "required": ["value"] } }
+				},
+				{
+					"if": { "properties": { "op": { "const": "falsy" } }, "required": ["op"] },
+					"then": { "not": { "required": ["value"] } }
+				},
+				{
+					"if": {
+						"properties": { "op": { "enum": ["matches", "not_matches"] } },
+						"required": ["op"]
+					},
+					"then": { "required": ["value"], "properties": { "value": { "type": "string" } } }
+				},
+				{
+					"if": {
+						"properties": { "op": { "enum": ["length_gte", "length_lte"] } },
+						"required": ["op"]
+					},
+					"then": { "required": ["value"], "properties": { "value": { "type": "integer" } } }
+				},
+				{
+					"if": {
+						"properties": {
+							"op": {
+								"enum": ["equals", "not_equals", "contains", "not_contains"]
+							}
+						},
+						"required": ["op"]
+					},
+					"then": { "required": ["value"] }
+				}
+			]
+		}
+	}
+}

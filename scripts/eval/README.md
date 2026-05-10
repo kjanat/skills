@@ -26,6 +26,22 @@ github-script and twoslash).
 
 ## `evals.json` schema
 
+A meta-schema lives at `scripts/eval/schema.json`. Reference it from each
+skill's eval file so editors / CI validate the structure:
+
+```json
+{
+    "$schema": "../../../scripts/eval/schema.json",
+    "skill_name": "<name>",
+    "evals": [...]
+}
+```
+
+The runner validates each case's `json_schema` field as a real JSON Schema
+(Draft 2020-12) at load time, and validates the agent's structured response
+against that schema after every run — schema violations surface as failed
+assertions in `benchmark.md`.
+
 ```json
 {
   "skill_name": "<must-match-frontmatter>",

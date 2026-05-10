@@ -19,8 +19,11 @@ Use for authoring or reviewing `uses: actions/github-script@v9` workflow steps.
 - Runtime is Node 24
 - Self-hosted runner minimum is `v2.327.1`
 - Prefer `github.rest.*` endpoint methods; use `github.request(...)` for raw requests.
-- For multi-token / cross-org / GitHub App scenarios, build extra clients with the injected `getOctokit(token, opts?)` factory; do not redeclare it with `const`/`let`.
-- Prefer ESM modules (`.mjs` or `.js` with `// @ts-check`); avoid CommonJS (`require`, `module.exports`). `require('@actions/github')` no longer works in v9 — `@actions/github` v9 is ESM-only.
+- For multi-token / cross-org / GitHub App scenarios,
+  build extra clients with the injected `getOctokit(token, opts?)` factory;
+  do not redeclare it with `const`/`let`.
+- Prefer ESM modules (`.mjs` or `.js` with `// @ts-check`); avoid CommonJS (`require`, `module.exports`).
+  `require('@actions/github')` no longer works in v9 — `@actions/github` v9 is ESM-only.
 - If authoring helpers in TypeScript, compile to `.mjs`/`.js` and import the built file in workflow steps.
 
 ## Fast workflow
@@ -46,44 +49,52 @@ See `references/external-files.md` for patterns.
 
 ## Reading order
 
-| Task                 | Read                                                                                           |
-| -------------------- | ---------------------------------------------------------------------------------------------- |
-| Write new step       | `SKILL.md`, `references/external-files.md`, `references/examples.md`, `references/security.md` |
-| Review existing step | `SKILL.md`, `references/security.md`, `references/inputs-outputs-retries.md`                   |
-| Migrate old workflow | `SKILL.md`, `references/runtime-and-migrations.md`                                             |
+| Task                 | Read                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| Write new step       | [`SKILL.md`], [`references/external-files.md`], [`references/examples.md`], [`references/security.md`] |
+| Review existing step | [`SKILL.md`], [`references/security.md`], [`references/inputs-outputs-retries.md`]                     |
+| Migrate old workflow | [`SKILL.md`], [`references/runtime-and-migrations.md`]                                                 |
 
 ## Security rules
 
 - Never inline `${{ ... }}` expressions directly inside `script`.
-- Expressions are evaluated before script; direct interpolation can cause injection or invalid JavaScript.
+- Expressions are evaluated before script; direct interpolation can cause
+  injection or invalid JavaScript.
 - If value exists in `context`, use it there; do not mirror into `env`.
 - Use `env` boundary and parse/validate in script.
 
-See `references/security.md` for patterns.
+See [`references/security.md`] for patterns.
 
 ## Script arguments available in script body
 
 - `github`: authenticated Octokit client with pagination plugins
 - `octokit`: alias for `github`
-- `getOctokit(token, opts?)`: factory for additional authenticated clients (multi-token, GitHub App, cross-org). Cannot be redeclared with `const`/`let` — it is an injected function parameter.
+- `getOctokit(token, opts?)`: factory for additional authenticated clients
+  (multi-token, GitHub App, cross-org).
+  Cannot be redeclared with `const`/`let` — it is an injected function parameter.
 - `context`: workflow run context
 - `core`, `glob`, `io`, `exec`
-- wrapped `require` plus escape hatch `__original_require__` (legacy; prefer ESM `import`). Note: `require('@actions/github')` fails in v9 because `@actions/github` v9 is ESM-only.
+- wrapped `require` plus escape hatch `__original_require__` (legacy; prefer ESM `import`).
+  Note: `require('@actions/github')` fails in v9 because `@actions/github` v9 is ESM-only.
 
-If you need source-level API details, inspect the action repo: `https://github.com/actions/github-script` (for example `action.yml`, `types/async-function.d.ts`, `src/main.ts`).
+If you need source-level API details, inspect the action repo: `https://github.com/actions/github-script`
+(for example `action.yml`, `types/async-function.d.ts`, `src/main.ts`).
 
 ### This action (upstream model)
 
-`with.script` is the body of an async function. These values are pre-defined (no import needed):
+`with.script` is the body of an async function. These values are pre-defined (no
+import needed):
 
-- `github`: pre-authenticated [octokit/rest.js](https://octokit.github.io/rest.js/) client
-- `context`: workflow [run context](https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts)
-- `core`: [@actions/core](https://github.com/actions/toolkit/tree/main/packages/core)
-- `glob`: [@actions/glob](https://github.com/actions/toolkit/tree/main/packages/glob)
-- `io`: [@actions/io](https://github.com/actions/toolkit/tree/main/packages/io)
-- `exec`: [@actions/exec](https://github.com/actions/toolkit/tree/main/packages/exec)
-- `getOctokit`: factory function from [@actions/github](https://github.com/actions/toolkit/tree/main/packages/github); inherits the same plugins (retry, request-log, proxy)
-- `require`: wrapped Node require (cwd-relative + local npm packages); use `__original_require__` for unwrapped require
+- `github`: pre-authenticated [octokit/rest.js][rest.js] client
+- `context`: workflow [run context][context]
+- `core`: [@actions/core]
+- `glob`: [@actions/glob]
+- `io`: [@actions/io]
+- `exec`: [@actions/exec]
+- `getOctokit`: factory function from [@actions/github];
+  inherits the same plugins (retry, request-log, proxy)
+- `require`: wrapped Node require (cwd-relative + local npm packages);
+  use `__original_require__` for unwrapped require
 
 ## Output model
 
@@ -106,15 +117,29 @@ See `references/inputs-outputs-retries.md` for details.
 
 ## In this reference
 
-| File                                   | Purpose                                       |
-| -------------------------------------- | --------------------------------------------- |
-| `references/security.md`               | injection avoidance and env-boundary patterns |
-| `references/inputs-outputs-retries.md` | inputs, outputs, retry semantics              |
-| `references/runtime-and-migrations.md` | v5-v9 changes and upgrade checks              |
-| `references/external-files.md`         | external ESM architecture, reuse, typecheck   |
-| `references/examples.md`               | minimal templates for common tasks            |
+| File                                     | Purpose                                       |
+| ---------------------------------------- | --------------------------------------------- |
+| [`references/security.md`]               | injection avoidance and env-boundary patterns |
+| [`references/inputs-outputs-retries.md`] | inputs, outputs, retry semantics              |
+| [`references/runtime-and-migrations.md`] | v5-v9 changes and upgrade checks              |
+| [`references/external-files.md`]         | external ESM architecture, reuse, typecheck   |
+| [`references/examples.md`]               | minimal templates for common tasks            |
 
 ## Scope note
 
 Upstream repository currently does not accept general contributions.\
 Security fixes and major breakage fixes still maintained.
+
+[`SKILL.md`]: ./SKILL.md
+[`references/security.md`]: ./references/security.md
+[`references/inputs-outputs-retries.md`]: ./references/inputs-outputs-retries.md
+[`references/runtime-and-migrations.md`]: ./references/runtime-and-migrations.md
+[`references/external-files.md`]: ./references/external-files.md
+[`references/examples.md`]: ./references/examples.md
+[@actions/github]: https://github.com/actions/toolkit/tree/main/packages/github
+[@actions/core]: https://github.com/actions/toolkit/tree/main/packages/core
+[@actions/glob]: https://github.com/actions/toolkit/tree/main/packages/glob
+[@actions/io]: https://github.com/actions/toolkit/tree/main/packages/io
+[@actions/exec]: https://github.com/actions/toolkit/tree/main/packages/exec
+[context]: https://github.com/actions/toolkit/blob/main/packages/github/src/context.ts
+[rest.js]: https://octokit.github.io/rest.js/

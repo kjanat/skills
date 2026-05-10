@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.14"
-# dependencies = []
+# dependencies = ["jsonschema>=4.21"]
 # ///
 """Generic skill-eval runner.
 
@@ -42,6 +42,8 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+import jsonschema
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 SKILLS_DIR = ROOT / "skills"
@@ -125,6 +127,12 @@ def _parse_case(item: dict[str, Any], index: int) -> EvalCase:
     schema = item.get("json_schema")
     if not isinstance(schema, dict):
         raise ValueError("'json_schema' must be an object")
+    try:
+        jsonschema.Draft202012Validator.check_schema(schema)
+    except jsonschema.SchemaError as err:
+        raise ValueError(
+            f"'json_schema' is not a valid JSON Schema: {err.message}"
+        ) from err
     assertions = tuple(
         _parse_assertion(a, i) for i, a in enumerate(item.get("assertions", []))
     )
@@ -423,7 +431,30 @@ def run_case(
                 error=f"no structured_output and result not valid JSON: {err}",
             )
     (case_dir / "structured.json").write_text(json.dumps(structured, indent=2) + "\n")
-    assertion_results = [evaluate_assertion(structured, a) for a in case.assertions]
+    schema_errors = [
+        e.message
+        for e in jsonschema.Draft202012Validator(case.json_schema).iter_errors(
+            structured
+        )
+    ]
+    if schema_errors:
+        (case_dir / "schema_errors.json").write_text(
+            json.dumps(schema_errors, indent=2) + "\n"
+        )
+    assertion_results: list[AssertionResult] = []
+    for err in schema_errors:
+        assertion_results.append(
+            AssertionResult(
+                name=f"schema: {err[:60]}",
+                path="",
+                op="schema",
+                expected=case.json_schema,
+                actual=None,
+                passed=False,
+                note=err,
+            )
+        )
+    assertion_results.extend(evaluate_assertion(structured, a) for a in case.assertions)
     case_result = CaseResult(
         case=case,
         duration_ms=duration_ms,
