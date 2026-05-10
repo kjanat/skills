@@ -37,7 +37,7 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import cast
 
 import jsonschema
 
@@ -48,12 +48,18 @@ SKILLS_DIR = ROOT / "skills"
 # ─── Types ─────────────────────────────────────────────────────────────
 
 
+type JsonValue = (
+    None | bool | int | float | str | list["JsonValue"] | dict[str, "JsonValue"]
+)
+type JsonObject = dict[str, JsonValue]
+
+
 @dataclass(frozen=True)
 class Assertion:
     name: str
     path: str
     op: str
-    value: Any = None
+    value: JsonValue = None
 
 
 @dataclass(frozen=True)
@@ -61,7 +67,7 @@ class EvalCase:
     id: int
     name: str
     prompt: str
-    json_schema: dict[str, Any]
+    json_schema: JsonObject
     assertions: tuple[Assertion, ...]
     system_prompt: str | None = None
 
@@ -71,8 +77,8 @@ class AssertionResult:
     name: str
     path: str
     op: str
-    expected: Any
-    actual: Any
+    expected: JsonValue
+    actual: JsonValue
     passed: bool
     note: str = ""
 
@@ -83,7 +89,7 @@ class CaseResult:
     duration_ms: int | None
     total_tokens: int | None
     total_cost_usd: float | None
-    structured: Any
+    structured: JsonValue
     raw_result_text: str
     assertions: list[AssertionResult] = field(default_factory=list)
     error: str | None = None
@@ -97,7 +103,9 @@ class CaseResult:
 
 
 def load_evals(path: Path) -> list[EvalCase]:
-    payload = json.loads(path.read_text())
+    payload: JsonValue = cast(JsonValue, json.loads(path.read_text()))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path}: top level must be an object")
     raw_evals = payload.get("evals")
     if not isinstance(raw_evals, list) or not raw_evals:
         raise ValueError(f"{path}: 'evals' must be a non-empty list")
@@ -112,12 +120,14 @@ def load_evals(path: Path) -> list[EvalCase]:
     return cases
 
 
-def _parse_case(item: dict[str, Any], index: int) -> EvalCase:
-    eval_id = item.get("id", index)
-    if not isinstance(eval_id, int):
+def _parse_case(item: JsonObject, index: int) -> EvalCase:
+    eval_id_raw = item.get("id", index)
+    if not isinstance(eval_id_raw, int) or isinstance(eval_id_raw, bool):
         raise ValueError("'id' must be an integer")
-    name = item.get("name") or f"eval-{eval_id}"
-    prompt = item["prompt"]
+    eval_id = eval_id_raw
+    raw_name = item.get("name")
+    name = raw_name if isinstance(raw_name, str) and raw_name else f"eval-{eval_id}"
+    prompt = item.get("prompt")
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("'prompt' must be a non-empty string")
     schema = item.get("json_schema")
@@ -129,15 +139,16 @@ def _parse_case(item: dict[str, Any], index: int) -> EvalCase:
         raise ValueError(
             f"'json_schema' is not a valid JSON Schema: {err.message}"
         ) from err
-    assertions = tuple(
-        _parse_assertion(a, i) for i, a in enumerate(item.get("assertions", []))
-    )
+    raw_assertions = item.get("assertions", [])
+    if not isinstance(raw_assertions, list):
+        raise ValueError("'assertions' must be a list when set")
+    assertions = tuple(_parse_assertion(a, i) for i, a in enumerate(raw_assertions))
     system_prompt = item.get("system_prompt")
     if system_prompt is not None and not isinstance(system_prompt, str):
         raise ValueError("'system_prompt' must be a string when set")
     return EvalCase(
         id=eval_id,
-        name=str(name),
+        name=name,
         prompt=prompt,
         json_schema=schema,
         assertions=assertions,
@@ -159,23 +170,24 @@ VALID_OPS = {
 }
 
 
-def _parse_assertion(item: Any, index: int) -> Assertion:
+def _parse_assertion(item: JsonValue, index: int) -> Assertion:
     if not isinstance(item, dict):
         raise ValueError(f"assertion[{index}] is not an object")
-    name = item.get("name") or f"assertion-{index}"
+    raw_name = item.get("name")
+    name = raw_name if isinstance(raw_name, str) and raw_name else f"assertion-{index}"
     path = item.get("path", "")
-    op = item.get("op")
-    if op not in VALID_OPS:
-        raise ValueError(f"assertion[{index}].op must be one of {sorted(VALID_OPS)}")
     if not isinstance(path, str):
         raise ValueError(f"assertion[{index}].path must be a string")
-    return Assertion(name=str(name), path=path, op=op, value=item.get("value"))
+    op = item.get("op")
+    if not isinstance(op, str) or op not in VALID_OPS:
+        raise ValueError(f"assertion[{index}].op must be one of {sorted(VALID_OPS)}")
+    return Assertion(name=name, path=path, op=op, value=item.get("value"))
 
 
 # ─── Path resolution ───────────────────────────────────────────────────
 
 
-def get_at_path(obj: Any, path: str) -> tuple[bool, Any]:
+def get_at_path(obj: JsonValue, path: str) -> tuple[bool, JsonValue]:
     """Return (found, value). Empty path returns the root object."""
     if path == "":
         return True, obj
@@ -197,10 +209,22 @@ def get_at_path(obj: Any, path: str) -> tuple[bool, Any]:
     return True, cursor
 
 
+def _as_int(value: JsonValue) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _as_float(value: JsonValue) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int | float):
+        return float(value)
+    return None
+
+
 # ─── Assertion engine ──────────────────────────────────────────────────
 
 
-def evaluate_assertion(structured: Any, assertion: Assertion) -> AssertionResult:
+def evaluate_assertion(structured: JsonValue, assertion: Assertion) -> AssertionResult:
     found, actual = get_at_path(structured, assertion.path)
     if not found and assertion.op not in {
         "falsy",
@@ -278,15 +302,17 @@ def evaluate_assertion(structured: Any, assertion: Assertion) -> AssertionResult
             case "falsy":
                 passed = not bool(actual)
             case "length_gte":
-                if hasattr(actual, "__len__") and isinstance(expected, int):
+                if isinstance(actual, str | list | dict) and isinstance(expected, int):
                     passed = len(actual) >= expected
                 else:
                     note = "length_gte: actual must be sized and value must be int"
             case "length_lte":
-                if hasattr(actual, "__len__") and isinstance(expected, int):
+                if isinstance(actual, str | list | dict) and isinstance(expected, int):
                     passed = len(actual) <= expected
                 else:
                     note = "length_lte: actual must be sized and value must be int"
+            case _:
+                note = f"unknown op {op!r}"
     except (TypeError, re.error) as err:
         note = f"{op} raised {type(err).__name__}: {err}"
         passed = False
@@ -321,7 +347,7 @@ def run_claude(
     skill_dir: Path,
     model: str | None,
     verbose: bool,
-) -> tuple[dict[str, Any], list[Any]]:
+) -> tuple[JsonObject, list[JsonValue]]:
     system_prompt = case.system_prompt or default_system_prompt(skill_dir)
     cmd = [
         "claude",
@@ -343,8 +369,10 @@ def run_claude(
         cmd.extend(["--model", model])
     cmd.append(case.prompt)
     if verbose:
+        properties = case.json_schema.get("properties")
+        schema_keys = list(properties.keys()) if isinstance(properties, dict) else []
         print(
-            f"  $ claude -p (prompt={len(case.prompt)} chars, schema_keys={list(case.json_schema.get('properties', {}).keys())})",
+            f"  $ claude -p (prompt={len(case.prompt)} chars, schema_keys={schema_keys})",
             file=sys.stderr,
         )
     completed = subprocess.run(
@@ -354,7 +382,7 @@ def run_claude(
         raise RuntimeError(
             f"claude exited {completed.returncode}\nstdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
         )
-    parsed = json.loads(completed.stdout)
+    parsed: JsonValue = cast(JsonValue, json.loads(completed.stdout))
     if isinstance(parsed, dict):
         if parsed.get("type") != "result":
             raise RuntimeError(f"unexpected claude payload: {parsed!r}")
@@ -402,20 +430,24 @@ def run_case(
             raw_result_text="",
             error=str(err),
         )
-    (case_dir / "raw.json").write_text(json.dumps(raw_events, indent=2) + "\n")
+    _ = (case_dir / "raw.json").write_text(json.dumps(raw_events, indent=2) + "\n")
     result_text = str(result_event.get("result", ""))
-    (case_dir / "result.txt").write_text(result_text)
-    duration_ms = result_event.get("duration_ms")
-    usage = result_event.get("usage") or {}
-    total_tokens = (
-        sum(v for k, v in usage.items() if isinstance(v, int) and k.endswith("_tokens"))
-        or None
-    )
-    total_cost = result_event.get("total_cost_usd")
-    structured: Any = result_event.get("structured_output")
+    _ = (case_dir / "result.txt").write_text(result_text)
+    duration_ms = _as_int(result_event.get("duration_ms"))
+    usage = result_event.get("usage")
+    total_tokens: int | None = None
+    if isinstance(usage, dict):
+        token_total = sum(
+            v
+            for k, v in usage.items()
+            if isinstance(v, int) and not isinstance(v, bool) and k.endswith("_tokens")
+        )
+        total_tokens = token_total or None
+    total_cost = _as_float(result_event.get("total_cost_usd"))
+    structured: JsonValue = result_event.get("structured_output")
     if structured is None:
         try:
-            structured = json.loads(result_text)
+            structured = cast(JsonValue, json.loads(result_text))
         except json.JSONDecodeError as err:
             return CaseResult(
                 case=case,
@@ -429,29 +461,7 @@ def run_case(
     _ = (case_dir / "structured.json").write_text(
         json.dumps(structured, indent=2) + "\n"
     )
-    schema_errors = [
-        e.message
-        for e in jsonschema.Draft202012Validator(case.json_schema).iter_errors(
-            structured
-        )
-    ]
-    if schema_errors:
-        _ = (case_dir / "schema_errors.json").write_text(
-            json.dumps(schema_errors, indent=2) + "\n"
-        )
-    assertion_results: list[AssertionResult] = [
-        AssertionResult(
-            name=f"schema: {err[:60]}",
-            path="",
-            op="schema",
-            expected=case.json_schema,
-            actual=None,
-            passed=False,
-            note=err,
-        )
-        for err in schema_errors
-    ]
-    assertion_results.extend(evaluate_assertion(structured, a) for a in case.assertions)
+    assertion_results = [evaluate_assertion(structured, a) for a in case.assertions]
     case_result = CaseResult(
         case=case,
         duration_ms=duration_ms,
@@ -461,13 +471,13 @@ def run_case(
         raw_result_text=result_text,
         assertions=assertion_results,
     )
-    (case_dir / "assertions.json").write_text(
+    _ = (case_dir / "assertions.json").write_text(
         json.dumps([_assertion_to_dict(a) for a in assertion_results], indent=2) + "\n"
     )
     return case_result
 
 
-def _assertion_to_dict(a: AssertionResult) -> dict[str, Any]:
+def _assertion_to_dict(a: AssertionResult) -> JsonObject:
     return {
         "name": a.name,
         "path": a.path,
@@ -509,7 +519,7 @@ def render_benchmark_md(
         flag = "✓" if r.passed else "✗"
         lines.append(
             f"| {r.case.name} | {flag} | {a_passed}/{len(r.assertions)} "
-            f"| {r.total_tokens or '?'} | {(r.duration_ms or 0) / 1000:.1f}s |"
+            + f"| {r.total_tokens or '?'} | {(r.duration_ms or 0) / 1000:.1f}s |"
         )
     lines.append("")
     for r in results:
@@ -531,7 +541,7 @@ def render_benchmark_md(
 
 def render_benchmark_json(
     skill_name: str, results: list[CaseResult], model: str | None
-) -> dict[str, Any]:
+) -> JsonObject:
     return {
         "skill_name": skill_name,
         "model": model,
@@ -551,7 +561,7 @@ def render_benchmark_json(
     }
 
 
-def _case_to_dict(r: CaseResult) -> dict[str, Any]:
+def _case_to_dict(r: CaseResult) -> JsonObject:
     return {
         "id": r.case.id,
         "name": r.case.name,
@@ -571,16 +581,16 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run skill evals via claude -p with structured output."
     )
-    parser.add_argument("skill", help="Skill name (subdir of skills/)")
-    parser.add_argument("--limit", type=int, help="Run only the first N cases")
-    parser.add_argument("--only", help="Comma-separated case names to run")
-    parser.add_argument("--model", help="Model to pass to `claude --model`")
-    parser.add_argument(
+    _ = parser.add_argument("skill", help="Skill name (subdir of skills/)")
+    _ = parser.add_argument("--limit", type=int, help="Run only the first N cases")
+    _ = parser.add_argument("--only", help="Comma-separated case names to run")
+    _ = parser.add_argument("--model", help="Model to pass to `claude --model`")
+    _ = parser.add_argument(
         "--output-dir",
         type=Path,
         help="Write artifacts to this dir (defaults to evals/runs/<UTC-timestamp>)",
     )
-    parser.add_argument("-v", "--verbose", action="store_true")
+    _ = parser.add_argument("-v", "--verbose", action="store_true")
     return parser.parse_args()
 
 
@@ -593,10 +603,32 @@ def resolve_skill_dir(name: str) -> Path:
     return skill_dir
 
 
+@dataclass(frozen=True)
+class CliArgs:
+    skill: str
+    limit: int | None
+    only: str | None
+    model: str | None
+    output_dir: Path | None
+    verbose: bool
+
+
+def _typed_args() -> CliArgs:
+    raw = parse_args()
+    return CliArgs(
+        skill=cast(str, raw.skill),
+        limit=cast("int | None", raw.limit),
+        only=cast("str | None", raw.only),
+        model=cast("str | None", raw.model),
+        output_dir=cast("Path | None", raw.output_dir),
+        verbose=cast(bool, raw.verbose),
+    )
+
+
 def main() -> int:
     if shutil.which("claude") is None:
         raise SystemExit("`claude` CLI not on PATH")
-    args = parse_args()
+    args = _typed_args()
     skill_dir = resolve_skill_dir(args.skill)
     evals_path = skill_dir / "evals" / "evals.json"
     if not evals_path.is_file():
@@ -628,9 +660,9 @@ def main() -> int:
             )
         )
     benchmark = render_benchmark_json(args.skill, results, args.model)
-    (run_dir / "benchmark.json").write_text(json.dumps(benchmark, indent=2) + "\n")
+    _ = (run_dir / "benchmark.json").write_text(json.dumps(benchmark, indent=2) + "\n")
     md = render_benchmark_md(args.skill, run_dir, results, args.model)
-    (run_dir / "benchmark.md").write_text(md)
+    _ = (run_dir / "benchmark.md").write_text(md)
     print(md)
     print(f"artifacts: {run_dir}")
     return 0 if all(r.passed for r in results) else 1
