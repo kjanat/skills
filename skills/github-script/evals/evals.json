@@ -2,22 +2,201 @@
 	"skill_name": "github-script",
 	"evals": [
 		{
-			"id": 0,
-			"name": "cross-org-getoctokit",
-			"prompt": "Write a GitHub Actions workflow step that uses actions/github-script to do two things in one script: (1) using the workflow's GITHUB_TOKEN, add the label 'triage' to the issue/PR that triggered the run; (2) using a separate PAT stored as the secret CROSS_ORG_PAT, dispatch a 'trigger-deploy' repository_dispatch event to my-org/another-repo. Show the complete workflow step (just the step, not a full workflow) and explain briefly why you chose that approach for the second client. Save the YAML to step.yml and the explanation to notes.md.",
-			"files": []
-		},
-		{
 			"id": 1,
-			"name": "migrate-v8-to-v9",
-			"prompt": "Update the workflow step below from actions/github-script@v8 conventions to the latest version. List the changes you made and why. Save the updated YAML to step.yml and the change notes to notes.md.\n\n```yaml\n- uses: actions/github-script@v8\n  env:\n    APP_TOKEN: ${{ secrets.APP_TOKEN }}\n  with:\n    script: |\n      const { getOctokit } = require('@actions/github')\n      const appOctokit = getOctokit(process.env.APP_TOKEN)\n      await appOctokit.rest.repos.createDispatchEvent({\n        owner: 'my-org',\n        repo: 'service',\n        event_type: 'deploy'\n      })\n```",
-			"files": []
+			"name": "cross-org-getoctokit",
+			"prompt": "Write a COMPLETE, runnable GitHub Actions workflow file. It must include `name:`, `on:` triggers (issues opened or pull_request opened), `permissions:` at the appropriate scope, and a `jobs:` block. The workflow must use a single `actions/github-script` step that does TWO things: (1) using the workflow's GITHUB_TOKEN, add the label 'triage' to the triggering issue/PR; (2) using the secret CROSS_ORG_PAT, dispatch a 'trigger-deploy' repository_dispatch event to my-org/another-repo. Return the YAML in `workflow_yaml` and a 1-2 sentence rationale in `rationale`.",
+			"json_schema": {
+				"type": "object",
+				"properties": {
+					"workflow_yaml": {
+						"type": "string",
+						"description": "Complete workflow file content (must include name, on, permissions, jobs)."
+					},
+					"rationale": {
+						"type": "string",
+						"description": "1-2 sentence explanation of the cross-org client choice."
+					}
+				},
+				"required": ["workflow_yaml", "rationale"],
+				"additionalProperties": false
+			},
+			"assertions": [
+				{ "name": "Has `name:` key", "path": "workflow_yaml", "op": "matches", "value": "(?m)^name:\\s*\\S" },
+				{ "name": "Has `on:` trigger block", "path": "workflow_yaml", "op": "matches", "value": "(?m)^on:" },
+				{
+					"name": "Has `permissions:` block",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "(?m)^\\s*permissions:"
+				},
+				{ "name": "Has `jobs:` block", "path": "workflow_yaml", "op": "matches", "value": "(?m)^jobs:\\s*$" },
+				{
+					"name": "Pins actions/github-script@v9",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "actions/github-script@v9"
+				},
+				{
+					"name": "Does not pin a stale @v[0-8]",
+					"path": "workflow_yaml",
+					"op": "not_matches",
+					"value": "actions/github-script@v[0-8](?!\\d)"
+				},
+				{
+					"name": "Uses injected getOctokit factory",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "\\bgetOctokit\\s*\\(\\s*process\\.env\\."
+				},
+				{
+					"name": "Avoids github.getOctokit (v8 quirk)",
+					"path": "workflow_yaml",
+					"op": "not_contains",
+					"value": "github.getOctokit"
+				},
+				{
+					"name": "Avoids require('@actions/github')",
+					"path": "workflow_yaml",
+					"op": "not_matches",
+					"value": "require\\(['\"]@actions/github['\"]\\)"
+				},
+				{ "name": "Calls addLabels", "path": "workflow_yaml", "op": "contains", "value": "addLabels" },
+				{
+					"name": "Calls createDispatchEvent",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "createDispatchEvent"
+				},
+				{
+					"name": "PAT is read via process.env, not inlined as ${{ secrets.* }}",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "process.env.CROSS_ORG_PAT"
+				}
+			]
 		},
 		{
 			"id": 2,
+			"name": "migrate-v8-to-v9",
+			"prompt": "Update the COMPLETE legacy workflow below from `actions/github-script@v8` conventions to the latest version recommended by the skill. Preserve the workflow structure (`name:`, `on:`, `permissions:`, `jobs:`) — only modernise what needs to change. Return the updated YAML in `workflow_yaml` and bullet-list change notes in `change_notes` (one bullet per change).\n\n```yaml\nname: Cross-org dispatch\non:\n  push:\n    branches: [main]\npermissions:\n  contents: read\njobs:\n  dispatch:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/github-script@v8\n        env:\n          APP_TOKEN: ${{ secrets.APP_TOKEN }}\n        with:\n          script: |\n            const { getOctokit } = require('@actions/github')\n            const appOctokit = getOctokit(process.env.APP_TOKEN)\n            await appOctokit.rest.repos.createDispatchEvent({\n              owner: 'my-org',\n              repo: 'service',\n              event_type: 'deploy'\n            })\n```",
+			"json_schema": {
+				"type": "object",
+				"properties": {
+					"workflow_yaml": { "type": "string" },
+					"change_notes": {
+						"type": "array",
+						"items": { "type": "string" },
+						"minItems": 1
+					}
+				},
+				"required": ["workflow_yaml", "change_notes"],
+				"additionalProperties": false
+			},
+			"assertions": [
+				{
+					"name": "Preserves `name:` key",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "(?m)^name:\\s*Cross-org dispatch"
+				},
+				{ "name": "Preserves `on:` trigger", "path": "workflow_yaml", "op": "matches", "value": "(?m)^on:" },
+				{
+					"name": "Preserves `permissions:` block",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "(?m)^permissions:"
+				},
+				{ "name": "Preserves `jobs:` block", "path": "workflow_yaml", "op": "matches", "value": "(?m)^jobs:" },
+				{
+					"name": "Pin updated to @v9",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "actions/github-script@v9"
+				},
+				{
+					"name": "@v8 pin removed",
+					"path": "workflow_yaml",
+					"op": "not_contains",
+					"value": "actions/github-script@v8"
+				},
+				{
+					"name": "require('@actions/github') removed",
+					"path": "workflow_yaml",
+					"op": "not_matches",
+					"value": "require\\(['\"]@actions/github['\"]\\)"
+				},
+				{
+					"name": "Uses injected getOctokit on the PAT",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "\\bgetOctokit\\s*\\(\\s*process\\.env\\.APP_TOKEN\\s*\\)"
+				},
+				{
+					"name": "createDispatchEvent call retained",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "createDispatchEvent"
+				},
+				{
+					"name": "At least one change note documents the v8→v9 bump",
+					"path": "change_notes",
+					"op": "matches",
+					"value": "(?i)v9|version 9|github-script@v9"
+				},
+				{
+					"name": "Notes mention require/ESM-only reason",
+					"path": "change_notes",
+					"op": "matches",
+					"value": "(?i)esm|require"
+				}
+			]
+		},
+		{
+			"id": 3,
 			"name": "pr-title-comment",
-			"prompt": "Write a GitHub Actions workflow step using actions/github-script that, when a pull request is opened, posts a comment back to the PR saying 'Thanks for opening: <PR title>'. Make sure it handles the PR title safely. Save just the step (not a full workflow) to step.yml.",
-			"files": []
+			"prompt": "Write a COMPLETE, runnable GitHub Actions workflow file. It must include `name:`, `on:` (fires when a pull request is opened), `permissions:`, and a `jobs:` block. The workflow must use `actions/github-script` to comment 'Thanks for opening: <PR title>' on the newly-opened PR. Handle the PR title safely. Return the YAML in `workflow_yaml`.",
+			"json_schema": {
+				"type": "object",
+				"properties": {
+					"workflow_yaml": { "type": "string" }
+				},
+				"required": ["workflow_yaml"],
+				"additionalProperties": false
+			},
+			"assertions": [
+				{ "name": "Has `name:` key", "path": "workflow_yaml", "op": "matches", "value": "(?m)^name:\\s*\\S" },
+				{
+					"name": "Triggers on pull_request opened",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "(?s)on:.*pull_request[\\s\\S]{0,80}opened"
+				},
+				{
+					"name": "Has `permissions:` block",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "(?m)^\\s*permissions:"
+				},
+				{
+					"name": "Pins actions/github-script@v9",
+					"path": "workflow_yaml",
+					"op": "contains",
+					"value": "actions/github-script@v9"
+				},
+				{
+					"name": "Reads PR title from context.payload (env-boundary safe)",
+					"path": "workflow_yaml",
+					"op": "matches",
+					"value": "context\\.payload\\.pull_request[?]?\\.title"
+				},
+				{
+					"name": "PR title NOT inlined as ${{ ... }} inside script body",
+					"path": "workflow_yaml",
+					"op": "not_matches",
+					"value": "(?s)script:[^|>]*[|>][\\s\\S]*\\$\\{\\{\\s*github\\.event\\.pull_request\\.title"
+				},
+				{ "name": "Uses createComment", "path": "workflow_yaml", "op": "contains", "value": "createComment" }
+			]
 		}
 	]
 }
