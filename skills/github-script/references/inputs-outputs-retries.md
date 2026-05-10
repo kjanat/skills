@@ -13,7 +13,7 @@
 Return value maps to `steps.<id>.outputs.result`.
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   id: set-result
   with:
     result-encoding: string
@@ -32,7 +32,7 @@ Return value maps to `steps.<id>.outputs.result`.
 Retries are off by default.
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     retries: 3
     retry-exempt-status-codes: 400,401

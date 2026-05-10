@@ -9,6 +9,7 @@
 - External script file (ESM)
 - External script file (TypeScript source)
 - Use custom token
+- Secondary client with `getOctokit` (cross-org / GitHub App)
 - Use exec helper
 - Handle API errors
 - Paginate REST results
@@ -17,7 +18,7 @@
 
 ```yaml
 - name: View context
-  uses: actions/github-script@v8
+  uses: actions/github-script@v9
   with:
     script: console.log(context)
 ```
@@ -33,7 +34,7 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@v9
         with:
           script: |
             await github.rest.issues.createComment({
@@ -47,7 +48,7 @@ jobs:
 ## Apply label
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       await github.rest.issues.addLabels({
@@ -61,7 +62,7 @@ jobs:
 ## GraphQL query
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const query = `query($owner:String!, $name:String!) {
@@ -81,7 +82,7 @@ jobs:
 
 ```yaml
 - uses: actions/checkout@v6
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const { default: run } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/task.mjs`)
@@ -113,7 +114,7 @@ Compile TS first; import compiled JS in workflow:
 - uses: actions/checkout@v6
 - run: npm ci --prefix scripts
 - run: npm run build --prefix scripts
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const { default: run } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/dist/task.mjs`)
@@ -139,7 +140,7 @@ export default async function run({ github, context, core }: AsyncFunctionArgume
 ## Use custom token
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     github-token: ${{ secrets.MY_PAT }}
     script: |
@@ -151,10 +152,65 @@ export default async function run({ github, context, core }: AsyncFunctionArgume
       })
 ```
 
+## Secondary client with `getOctokit` (cross-org / GitHub App)
+
+`getOctokit(token, opts?)` is injected into the script context (v9+). The
+returned client inherits the same retry / request-log / proxy plugins as the
+default `github` client. Use it when one step needs more than one identity —
+typically the workflow's own `GITHUB_TOKEN` plus a PAT or App token for
+another repo, org, or GHES instance.
+
+`request` and `retry` options merge with the action defaults; other top-level
+options (e.g. `baseUrl`, `userAgent`) replace them outright.
+
+Caveat: `getOctokit` is a function parameter. Do not redeclare it with
+`const`/`let` — that throws `SyntaxError`. Use it directly, or use `var` if
+you must shadow it.
+
+```yaml
+- uses: actions/github-script@v9
+  env:
+    APP_TOKEN: ${{ secrets.MY_APP_TOKEN }}
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    script: |
+      // Default `github` client uses GITHUB_TOKEN (current repo).
+      await github.rest.issues.addLabels({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        labels: ['triage'],
+      })
+
+      // Secondary client with a different token for a cross-repo dispatch.
+      const appOctokit = getOctokit(process.env.APP_TOKEN)
+      await appOctokit.rest.repos.createDispatchEvent({
+        owner: 'my-org',
+        repo: 'another-repo',
+        event_type: 'trigger-deploy',
+      })
+```
+
+GHES with custom `baseUrl`:
+
+```yaml
+- uses: actions/github-script@v9
+  env:
+    GHES_TOKEN: ${{ secrets.GHES_PAT }}
+  with:
+    script: |
+      const ghes = getOctokit(process.env.GHES_TOKEN, {
+        baseUrl: 'https://github.example.com/api/v3',
+      })
+
+      const { data } = await ghes.rest.repos.listForOrg({ org: 'internal' })
+      core.info(`Found ${data.length} repos on GHES`)
+```
+
 ## Use exec helper
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const { exitCode, stdout, stderr } = await exec.getExecOutput('echo', ['hello'])
@@ -164,7 +220,7 @@ export default async function run({ github, context, core }: AsyncFunctionArgume
 ## Handle API errors
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       try {
@@ -182,7 +238,7 @@ export default async function run({ github, context, core }: AsyncFunctionArgume
 ## Paginate REST results
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const issues = await github.paginate(github.rest.issues.listForRepo, {

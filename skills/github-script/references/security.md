@@ -9,7 +9,7 @@
 ## Safe pattern (context first)
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const title = context.payload.pull_request?.title ?? ''
@@ -21,7 +21,7 @@
 ## Safe pattern (env only when needed)
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   env:
     TITLE_PREFIX: ${{ vars.TITLE_PREFIX }}
   with:
@@ -36,7 +36,7 @@
 ## Unsafe pattern
 
 ```yaml
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const title = "${{ github.event.pull_request.title }}"

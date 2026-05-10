@@ -4,22 +4,23 @@ description: Writes secure actions/github-script workflow steps. Use when GitHub
 license: MIT
 metadata:
   author: kjanat
-  version: "1.0"
+  version: "1.1"
 ---
 
 # github-script
 
-Use for authoring or reviewing `uses: actions/github-script@v8` workflow steps.
+Use for authoring or reviewing `uses: actions/github-script@v9` workflow steps.
 
 `with.script` runs as an async function body; use `await import(...)` for module imports.
 
 ## Defaults
 
-- Pin `actions/github-script@v8`
+- Pin `actions/github-script@v9`
 - Runtime is Node 24
 - Self-hosted runner minimum is `v2.327.1`
 - Prefer `github.rest.*` endpoint methods; use `github.request(...)` for raw requests.
-- Prefer ESM modules (`.mjs` or `.js` with `// @ts-check`); avoid CommonJS (`require`, `module.exports`).
+- For multi-token / cross-org / GitHub App scenarios, build extra clients with the injected `getOctokit(token, opts?)` factory; do not redeclare it with `const`/`let`.
+- Prefer ESM modules (`.mjs` or `.js` with `// @ts-check`); avoid CommonJS (`require`, `module.exports`). `require('@actions/github')` no longer works in v9 — `@actions/github` v9 is ESM-only.
 - If authoring helpers in TypeScript, compile to `.mjs`/`.js` and import the built file in workflow steps.
 
 ## Fast workflow
@@ -64,9 +65,10 @@ See `references/security.md` for patterns.
 
 - `github`: authenticated Octokit client with pagination plugins
 - `octokit`: alias for `github`
+- `getOctokit(token, opts?)`: factory for additional authenticated clients (multi-token, GitHub App, cross-org). Cannot be redeclared with `const`/`let` — it is an injected function parameter.
 - `context`: workflow run context
 - `core`, `glob`, `io`, `exec`
-- wrapped `require` plus escape hatch `__original_require__` (legacy; prefer ESM `import`)
+- wrapped `require` plus escape hatch `__original_require__` (legacy; prefer ESM `import`). Note: `require('@actions/github')` fails in v9 because `@actions/github` v9 is ESM-only.
 
 If you need source-level API details, inspect the action repo: `https://github.com/actions/github-script` (for example `action.yml`, `types/async-function.d.ts`, `src/main.ts`).
 
@@ -80,6 +82,7 @@ If you need source-level API details, inspect the action repo: `https://github.c
 - `glob`: [@actions/glob](https://github.com/actions/toolkit/tree/main/packages/glob)
 - `io`: [@actions/io](https://github.com/actions/toolkit/tree/main/packages/io)
 - `exec`: [@actions/exec](https://github.com/actions/toolkit/tree/main/packages/exec)
+- `getOctokit`: factory function from [@actions/github](https://github.com/actions/toolkit/tree/main/packages/github); inherits the same plugins (retry, request-log, proxy)
 - `require`: wrapped Node require (cwd-relative + local npm packages); use `__original_require__` for unwrapped require
 
 ## Output model
@@ -107,7 +110,7 @@ See `references/inputs-outputs-retries.md` for details.
 | -------------------------------------- | --------------------------------------------- |
 | `references/security.md`               | injection avoidance and env-boundary patterns |
 | `references/inputs-outputs-retries.md` | inputs, outputs, retry semantics              |
-| `references/runtime-and-migrations.md` | v5-v8 changes and upgrade checks              |
+| `references/runtime-and-migrations.md` | v5-v9 changes and upgrade checks              |
 | `references/external-files.md`         | external ESM architecture, reuse, typecheck   |
 | `references/examples.md`               | minimal templates for common tasks            |
 

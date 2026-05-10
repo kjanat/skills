@@ -1,6 +1,6 @@
 # GITHUB-SCRIPT KNOWLEDGE BASE
 
-Guidance for secure `actions/github-script@v8` workflow steps and reusable ESM
+Guidance for secure `actions/github-script@v9` workflow steps and reusable ESM
 helper modules.
 
 ## STRUCTURE
@@ -28,12 +28,12 @@ github-script/
 | Security baseline       | `references/security.md`               | Read first for any script authoring    |
 | I/O and retries         | `references/inputs-outputs-retries.md` | Output model + retry knobs             |
 | External module pattern | `references/external-files.md`         | Preferred architecture                 |
-| Runtime changes         | `references/runtime-and-migrations.md` | v5-v8 behavior                         |
+| Runtime changes         | `references/runtime-and-migrations.md` | v5-v9 behavior                         |
 | Reusable job snippets   | `assets/*.yml`                         | Template fragments, not full workflows |
 
 ## LOCAL CONVENTIONS
 
-- Pin action usage to `actions/github-script@v8`.
+- Pin action usage to `actions/github-script@v9`.
 - Keep inline `with.script` minimal; move logic to ESM files.
 - Typecheck helper modules using local `assets/tsconfig.json` setup.
 

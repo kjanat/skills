@@ -48,7 +48,7 @@ See bundled config/examples in `assets/package.json`, `assets/tsconfig.json`, an
 
 ```yaml
 - uses: actions/checkout@v6
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const { default: run } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/task.mjs`)
@@ -85,7 +85,7 @@ Assumes `scripts/package.json` has `build` and emits `scripts/dist/*.mjs`.
 - uses: actions/checkout@v6
 - run: npm ci --prefix scripts
 - run: npm run build --prefix scripts
-- uses: actions/github-script@v8
+- uses: actions/github-script@v9
   with:
     script: |
       const { default: run } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/dist/task.mjs`)

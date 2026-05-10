@@ -10,7 +10,7 @@ check:
     - uses: astral-sh/setup-uv@v7
     - run: uv sync
 
-    - uses: actions/github-script@v8
+    - uses: actions/github-script@v9
       id: check
       with:
         result-encoding: json
