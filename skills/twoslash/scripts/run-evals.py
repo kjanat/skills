@@ -12,7 +12,7 @@ import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal, NotRequired, TypedDict, TypeGuard
+from typing import Literal, NotRequired, TypedDict, TypeGuard, cast
 
 
 class ClaudeUsage(TypedDict):
@@ -60,6 +60,17 @@ class TriggerQuery:
 
 
 @dataclass(frozen=True)
+class CliArgs:
+    mode: Literal["all", "responses", "triggers"]
+    trigger_mode: Literal["proxy", "actual"]
+    model: str | None
+    judge_model: str | None
+    limit: int | None
+    output_dir: Path | None
+    verbose: bool
+
+
+@dataclass(frozen=True)
 class ClaudeRun:
     raw_events: list[object]
     result_text: str
@@ -81,13 +92,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run Twoslash eval prompts through Claude CLI and grade the responses.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--mode",
         choices=("all", "responses", "triggers"),
         default="all",
         help="Which eval lanes to run.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--trigger-mode",
         choices=("proxy", "actual"),
         default="proxy",
@@ -96,22 +107,22 @@ def parse_args() -> argparse.Namespace:
             "'actual' tries to observe Claude's Skill tool directly."
         ),
     )
-    parser.add_argument("--model", help="Model name passed to `claude --model`.")
-    parser.add_argument(
+    _ = parser.add_argument("--model", help="Model name passed to `claude --model`.")
+    _ = parser.add_argument(
         "--judge-model",
         help="Optional model used for grading. Defaults to --model when omitted.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--limit",
         type=int,
         help="Only run the first N cases from each selected lane.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--output-dir",
         type=Path,
         help="Directory for generated eval artifacts. Defaults to evals/runs/<timestamp>.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--verbose",
         action="store_true",
         help="Print progress while evals are running.",
@@ -119,8 +130,21 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _typed_args() -> CliArgs:
+    raw = parse_args()
+    return CliArgs(
+        mode=cast('Literal["all", "responses", "triggers"]', raw.mode),
+        trigger_mode=cast('Literal["proxy", "actual"]', raw.trigger_mode),
+        model=cast("str | None", raw.model),
+        judge_model=cast("str | None", raw.judge_model),
+        limit=cast("int | None", raw.limit),
+        output_dir=cast("Path | None", raw.output_dir),
+        verbose=cast(bool, raw.verbose),
+    )
+
+
 def main() -> None:
-    args = parse_args()
+    args = _typed_args()
     judge_model = args.judge_model or args.model
     run_dir = args.output_dir or default_run_dir()
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -187,24 +211,38 @@ def default_run_dir() -> Path:
 
 
 def load_output_evals(path: Path) -> list[OutputEval]:
-    payload = json.loads(path.read_text())
+    raw_payload: object = cast(object, json.loads(path.read_text()))
+    if not isinstance(raw_payload, dict):
+        raise ValueError(f"Invalid eval file: {path}")
+    payload = cast("dict[str, object]", raw_payload)
     evals = payload.get("evals")
     if not isinstance(evals, list):
         raise ValueError(f"Invalid eval file: {path}")
     loaded: list[OutputEval] = []
-    for item in evals:
-        if not isinstance(item, dict):
-            raise ValueError(f"Invalid eval item in {path}: {item!r}")
-        assertions = item.get("assertions")
-        if not isinstance(assertions, list) or not all(
-            isinstance(entry, str) for entry in assertions
-        ):
+    for item_raw in cast("list[object]", evals):
+        if not isinstance(item_raw, dict):
+            raise ValueError(f"Invalid eval item in {path}: {item_raw!r}")
+        item = cast("dict[str, object]", item_raw)
+        assertions_raw = item.get("assertions")
+        if not isinstance(assertions_raw, list):
             raise ValueError(f"Invalid assertions in {path}: {item!r}")
+        assertions: list[str] = []
+        for entry in cast("list[object]", assertions_raw):
+            if not isinstance(entry, str):
+                raise ValueError(f"Invalid assertion entry in {path}: {entry!r}")
+            assertions.append(entry)
+        id_raw = item.get("id")
+        if not isinstance(id_raw, int) or isinstance(id_raw, bool):
+            raise ValueError(f"Invalid eval id in {path}: {id_raw!r}")
+        prompt = item.get("prompt")
+        expected_output = item.get("expected_output")
+        if not isinstance(prompt, str) or not isinstance(expected_output, str):
+            raise ValueError(f"Invalid eval prompt/expected_output in {path}: {item!r}")
         loaded.append(
             OutputEval(
-                id=int(item["id"]),
-                prompt=str(item["prompt"]),
-                expected_output=str(item["expected_output"]),
+                id=id_raw,
+                prompt=prompt,
+                expected_output=expected_output,
                 assertions=tuple(assertions),
             )
         )
@@ -212,19 +250,19 @@ def load_output_evals(path: Path) -> list[OutputEval]:
 
 
 def load_trigger_queries(path: Path) -> list[TriggerQuery]:
-    payload = json.loads(path.read_text())
+    payload: object = cast(object, json.loads(path.read_text()))
     if not isinstance(payload, list):
         raise ValueError(f"Invalid trigger query file: {path}")
     loaded: list[TriggerQuery] = []
-    for item in payload:
-        if not isinstance(item, dict):
+    for item_raw in cast("list[object]", payload):
+        if not isinstance(item_raw, dict):
+            raise ValueError(f"Invalid trigger query in {path}: {item_raw!r}")
+        item = cast("dict[str, object]", item_raw)
+        query = item.get("query")
+        should_trigger = item.get("should_trigger")
+        if not isinstance(query, str) or not isinstance(should_trigger, bool):
             raise ValueError(f"Invalid trigger query in {path}: {item!r}")
-        loaded.append(
-            TriggerQuery(
-                query=str(item["query"]),
-                should_trigger=bool(item["should_trigger"]),
-            )
-        )
+        loaded.append(TriggerQuery(query=query, should_trigger=should_trigger))
     return loaded
 
 
@@ -506,7 +544,7 @@ def build_skill_bundle(skill_dir: Path) -> str:
             (skill_dir / "references" / "source-index.md").read_text(),
         ),
     ]
-    rendered = []
+    rendered: list[str] = []
     for path, text in parts:
         rendered.append(f'<skill-file path="{path}">\n{text.rstrip()}\n</skill-file>')
     return "\n\n".join(rendered)
@@ -596,15 +634,16 @@ def run_claude_json(
         )
 
     try:
-        raw_events = json.loads(completed.stdout)
+        parsed: object = cast(object, json.loads(completed.stdout))
     except json.JSONDecodeError as error:
         raise RuntimeError(
             f"Could not parse Claude JSON output:\n{completed.stdout}"
         ) from error
 
-    if not isinstance(raw_events, list):
-        raise RuntimeError(f"Claude output was not a JSON array: {raw_events!r}")
+    if not isinstance(parsed, list):
+        raise RuntimeError(f"Claude output was not a JSON array: {parsed!r}")
 
+    raw_events: list[object] = cast("list[object]", parsed)
     result_event = find_result_event(raw_events)
     usage = result_event.get("usage")
     typed_usage = coerce_usage(usage)
@@ -639,7 +678,7 @@ def detect_skill_trigger(raw_events: list[object], skill_name: str) -> bool:
         content = message.get("content")
         if not isinstance(content, list):
             continue
-        for chunk in content:
+        for chunk in cast("list[object]", content):
             if not is_string_object_dict(chunk):
                 continue
             if chunk.get("type") != "tool_use":
@@ -667,7 +706,7 @@ def extract_skill_base_dirs(raw_events: list[object]) -> list[str]:
         content = message.get("content")
         if not isinstance(content, list):
             continue
-        for chunk in content:
+        for chunk in cast("list[object]", content):
             if not is_string_object_dict(chunk) or chunk.get("type") != "text":
                 continue
             text = chunk.get("text")
@@ -697,7 +736,7 @@ def parse_grading_result(result_text: str) -> GradingResult:
         )
 
     validated_assertions: list[AssertionGrade] = []
-    for item in assertion_results:
+    for item in cast("list[object]", assertion_results):
         if not is_string_object_dict(item):
             raise RuntimeError(
                 f"Claude grading assertion had unexpected type: {item!r}"
@@ -794,7 +833,9 @@ def coerce_usage(value: object) -> ClaudeUsage:
 
 
 def is_string_object_dict(value: object) -> TypeGuard[dict[str, object]]:
-    return isinstance(value, dict) and all(isinstance(key, str) for key in value)
+    if not isinstance(value, dict):
+        return False
+    return all(isinstance(key, str) for key in cast("dict[object, object]", value))
 
 
 def extract_json_payload(result_text: str) -> object:
@@ -804,22 +845,22 @@ def extract_json_payload(result_text: str) -> object:
             r"```(?:json)?\s*(\{.*\})\s*```", stripped, flags=re.DOTALL
         )
         if fenced_match is not None:
-            return json.loads(fenced_match.group(1))
+            return cast(object, json.loads(fenced_match.group(1)))
 
     try:
-        return json.loads(stripped)
+        return cast(object, json.loads(stripped))
     except json.JSONDecodeError:
         start = stripped.find("{")
         end = stripped.rfind("}")
         if start == -1 or end == -1 or end <= start:
             raise
-        return json.loads(stripped[start : end + 1])
+        return cast(object, json.loads(stripped[start : end + 1]))
 
 
 def save_claude_run(base_path: Path, run: ClaudeRun) -> None:
     base_path.parent.mkdir(parents=True, exist_ok=True)
     write_json(base_path.with_suffix(".json"), run.raw_events)
-    base_path.with_suffix(".txt").write_text(run.result_text)
+    _ = base_path.with_suffix(".txt").write_text(run.result_text)
     write_json(
         base_path.with_name(base_path.name + "-timing.json"),
         {
@@ -835,7 +876,7 @@ def save_claude_run(base_path: Path, run: ClaudeRun) -> None:
 
 def write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2) + "\n")
+    _ = path.write_text(json.dumps(payload, indent=2) + "\n")
 
 
 def ratio(numerator: int, denominator: int) -> float:

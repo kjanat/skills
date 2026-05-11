@@ -7,8 +7,10 @@
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 
 @dataclass(frozen=True)
@@ -25,7 +27,7 @@ def parse_args() -> argparse.Namespace:
             "Use this instead of eyeballing spaces for `^?`, `^|`, or `^^^` lines."
         )
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "paths",
         nargs="+",
         type=Path,
@@ -36,7 +38,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    reports = [inspect_path(path) for path in args.paths]
+    paths: Sequence[Path] = cast("Sequence[Path]", args.paths)
+    reports = [inspect_path(path) for path in paths]
     payload: object
     if len(reports) == 1:
         payload = reports[0]

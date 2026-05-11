@@ -21,7 +21,7 @@ def ground_flash_density_from_td(t_d: float) -> float:
     Returns:
         N_g: Ground flash density (km^-2 yr^-1).
     """
-    return 0.04 * t_d**1.25
+    return 0.04 * math.pow(t_d, 1.25)
 
 
 def ground_flash_density_from_th(t_h: float) -> float:
@@ -35,7 +35,7 @@ def ground_flash_density_from_th(t_h: float) -> float:
     Returns:
         N_g: Ground flash density (km^-2 yr^-1).
     """
-    return 0.054 * t_h**1.1
+    return 0.054 * math.pow(t_h, 1.1)
 
 
 def cloud_to_ground_ratio(latitude_deg: float) -> float:
@@ -65,7 +65,7 @@ def flash_rate_from_cloud_height(h_km: float) -> float:
     Returns:
         F: Flash rate (flashes/min).
     """
-    return 3.44e-5 * h_km**4.9
+    return 3.44e-5 * math.pow(h_km, 4.9)
 
 
 def flash_incidence_to_structure(
@@ -83,7 +83,7 @@ def flash_incidence_to_structure(
     Returns:
         N: Expected flashes per year.
     """
-    return 24e-6 * h_s**2.05 * n_g
+    return 24e-6 * math.pow(h_s, 2.05) * n_g
 
 
 def upward_flash_percentage(h_s: float) -> float:
@@ -121,7 +121,7 @@ def attractive_radius(
     Returns:
         R_a: Attractive radius (m).
     """
-    return alpha * h_s**beta
+    return alpha * math.pow(h_s, beta)
 
 
 def fair_weather_field(z_km: float) -> float:

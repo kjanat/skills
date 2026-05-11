@@ -36,7 +36,7 @@ def striking_distance(
     Returns:
         r: Striking distance (m).
     """
-    return a * i_peak_ka**b
+    return a * math.pow(i_peak_ka, b)
 
 
 def rolling_sphere_min_current(radius: float) -> float:
@@ -56,7 +56,7 @@ def rolling_sphere_min_current(radius: float) -> float:
     Returns:
         i_min: Minimum peak current (kA).
     """
-    return (radius / 10.0) ** (1.0 / 0.65)
+    return math.pow(radius / 10.0, 1.0 / 0.65)
 
 
 # --- Grounding Resistance ---
@@ -202,7 +202,7 @@ def conductor_melting_action_integral(
 
 
 if __name__ == "__main__":
-    from incidence import flash_incidence_to_structure, upward_flash_percentage
+    from .incidence import flash_incidence_to_structure, upward_flash_percentage
 
     print("Striking Distance vs Peak Current (Love/IEEE):")
     print(f"{'I (kA)':>8} {'r (m)':>8}")
@@ -219,8 +219,8 @@ if __name__ == "__main__":
         print(f"  {soil:>6} (rho={rho:4d} ohm*m): R={r_gr:.0f} ohm")
 
     print(
-        f"\nStep voltage: 20 kA, rho=100, feet at 9.5-10.0 m: "
-        f"{step_voltage(20e3, 100, 9.5, 10.0):.0f} V"
+        "\nStep voltage: 20 kA, rho=100, feet at 9.5-10.0 m: "
+        + f"{step_voltage(20e3, 100, 9.5, 10.0):.0f} V"
     )
 
     print(
@@ -228,8 +228,8 @@ if __name__ == "__main__":
     )
 
     print(
-        f"\nFlash incidence to 100 m tower, Ng=10: "
-        f"{flash_incidence_to_structure(100, 10):.1f} flashes/yr"
+        "\nFlash incidence to 100 m tower, Ng=10: "
+        + f"{flash_incidence_to_structure(100, 10):.1f} flashes/yr"
     )
 
     print(f"Upward flash % for 200 m: {upward_flash_percentage(200):.0f}%")

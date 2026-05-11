@@ -45,13 +45,13 @@ def attenuation_factor(
     Returns:
         P: Attenuation factor (dimensionless, 0 to 1).
     """
-    if model in (RSModel.TL, RSModel.BG, RSModel.TCS):
-        return 1.0
-    elif model == RSModel.MTLL:
-        return max(1.0 - z_prime / h_total, 0.0)
-    elif model == RSModel.MTLE:
-        return math.exp(-z_prime / lambda_decay)
-    raise ValueError(f"Unknown model: {model}")
+    match model:
+        case RSModel.TL | RSModel.BG | RSModel.TCS:
+            return 1.0
+        case RSModel.MTLL:
+            return max(1.0 - z_prime / h_total, 0.0)
+        case RSModel.MTLE:
+            return math.exp(-z_prime / lambda_decay)
 
 
 def current_wave_speed(model: RSModel, v_f: float) -> float:
@@ -66,13 +66,13 @@ def current_wave_speed(model: RSModel, v_f: float) -> float:
             Positive = upward (TL-type), negative = downward (TCS-type).
             Infinite for BG model (returned as math.inf).
     """
-    if model in (RSModel.TL, RSModel.MTLL, RSModel.MTLE):
-        return v_f  # upward at front speed
-    elif model == RSModel.BG:
-        return math.inf  # instantaneous
-    elif model == RSModel.TCS:
-        return -C  # downward at speed of light
-    raise ValueError(f"Unknown model: {model}")
+    match model:
+        case RSModel.TL | RSModel.MTLL | RSModel.MTLE:
+            return v_f  # upward at front speed
+        case RSModel.BG:
+            return math.inf  # instantaneous
+        case RSModel.TCS:
+            return -C  # downward at speed of light
 
 
 def channel_current(
@@ -207,7 +207,7 @@ def braginskii_radius(
         r: Channel radius (m).
     """
     # Original formula in cgs
-    r_cm = 9.35 * i ** (1.0 / 3.0) * t**0.5
+    r_cm = 9.35 * math.pow(i, 1.0 / 3.0) * math.pow(t, 0.5)
     return r_cm * 1e-2  # convert cm to m
 
 
@@ -261,8 +261,8 @@ def heidler_current(
     if t <= 0:
         return 0.0
 
-    x = (t / tau_1) ** n
-    eta = math.exp(-(tau_1 / tau_2) * (n * tau_2 / tau_1) ** (1.0 / n))
+    x = math.pow(t / tau_1, n)
+    eta = math.exp(-(tau_1 / tau_2) * math.pow(n * tau_2 / tau_1, 1.0 / n))
     return (i_0 / eta) * x / (1.0 + x) * math.exp(-t / tau_2)
 
 

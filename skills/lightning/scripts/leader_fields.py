@@ -60,7 +60,7 @@ def leader_e_field_uniform(
 
     term1 = 1.0 / math.sqrt(1.0 + z_t * z_t / r2)
     term2 = 1.0 / math.sqrt(1.0 + h_m * h_m / r2)
-    term3 = (h_m - z_t) * h_m / (r2 * (1.0 + h_m * h_m / r2) ** 1.5)
+    term3 = (h_m - z_t) * h_m / (r2 * math.pow(1.0 + h_m * h_m / r2, 1.5))
 
     return rho_l / (2.0 * math.pi * EPS_0 * r) * (term1 - term2 - term3)
 
@@ -141,8 +141,8 @@ def leader_retarded_height(
         import warnings
 
         warnings.warn(
-            f"leader_retarded_height: Newton's method did not converge "
-            f"after 50 iterations (residual |f|={abs(f):.2e})",
+            "leader_retarded_height: Newton's method did not converge "
+            + f"after 50 iterations (residual |f|={abs(f):.2e})",
             stacklevel=2,
         )
 

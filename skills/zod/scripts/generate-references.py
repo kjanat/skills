@@ -57,7 +57,9 @@ def write_routing_map(
             title = titles[rel]
             lines.append(f"| {title} | `docs/{rel}` |")
 
-    (refs_dir / "routing-map.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _ = (refs_dir / "routing-map.md").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
 
 
 def write_source_index(
@@ -92,7 +94,9 @@ def write_source_index(
         "```",
     ]
 
-    (refs_dir / "source-index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _ = (refs_dir / "source-index.md").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
 
 
 def main() -> None:

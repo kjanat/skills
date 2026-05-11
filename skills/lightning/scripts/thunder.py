@@ -158,7 +158,7 @@ def overpressure_at_distance(
     r_0 = relaxation_radius(w, p_0)
     if r <= r_0:
         return p_0  # Near-field: pressure ~ ambient (strong shock regime)
-    return p_0 * (r_0 / r) ** 0.75
+    return p_0 * math.pow(r_0 / r, 0.75)
 
 
 def shock_to_acoustic_transition(
@@ -195,7 +195,7 @@ if __name__ == "__main__":
         print(f"  {secs:2d} s → {d / 1e3:.1f} km")
 
     print(
-        f"\nOverpressure at 1 km for W=10^4 J/m: "
-        f"{overpressure_at_distance(1e4, 1e3):.2f} Pa "
-        f"({overpressure_at_distance(1e4, 1e3) / P_0 * 1e4:.2f} x10^-4 atm)"
+        "\nOverpressure at 1 km for W=10^4 J/m: "
+        + f"{overpressure_at_distance(1e4, 1e3):.2f} Pa "
+        + f"({overpressure_at_distance(1e4, 1e3) / P_0 * 1e4:.2f} x10^-4 atm)"
     )
