@@ -4,7 +4,7 @@ description: Commits changes with strict safety gates and high-signal commit mes
 license: MIT
 metadata:
   author: kjanat
-  version: "1.6"
+  version: "1.7"
 ---
 
 # commit
@@ -36,7 +36,7 @@ Git-only skill. If `.jj/` exists, do not run this flow.
 - Never use `--no-verify` unless `no-verify` was explicit.
 - Shell-specific message-build override (highest priority):
   - In Bash/zsh, multiline commit/amend messages must use `git commit -m "$(cat <<'EOF'` ... `EOF` ... `)"` syntax.
-  - In PowerShell, multiline commit/amend messages must use a here-string variable passed to `git commit -m "$msg"`.
+  - In PowerShell, multiline commit/amend messages must use a single-quoted here-string variable (`@'` ... `'@`) passed to `git commit -m "$msg"`.
   - Do not use `git commit -F -`, `git commit --amend -F -`, or newline escapes in `-m`.
   - Bash/zsh closing delimiter line must be exactly `EOF`.
   - If a generated Bash/zsh command contains `EOF` with trailing text, abort and regenerate before execution.
@@ -131,13 +131,13 @@ EOF
 ```
 
 ```powershell
-$msg = @"
+$msg = @'
 feat(parser): tighten svg filter constraints
 
 Reject invalid filter primitive/type combinations and keep valid
 defs + text-link structures parseable so AST consumers can trust
 structure for linting and transforms.
-"@
+'@
 
 git commit -m "$msg"
 ```
@@ -154,9 +154,11 @@ git commit -m "$msg"
 ## PowerShell Here-String Rules
 
 - Use a here-string variable, then pass it via `git commit -m "$msg"`.
-- Keep `@"` and `"@` on dedicated lines.
+- Use a single-quoted here-string (`@'` ... `'@`) for the message body. PowerShell treats backticks inside double-quoted here-strings (`@"` ... `"@`) as escapes, so code-ish literals like `` `bw unlock` `` can become control characters in the commit message.
+- Keep `@'` and `'@` on dedicated lines.
 - Preserve blank lines in the message body.
 - Avoid inline here-strings inside the `git commit` command.
+- If a subject-only PowerShell commit message needs literal backticks, use the same single-quoted here-string form instead of `git commit -m "..."`.
 
 Good:
 
@@ -182,12 +184,12 @@ EOF
 ```
 
 ```powershell
-$msg = @"
+$msg = @'
 chore(release): 0.4.0 - collision fix + exec/run unification
 
 - Bump `runner` to 0.4.0 and fill in the CHANGELOG section.
 - Explain the breaking CLI change and the fallback allocation fix.
-"@
+'@
 
 git commit -m "$msg"
 ```
@@ -225,6 +227,14 @@ EOF trailing-text
 git commit -m @"
 ...
 "@
+```
+
+```powershell
+$msg = @"
+fix(cli): mention `bw unlock`
+"@
+
+git commit -m "$msg"
 ```
 
 ## Operational Notes

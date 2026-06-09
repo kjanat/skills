@@ -35,22 +35,35 @@ If `amend` was not explicit, do not amend.
 
 3. Apply staging gate from `SKILL.md`.
 4. Draft full-scope commit message.
-5. Run exactly one amend action.
+5. Run exactly one amend action using the shell-specific message forms in `SKILL.md`.
 
-   Subject-only:
+   Subject-only, Bash/zsh:
 
    ```bash
    git commit --amend -m "type(scope): subject"
    ```
 
-   Multiline:
+   Multiline, Bash/zsh:
 
    ```bash
-   git commit --amend -F - <<'EOF'
+   git commit --amend -m "$(cat <<'EOF'
    type(scope): subject
 
    Explain user impact and intent of full final commit.
    EOF
+   )"
+   ```
+
+   Multiline, PowerShell:
+
+   ```powershell
+   $msg = @'
+   type(scope): subject
+
+   Explain user impact and intent of full final commit.
+   '@
+
+   git commit --amend -m "$msg"
    ```
 
    If explicit `no-verify` was requested, add `--no-verify` to the amend command.
@@ -78,9 +91,9 @@ If `amend` was not explicit, do not amend.
 
 ## Guardrails
 
-- Heredoc hard-stop override from `SKILL.md` is highest priority.
-- If `git commit --amend -F - <<'EOF'` is used, run it in an isolated shell call only.
-- Never chain on the heredoc opener line or after the `EOF` line.
+- Shell-specific message forms from `SKILL.md` are highest priority.
+- Do not use `git commit --amend -F -`; use `-m` with the shell-specific forms from `SKILL.md`.
+- Never chain on the Bash/zsh heredoc opener line or after the `EOF` line.
 - Closing delimiter must be exactly `EOF` with no trailing text.
 - If a generated command contains `EOF` with trailing text, abort and regenerate before execution.
 - Run verification and push commands in separate shell calls only.
