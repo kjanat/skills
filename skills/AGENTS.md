@@ -13,6 +13,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `changelog-writing`         | Keep a Changelog edits               | no           |
 | `discoveries-writing`       | agent memory files / DISCOVERIES.md  | no           |
 | `commit`                    | safe commit workflow                 | no           |
+| `dprint-plugin-creator`     | scaffold dprint formatter plugins    | no           |
 | `ezelsbruggen-schrijven`    | Dutch mnemonics and recall hooks     | no           |
 | `github-docker-action`      | Docker container actions             | no           |
 | `github-script`             | secure `actions/github-script` usage | yes          |
@@ -37,6 +38,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - Twoslash eval harness or trigger checks: read `twoslash/AGENTS.md` first.
 - Domain science question (lightning): use `lightning/SKILL.md`.
 - Go reverse proxy / edge HTTP infra (statute, nginx-replacement-in-Go, TLS/ACME, HTTP/2/3, QUIC): use `statute-proxy/SKILL.md`.
+- Building/scaffolding a dprint formatter plugin (wrap Rust/Go/JS formatter, plugin protocol, schema gen): use `dprint-plugin-creator/SKILL.md`.
 - Repo maintenance: use `../scripts/maintain.sh`.
 
 ## SHARED CONVENTIONS

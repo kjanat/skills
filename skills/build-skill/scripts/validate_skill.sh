@@ -121,8 +121,11 @@ fi
 # Extract frontmatter
 FRONTMATTER=""
 if [[ "${CONTENT}" =~ ^---[[:space:]]*(.*)[[:space:]]*--- ]]; then
-	# Use awk for reliable extraction
-	FRONTMATTER="$(echo "${CONTENT}" | awk '/^---$/{if(p){exit}else{p=1;next}}p')"
+	# Use awk for reliable extraction. Read the file directly rather than
+	# piping echo into awk: awk's early `exit` on the closing '---' closes the
+	# pipe while echo is still writing large bodies, which under `set -o
+	# pipefail` surfaces as a SIGPIPE (141) failure and aborts the script.
+	FRONTMATTER="$(awk '/^---$/{if(p){exit}else{p=1;next}}p' "${SKILL_MD}")"
 fi
 
 if [[ -z "${FRONTMATTER}" ]]; then
@@ -159,18 +162,38 @@ else
 	fi
 fi
 
-# Extract description field
-DESCRIPTION=""
-if [[ "${FRONTMATTER}" =~ description:[[:space:]]*(.+) ]]; then
-	DESCRIPTION="${BASH_REMATCH[1]}"
-	# Handle multi-line descriptions (take first line for now)
-	DESCRIPTION="${DESCRIPTION%%$'\n'*}"
-	# Remove quotes if present
-	DESCRIPTION="${DESCRIPTION#\"}"
-	DESCRIPTION="${DESCRIPTION%\"}"
-	DESCRIPTION="${DESCRIPTION#\'}"
-	DESCRIPTION="${DESCRIPTION%\'}"
-fi
+# Extract description field. Handles inline values, quoted values, and YAML
+# block scalars (`>`, `>-`, `|`, ...) whose text lives on following indented
+# lines. awk folds block-scalar bodies into a single space-joined string so the
+# length and activation-trigger checks below see the real description.
+DESCRIPTION="$(awk '
+	/^description:[[:space:]]*/ {
+		val = $0
+		sub(/^description:[[:space:]]*/, "", val)
+		# Block scalar indicator (>, |, optionally with chomping/indent chars)
+		if (val ~ /^[|>][0-9+-]*[[:space:]]*$/) {
+			block = 1
+			next
+		}
+		print val
+		exit
+	}
+	block {
+		# Block body ends at a non-indented line (next key or frontmatter end)
+		if ($0 !~ /^[[:space:]]/ || $0 ~ /^---[[:space:]]*$/) exit
+		line = $0
+		sub(/^[[:space:]]+/, "", line)
+		printf "%s ", line
+	}
+' "${SKILL_MD}")"
+# Collapse whitespace and strip surrounding quotes
+DESCRIPTION="$(echo "${DESCRIPTION}" | tr -s '[:space:]' ' ')"
+DESCRIPTION="${DESCRIPTION#"${DESCRIPTION%%[![:space:]]*}"}"
+DESCRIPTION="${DESCRIPTION%"${DESCRIPTION##*[![:space:]]}"}"
+DESCRIPTION="${DESCRIPTION#\"}"
+DESCRIPTION="${DESCRIPTION%\"}"
+DESCRIPTION="${DESCRIPTION#\'}"
+DESCRIPTION="${DESCRIPTION%\'}"
 
 if [[ -z "${DESCRIPTION}" ]]; then
 	log_error "Missing 'description' field in frontmatter"
