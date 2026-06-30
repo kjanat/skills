@@ -39,12 +39,17 @@ jobs:
       - name: Install dprint
         uses: kjanat/install-dprint@v1
 
+      - name: Install tombi
+        # TOML formatter the dprint exec plugin shells out to.
+        uses: taiki-e/install-action@v2
+        with:
+          tool: tombi
+
       - name: Format synced docs
         # Re-format whatever the sync touched so the commit is dprint-clean and
         # won't ping-pong with local runs. --dirty covers new (untracked) files
-        # too; --allow-no-files keeps a no-drift run green; exclude TOML since
-        # its formatter (tombi) isn't installed in CI.
-        run: dprint fmt --dirty --allow-no-files --excludes '**/*.toml'
+        # too; --allow-no-files keeps a no-drift run green.
+        run: dprint fmt --dirty --allow-no-files
 
       - name: Commit and push drift
         run: |
