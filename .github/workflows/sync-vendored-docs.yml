@@ -1,0 +1,49 @@
+name: Sync vendored docs
+
+# Periodically re-vendors upstream docs (threlte, xstate, zod) via
+# scripts/maintain.sh and commits any drift straight to master.
+on:
+  schedule:
+    # Weekly, Monday 06:17 UTC (off the hour to dodge scheduler backlog).
+    - cron: "17 6 * * 1"
+  workflow_dispatch: # manual trigger from the Actions tab
+
+# Allow the job to push commits back to the repo.
+permissions:
+  contents: write
+
+# Never let two sync runs race on the same branch.
+concurrency:
+  group: sync-vendored-docs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Sync and commit
+    runs-on: ubuntu-latest
+    # Don't run on forks — only the canonical repo should push.
+    if: github.repository == 'kjanat/skills'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Sync vendored docs
+        env:
+          # Raises GitHub API rate limits inside the sync scripts.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./scripts/maintain.sh sync
+
+      - name: Validate skills
+        run: ./scripts/maintain.sh validate
+
+      - name: Commit and push drift
+        run: |
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "No vendored-doc changes — nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "sync vendored docs ($(date -u +%Y-%m-%d))"
+          git push

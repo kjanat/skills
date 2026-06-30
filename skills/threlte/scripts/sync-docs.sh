@@ -63,11 +63,16 @@ for cmd in curl tar python3; do
 	}
 done
 
+# Optional GitHub auth — raises API rate limits (CI passes GITHUB_TOKEN).
+GH_AUTH=()
+GH_API_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+[[ -n "${GH_API_TOKEN}" ]] && GH_AUTH=(-H "Authorization: Bearer ${GH_API_TOKEN}")
+
 # ── 1. Download repo tarball ──────────────────────────────────────────
 log "Downloading ${REPO}@${REF}"
 
 TARBALL_URL="https://api.github.com/repos/${REPO}/tarball/${REF}"
-curl -sL "${TARBALL_URL}" -o "${TMP_DIR}/repo.tar.gz"
+curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -sL "${TARBALL_URL}" -o "${TMP_DIR}/repo.tar.gz"
 
 tar xzf "${TMP_DIR}/repo.tar.gz" -C "${TMP_DIR}"
 EXTRACTED_ROOT="$(find "${TMP_DIR}" -maxdepth 1 -type d -name 'threlte-threlte-*' | head -1)"
@@ -122,7 +127,7 @@ else
 fi
 
 # ── 4. Resolve commit SHA ────────────────────────────────────────────
-RESOLVED_SHA="$(curl -s "https://api.github.com/repos/${REPO}/commits/${REF}" \
+RESOLVED_SHA="$(curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -s "https://api.github.com/repos/${REPO}/commits/${REF}" \
 	| python3 -c "import json,sys; print(json.load(sys.stdin).get('sha','unknown')[:12])")"
 
 # ── 5. Generate routing map ──────────────────────────────────────────

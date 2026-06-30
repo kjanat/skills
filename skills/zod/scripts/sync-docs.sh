@@ -58,6 +58,11 @@ for cmd in curl tar python3; do
 	}
 done
 
+# Optional GitHub auth — raises API rate limits (CI passes GITHUB_TOKEN).
+GH_AUTH=()
+GH_API_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+[[ -n "${GH_API_TOKEN}" ]] && GH_AUTH=(-H "Authorization: Bearer ${GH_API_TOKEN}")
+
 for script in "${PARSE_FRONTMATTER}" "${GENERATE_REFERENCES}"; do
 	[[ -f "${script}" ]] || {
 		err "Missing helper script: ${script}"
@@ -67,7 +72,7 @@ done
 
 log "Downloading ${REPO}@${REF}"
 TARBALL_URL="https://api.github.com/repos/${REPO}/tarball/${REF}"
-curl -sL "${TARBALL_URL}" -o "${TMP_DIR}/repo.tar.gz"
+curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -sL "${TARBALL_URL}" -o "${TMP_DIR}/repo.tar.gz"
 tar xzf "${TMP_DIR}/repo.tar.gz" -C "${TMP_DIR}"
 
 EXTRACTED_ROOT="$(find "${TMP_DIR}" -maxdepth 1 -type d -name 'colinhacks-zod-*' | head -1)"
@@ -96,7 +101,7 @@ else
 fi
 
 RESOLVED_SHA="$(
-	curl -s "https://api.github.com/repos/${REPO}/commits/${REF}" \
+	curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -s "https://api.github.com/repos/${REPO}/commits/${REF}" \
 		| python3 -c 'import json,sys; print(json.load(sys.stdin).get("sha","unknown"))'
 )"
 RESOLVED_SHORT="${RESOLVED_SHA:0:12}"

@@ -69,11 +69,16 @@ for cmd in curl tar npm python3; do
 	}
 done
 
+# Optional GitHub auth — raises API rate limits (CI passes GITHUB_TOKEN).
+GH_AUTH=()
+GH_API_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+[[ -n "${GH_API_TOKEN}" ]] && GH_AUTH=(-H "Authorization: Bearer ${GH_API_TOKEN}")
+
 # ── 1. Vendor narrative docs from GitHub ──────────────────────────────
 log "Downloading docs from ${DOCS_REPO}@${DOCS_REF}"
 
 TARBALL_URL="https://api.github.com/repos/${DOCS_REPO}/tarball/${DOCS_REF}"
-curl -sL "${TARBALL_URL}" -o "${TMP_DIR}/docs.tar.gz"
+curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -sL "${TARBALL_URL}" -o "${TMP_DIR}/docs.tar.gz"
 
 # GitHub tarballs have a random prefix dir — find it
 tar xzf "${TMP_DIR}/docs.tar.gz" -C "${TMP_DIR}"
@@ -102,7 +107,7 @@ else
 fi
 
 # Resolve actual commit SHA (DOCS_REF may be a branch name)
-RESOLVED_SHA="$(curl -s "https://api.github.com/repos/${DOCS_REPO}/commits/${DOCS_REF}" \
+RESOLVED_SHA="$(curl "${GH_AUTH[@]+"${GH_AUTH[@]}"}" -s "https://api.github.com/repos/${DOCS_REPO}/commits/${DOCS_REF}" \
 	| python3 -c "import json,sys; print(json.load(sys.stdin).get('sha','unknown')[:12])")"
 
 # ── 2. Vendor API types from npm ─────────────────────────────────────
