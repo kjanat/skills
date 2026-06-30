@@ -41,9 +41,7 @@ jobs:
 
       - name: Install tombi
         # TOML formatter the dprint exec plugin shells out to.
-        uses: taiki-e/install-action@v2
-        with:
-          tool: tombi
+        uses: taiki-e/install-action@tombi
 
       - name: Format synced docs
         # Re-format whatever the sync touched so the commit is dprint-clean and
