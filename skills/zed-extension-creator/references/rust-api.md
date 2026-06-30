@@ -3,6 +3,7 @@
 Procedural extensions are a Rust crate compiled to `wasm32-wasip2` (Zed does the cross-compile). You implement the `Extension` trait and register it. This reference covers the trait, the helper functions, the key types, and the sandbox rules — accurate to crate line **0.7.x** (WIT `since_v0.6.0`). Always confirm against the version you pin: <https://docs.rs/zed_extension_api>.
 
 ## Table of contents
+
 1. Crate setup and entry point
 2. The `Extension` trait — every method
 3. Helper functions (downloads, GitHub, npm, platform, install status)
@@ -15,20 +16,22 @@ Procedural extensions are a Rust crate compiled to `wasm32-wasip2` (Zed does the
 ## 1. Crate setup and entry point
 
 `Cargo.toml`:
+
 ```toml
 [package]
-name = "my-extension"
+name    = "my-extension"
 version = "0.0.1"
-edition = "2021"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-zed_extension_api = "0.7"   # pin to the version you mean; check crates.io for newest
+zed_extension_api = "0.7"  # pin to the version you mean; check crates.io for newest
 ```
 
 `src/lib.rs`:
+
 ```rust
 use zed_extension_api::{self as zed, Result};
 
@@ -60,6 +63,7 @@ Every method except `new()` has a default implementation, so implement only what
 ```rust
 fn new() -> Self where Self: Sized;
 ```
+
 Constructs the extension. Initialize caches here; keep it cheap (no network).
 
 ### Language servers
@@ -71,6 +75,7 @@ fn language_server_command(
     worktree: &Worktree,
 ) -> Result<Command>;
 ```
+
 **The core LSP method.** Return the `Command` (binary path + args + env) that launches the server. Acquire the binary here — download from GitHub/npm or locate it via `worktree.which(...)`. Called on every server start, so cache and rate-limit any network work. Default returns an error (so declaring a server without implementing this fails).
 
 ```rust
@@ -82,6 +87,7 @@ fn language_server_workspace_configuration(
     &mut self, _id: &LanguageServerId, _worktree: &Worktree,
 ) -> Result<Option<serde_json::Value>>;            // default: Ok(None)
 ```
+
 Return JSON passed to the server as LSP `initializationOptions` / `workspace/configuration`. Read user settings via the `settings` module (see §5) and merge.
 
 ```rust
@@ -93,6 +99,7 @@ fn language_server_additional_workspace_configuration(
     &mut self, _id: &LanguageServerId, _target_id: &LanguageServerId, _worktree: &Worktree,
 ) -> Result<Option<serde_json::Value>>;            // default: Ok(None)
 ```
+
 For options/config that one server needs to send *to another* server (`_target_id`). Niche; used by stacked servers (e.g. a framework server configuring a base server).
 
 ```rust
@@ -104,6 +111,7 @@ fn label_for_symbol(
     &self, _id: &LanguageServerId, _symbol: lsp::Symbol,
 ) -> Option<CodeLabel>;                             // default: None
 ```
+
 Style how completions/symbols render (e.g. show a function signature with the return type dimmed). Return a `CodeLabel` (see §4) or `None` to use Zed's default. Worth implementing for a polished feel; see `references/language-servers.md`.
 
 ### Context servers (MCP)
@@ -113,6 +121,7 @@ fn context_server_command(
     &mut self, _context_server_id: &ContextServerId, _project: &Project,
 ) -> Result<Command>;                              // default: error
 ```
+
 Return the `Command` that launches the MCP server (stdio transport). Same acquire-and-cache discipline as LSP.
 
 ```rust
@@ -120,6 +129,7 @@ fn context_server_configuration(
     &mut self, _context_server_id: &ContextServerId, _project: &Project,
 ) -> Result<Option<ContextServerConfiguration>>;   // default: Ok(None)
 ```
+
 Surface setup info to the user. `ContextServerConfiguration { installation_instructions: String (Markdown), settings_schema: String (JSON Schema), default_settings: String }`. See `references/context-servers.md`.
 
 ### Slash commands (legacy Assistant)
@@ -133,6 +143,7 @@ fn run_slash_command(
     &self, _command: SlashCommand, _args: Vec<String>, _worktree: Option<&Worktree>,
 ) -> Result<SlashCommandOutput>;                    // default: error
 ```
+
 `run_slash_command` returns `SlashCommandOutput { text: String, sections: Vec<SlashCommandOutputSection> }`. Legacy; prefer MCP for new work.
 
 ### Docs indexing (the `/docs` slash command)
@@ -144,6 +155,7 @@ fn index_docs(
     &self, _provider: String, _package: String, _database: &KeyValueStore,
 ) -> Result<()>;                                    // default: error
 ```
+
 Lets an extension provide package docs to the `/docs` command, writing indexed content into the provided `KeyValueStore`. Niche.
 
 ### Debug adapters (DAP)
@@ -177,6 +189,7 @@ fn run_dap_locator(
     &mut self, _locator_name: String, _build_task: TaskTemplate,
 ) -> Result<DebugRequest>;                          // default: error
 ```
+
 Full treatment, including the two-phase locator flow, in `references/debug-adapters.md`.
 
 ---
@@ -225,6 +238,7 @@ Each of `download_file`, `npm_install_package`, and `process::Command` requires 
 ## 4. Key types
 
 ### `Command` (`type Command`)
+
 ```rust
 struct Command {
     command: String,          // path to the executable
@@ -232,19 +246,24 @@ struct Command {
     env: Vec<(String, String)>,   // EnvVars
 }
 ```
+
 Returned by `language_server_command`, `context_server_command`. Build the env from `worktree.shell_env()` if the server needs the user's environment.
 
 ### `Worktree`
+
 Represents an open project folder. Methods you'll actually use:
+
 ```rust
 worktree.root_path() -> String
 worktree.read_text_file(path: &str) -> Result<String>   // read a project file (e.g. detect config)
 worktree.which(binary_name: &str) -> Option<String>     // find a binary in the user's PATH
 worktree.shell_env() -> Vec<(String, String)>           // the user's environment (NOT std::env)
 ```
+
 `which` + `shell_env` are the **sandbox-correct** replacements for std environment access.
 
 ### `CodeLabel` (completion/symbol styling)
+
 ```rust
 struct CodeLabel {
     code: String,                 // the text to display
@@ -257,15 +276,19 @@ enum CodeLabelSpan {
 }
 // Constructors: CodeLabelSpan::code_range(range), CodeLabelSpan::literal(text, Some("type"))
 ```
+
 See the worked example in `references/language-servers.md`.
 
 ### IDs
+
 `LanguageServerId` and `ContextServerId` are opaque newtypes over `String` with `AsRef<str>` and `Display`. Match on `id.as_ref()` when one extension provides several servers.
 
 ### `KeyValueStore`
+
 A persistent key/value store handed to `index_docs` for caching indexed documentation.
 
 ### Module `lsp` types
+
 `Completion`, `CompletionKind`, `Symbol`, `SymbolKind`, `InsertTextFormat` — the LSP payloads passed to `label_for_completion`/`label_for_symbol`.
 
 ---

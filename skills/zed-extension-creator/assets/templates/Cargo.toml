@@ -9,13 +9,13 @@
 # extension. rustup just has to be your active Rust install (NOT Homebrew).
 
 [package]
-name = "my-extension"
+name    = "my-extension"
 version = "0.0.1"
-edition = "2021"
-publish = false               # this crate is consumed by Zed, never published to crates.io
+edition = "2024"
+publish = false           # this crate is consumed by Zed, never published to crates.io
 
 [lib]
-crate-type = ["cdylib"]       # REQUIRED: Zed loads the extension as a wasm C-ABI dynamic lib
+crate-type = ["cdylib"]  # REQUIRED: Zed loads the extension as a wasm C-ABI dynamic lib
 
 [dependencies]
 # Pin a concrete version. Check https://crates.io/crates/zed_extension_api for

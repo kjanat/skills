@@ -9,17 +9,18 @@ The single best source of real-world examples is Zed's own built-in languages: <
 Each language lives in its own subdirectory under `languages/`. The directory name is arbitrary; the `name` field is what matters.
 
 ```toml
-name = "My Language"              # required — shows in the language picker; LSP `languages` must match this
-grammar = "my-language"          # required — the [grammars.X] key from extension.toml
-path_suffixes = ["myl", "mylang"]  # file extensions (NOT globs; just suffixes)
-line_comments = ["# "]           # used by editor::ToggleComments
-tab_size = 4                     # default 4
-hard_tabs = false                # tabs vs spaces; default false (spaces)
-first_line_pattern = "^#!.*\\bmylang\\b"   # regex on first line (e.g. shebang detection)
+name               = "My Language"        # required — shows in the language picker; LSP `languages` must match this
+grammar            = "my-language"        # required — the [grammars.X] key from extension.toml
+path_suffixes      = ["myl", "mylang"]    # file extensions (NOT globs; just suffixes)
+line_comments      = ["# "]               # used by editor::ToggleComments
+tab_size           = 4                    # default 4
+hard_tabs          = false                # tabs vs spaces; default false (spaces)
+first_line_pattern = "^#!.*\\bmylang\\b"  # regex on first line (e.g. shebang detection)
 # debuggers = ["my-debug-adapter"]         # order debuggers in the New Process modal
 ```
 
 Field notes:
+
 - `path_suffixes` are plain suffixes, **not** glob patterns (unlike the user-settings `file_types`). For glob matching, users add `file_types` in their settings.
 - `first_line_pattern` matches files by their first line — used for scripts identified by shebang.
 - `line_comments` powers comment toggling (`cmd-/`).
@@ -30,7 +31,7 @@ Field notes:
 ```toml
 [grammars.my-language]
 repository = "https://github.com/org/tree-sitter-my-language"
-rev = "<commit-sha>"
+rev        = "<commit-sha>"
 # path = "subdir"   # if the grammar is in a repo subdirectory
 ```
 
@@ -43,17 +44,17 @@ rev = "<commit-sha>"
 
 Queries live alongside `config.toml` in `languages/<lang>/`. They use the [tree-sitter query language](https://tree-sitter.github.io/tree-sitter/using-parsers/queries/). Each file name maps to a feature. Only `highlights.scm` is essential; add the rest as the language warrants.
 
-| File | Feature |
-|---|---|
-| `highlights.scm` | Syntax highlighting |
-| `injections.scm` | Embedding one language in another (code blocks, SQL-in-string) |
-| `brackets.scm` | Bracket matching + rainbow brackets |
-| `indents.scm` | Auto-indentation |
-| `outline.scm` | Code outline / structure / breadcrumbs |
-| `textobjects.scm` | Vim text-object & section navigation |
-| `runnables.scm` | "Run" buttons for detected runnable code |
-| `overrides.scm` | Scoped setting overrides (e.g. inside strings/comments) |
-| `redactions.scm` | Hide values when screen-sharing |
+| File              | Feature                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `highlights.scm`  | Syntax highlighting                                            |
+| `injections.scm`  | Embedding one language in another (code blocks, SQL-in-string) |
+| `brackets.scm`    | Bracket matching + rainbow brackets                            |
+| `indents.scm`     | Auto-indentation                                               |
+| `outline.scm`     | Code outline / structure / breadcrumbs                         |
+| `textobjects.scm` | Vim text-object & section navigation                           |
+| `runnables.scm`   | "Run" buttons for detected runnable code                       |
+| `overrides.scm`   | Scoped setting overrides (e.g. inside strings/comments)        |
+| `redactions.scm`  | Hide values when screen-sharing                                |
 
 ### 3.1 `highlights.scm`
 
@@ -72,10 +73,12 @@ Capture syntax nodes and tag them with a highlight name the theme styles.
 `@attribute` · `@boolean` · `@comment` · `@comment.doc` · `@constant` · `@constant.builtin` · `@constructor` · `@embedded` · `@emphasis` · `@emphasis.strong` · `@enum` · `@function` · `@hint` · `@keyword` · `@label` · `@link_text` · `@link_uri` · `@number` · `@operator` · `@predictive` · `@preproc` · `@primary` · `@property` · `@punctuation` · `@punctuation.bracket` · `@punctuation.delimiter` · `@punctuation.list_marker` · `@punctuation.special` · `@string` · `@string.escape` · `@string.regex` · `@string.special` · `@string.special.symbol` · `@tag` · `@tag.doctype` · `@text.literal` · `@title` · `@type` · `@type.builtin` · `@variable` · `@variable.special` · `@variable.parameter` · `@variant`
 
 **Fallback captures:** a node can carry multiple captures; Zed resolves **right-to-left**, using the first the theme defines.
+
 ```scheme
 (type_identifier) @type @variable
 ; tries @variable first; if the theme has no style for it, falls back to @type
 ```
+
 This lets you offer a preferred highlight while still rendering in themes that lack it.
 
 ### 3.2 `injections.scm`
@@ -90,6 +93,7 @@ Embed another language's grammar inside this one.
 ((inline) @content
  (#set! injection.language "markdown-inline"))
 ```
+
 - `@injection.language` — captures the embedded language identifier (dynamic), or set a fixed one with `(#set! injection.language "...")`.
 - `@injection.content` — the text to reparse as the injected language.
 
@@ -100,7 +104,9 @@ Embed another language's grammar inside this one.
 ("{" @open "}" @close)
 ("\"" @open "\"" @close)
 ```
+
 `@open`/`@close` mark pairs. To exclude a pair from rainbow coloring:
+
 ```scheme
 (("\"" @open "\"" @close) (#set! rainbow.exclude))
 ```
@@ -111,6 +117,7 @@ Embed another language's grammar inside this one.
 (array "]" @end) @indent
 (object "}" @end) @indent
 ```
+
 `@indent` marks a node whose body should be indented; `@end` marks the closing token that dedents.
 
 ### 3.5 `outline.scm`
@@ -118,20 +125,21 @@ Embed another language's grammar inside this one.
 ```scheme
 (pair key: (string (string_content) @name)) @item
 ```
+
 Captures: `@name` (the displayed label text), `@item` (the whole entry), `@context` / `@context.extra` (extra context shown with the item), `@annotation` (doc comments/attributes/decorators preceding the item — used by the agent when generating code edits).
 
 ### 3.6 `textobjects.scm` (Vim mode)
 
 Defines function/class/comment objects for `af`/`if`/`ac`/`ic` and section motions. For languages without functions/classes, map analogous constructs (CSS: a rule-set = method, a media-query = class).
 
-| Capture | Object / motions |
-|---|---|
+| Capture            | Object / motions          |
+| ------------------ | ------------------------- |
 | `@function.around` | `af`; `[m` `]m` `[M` `]M` |
-| `@function.inside` | `if` |
-| `@class.around` | `ac`; `[[` `]]` `[]` `][` |
-| `@class.inside` | `ic` |
-| `@comment.around` | `gc` |
-| `@comment.inside` | `igc` |
+| `@function.inside` | `if`                      |
+| `@class.around`    | `ac`; `[[` `]]` `[]` `][` |
+| `@class.inside`    | `ic`                      |
+| `@comment.around`  | `gc`                      |
+| `@comment.inside`  | `igc`                     |
 
 ```scheme
 (method_definition
@@ -139,6 +147,7 @@ Defines function/class/comment objects for `af`/`if`/`ac`/`ic` and section motio
 (function_signature_item) @function.around   ; declarations with no body
 (comment)+ @comment.around                    ; join adjacent comments
 ```
+
 Closures generally should *not* count as functions. `nvim-treesitter-textobjects` and Helix have queries for many languages to adapt.
 
 ### 3.7 `runnables.scm`
@@ -153,6 +162,7 @@ Detect runnable code and show a Run button.
   (#set! tag package-script)
 )
 ```
+
 - `@run` — where the run button appears.
 - Captures **not** prefixed with `_` are exported as env vars `ZED_CUSTOM_<NAME>` to the run command.
 - `(#set! tag ...)` tags the runnable so a matching task template can pick it up.
@@ -166,6 +176,7 @@ Define syntactic scopes used to override settings inside specific constructs. Pa
 [ (string) (template_string) ] @string
 (comment) @comment.inclusive       ; .inclusive extends the scope through the trailing newline
 ```
+
 ```toml
 # config.toml
 word_characters = ["#", "$"]
@@ -173,7 +184,9 @@ word_characters = ["#", "$"]
 [overrides.string]
 completion_query_characters = ["-"]
 ```
+
 Ranges are **exclusive** by default (cursor must be strictly inside). Add the `.inclusive` suffix to a capture to make the scope inclusive (e.g. so a line comment's scope reaches the newline). You can also disable specific auto-closing brackets within a scope via `not_in` on the bracket definition in `config.toml`:
+
 ```toml
 brackets = [
   { start = "'", end = "'", close = true, newline = false, not_in = ["string", "comment"] },
@@ -183,6 +196,7 @@ brackets = [
 ### 3.9 `redactions.scm`
 
 Mark values to render redacted during screen-share.
+
 ```scheme
 (pair value: (number) @redact)
 (pair value: (string) @redact)
@@ -194,7 +208,7 @@ To also provide IDE features, declare the server in `extension.toml` and impleme
 
 ```toml
 [language_servers.my-language-lsp]
-name = "My Language LSP"
+name      = "My Language LSP"
 languages = ["My Language"]
 ```
 
@@ -206,9 +220,10 @@ If your language server emits semantic tokens, you can ship default style rules 
 
 ```json
 [
-  { "token_type": "lifetime",   "style": ["lifetime"] },
-  { "token_type": "builtinType","style": ["type"] },
-  { "token_type": "selfKeyword","style": ["variable.special"] }
+  { "token_type": "lifetime", "style": ["lifetime"] },
+  { "token_type": "builtinType", "style": ["type"] },
+  { "token_type": "selfKeyword", "style": ["variable.special"] }
 ]
 ```
-Same format as the user `semantic_token_rules` setting. Precedence: user settings > extension rules > Zed built-in defaults. Users enable semantic tokens with `"semantic_tokens": "combined"` (tree-sitter + LSP) or `"full"` (LSP only); default is `"off"`. Each rule supports `token_type`, `token_modifiers`, `style`, `foreground_color`, `background_color`, `underline`, `strikethrough`, `font_weight`, `font_style`.
+
+Same format as the user-level rules, which live under the `global_lsp_settings.semantic_token_rules` key in `settings.json` (not at the top level). Precedence: user settings > extension rules > Zed built-in defaults. Users enable semantic tokens with `"semantic_tokens": "combined"` (tree-sitter + LSP) or `"full"` (LSP only); default is `"off"`. Each rule supports `token_type`, `token_modifiers`, `style`, `foreground_color`, `background_color`, `underline`, `strikethrough`, `font_weight`, and `font_style`.
