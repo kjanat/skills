@@ -1,0 +1,28 @@
+# Cargo.toml for a Zed extension's Rust crate.
+#
+# Only needed for extensions with procedural logic: language servers, MCP /
+# context servers, or debug adapters. Pure language/theme/icon/snippet
+# extensions have no Rust and no Cargo.toml.
+#
+# You do NOT run `cargo build` or add a wasm target yourself — Zed compiles this
+# to wasm32-wasip2 with its bundled toolchain when you install the dev
+# extension. rustup just has to be your active Rust install (NOT Homebrew).
+
+[package]
+name = "my-extension"
+version = "0.0.1"
+edition = "2021"
+publish = false               # this crate is consumed by Zed, never published to crates.io
+
+[lib]
+crate-type = ["cdylib"]       # REQUIRED: Zed loads the extension as a wasm C-ABI dynamic lib
+
+[dependencies]
+# Pin a concrete version. Check https://crates.io/crates/zed_extension_api for
+# the newest, and confirm Zed-version compatibility before bumping — an API
+# bump can require code changes.
+zed_extension_api = "0.7"
+
+# serde_json is re-exported as zed_extension_api::serde_json, so you usually
+# don't need a direct dependency. Add crates only if the wasm sandbox allows
+# what they do (no threads, no arbitrary filesystem/network outside the API).

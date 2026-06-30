@@ -1,0 +1,51 @@
+# languages/<lang>/config.toml — language definition.
+#
+# Lives at languages/<your-language>/config.toml, alongside the *.scm tree-sitter
+# query files (highlights.scm, injections.scm, brackets.scm, indents.scm,
+# outline.scm, …). See references/languages.md for every query file and capture.
+#
+# `name` and `grammar` are the only required keys.
+
+name = "My Language"          # display name; referenced by language_servers.languages
+grammar = "my-language"       # must match a [grammars.<name>] id in extension.toml
+
+# Files that map to this language. These are SUFFIXES, not globs.
+path_suffixes = ["mylang", "ml2"]
+
+# Optional: match by first line when extension is ambiguous/absent (regex).
+# first_line_pattern = "^#!/usr/bin/env mylang"
+
+# --- Comments ----------------------------------------------------------------
+# Used by the "toggle comment" action. Provide the prefix(es) WITH trailing space.
+line_comments = ["# "]
+# For block comments, use:
+# block_comment = ["/* ", " */"]
+
+# --- Indentation -------------------------------------------------------------
+tab_size = 2
+hard_tabs = false             # true => indent with tabs, false => spaces
+
+# --- Bracket / autoclose pairs ----------------------------------------------
+# `close` autocloses; `newline` expands the pair on Enter. `not_in` suppresses
+# autoclose inside the listed scopes (must correspond to captures in your queries).
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = true },
+  { start = "(", end = ")", close = true, newline = true },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["string", "comment"] },
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string", "comment"] },
+]
+
+# --- Word boundaries ---------------------------------------------------------
+# Extra characters Zed should treat as part of a "word" (selection, completion).
+# word_characters = ["-", "$"]
+
+# --- Misc behavior -----------------------------------------------------------
+# autoclose_before = ";:.,=}])>  "   # chars after which autoclose is allowed
+# collapsed_placeholder = " ... "    # folded-region placeholder text
+# increase_indent_pattern / decrease_indent_pattern can be set, but prefer
+# indents.scm for indentation logic where possible.
+
+# --- Debuggers (optional) ----------------------------------------------------
+# Debug adapters usable with this language (must be available to Zed).
+# debuggers = ["my-debugger"]

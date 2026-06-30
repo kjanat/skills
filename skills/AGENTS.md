@@ -25,6 +25,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `twoslash`                  | Twoslash docs snippets and notations | yes          |
 | `uv-versioning`             | uv version bump planning             | no           |
 | `xstate`                    | XState v5 docs + API types           | yes          |
+| `zed-extension-creator`     | scaffold/ship Zed editor extensions  | no           |
 | `zod`                       | Zod v4 docs routing + API guidance   | yes          |
 
 ## HOW TO ROUTE
@@ -39,6 +40,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - Domain science question (lightning): use `lightning/SKILL.md`.
 - Go reverse proxy / edge HTTP infra (statute, nginx-replacement-in-Go, TLS/ACME, HTTP/2/3, QUIC): use `statute-proxy/SKILL.md`.
 - Building/scaffolding a dprint formatter plugin (wrap Rust/Go/JS formatter, plugin protocol, schema gen): use `dprint-plugin-creator/SKILL.md`.
+- Building a Zed editor extension (language/grammar, LSP wrapper, theme, MCP/context server, DAP, snippets, `extension.toml`, `zed_extension_api`): use `zed-extension-creator/SKILL.md`.
 - Repo maintenance: use `../scripts/maintain.sh`.
 
 ## SHARED CONVENTIONS

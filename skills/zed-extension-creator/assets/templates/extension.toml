@@ -1,0 +1,100 @@
+# =============================================================================
+# Zed extension manifest — annotated template.
+#
+# Keep ONLY the sections your extension actually uses; delete the rest.
+# The identity block at the top is the only mandatory part. Everything below
+# "CAPABILITIES" is opt-in per extension type.
+#
+# Schema/field reference: references/manifest.md
+# =============================================================================
+
+# --- Identity (required) -----------------------------------------------------
+id = "my-extension"          # immutable once published. lowercase, hyphenated,
+                             # must NOT contain "zed", "Zed", or "extension".
+                             # convention: themes end "-theme", snippets "-snippets".
+name = "My Extension"        # human-readable display name (free to change later)
+version = "0.0.1"            # semver; bump on every published change
+schema_version = 1           # manifest schema version — keep at 1
+authors = ["Your Name <you@example.com>"]
+description = "One sentence describing what this adds to Zed."
+repository = "https://github.com/you/my-extension"   # required to publish
+
+# =============================================================================
+# CAPABILITIES — delete every section you don't use.
+# =============================================================================
+
+# --- Grammars (language extensions) ------------------------------------------
+# Registers a tree-sitter grammar Zed will fetch and compile. Pair with a
+# languages/<lang>/config.toml + *.scm query files. See references/languages.md
+# [grammars.my-language]
+# repository = "https://github.com/org/tree-sitter-my-language"
+# rev = "0000000000000000000000000000000000000000"  # a full commit SHA, not a tag
+# path = "subdir"   # optional: only if grammar.js is NOT at the repo root
+
+# --- Language servers (LSP / Rust) -------------------------------------------
+# Requires src/lib.rs implementing language_server_command. See
+# references/language-servers.md (+ language-server-lib.rs template).
+# [language_servers.my-lsp]
+# name = "My Language LSP"
+# languages = ["My Language"]          # must match config.toml `name` values
+# # If one server serves several languages, map Zed names -> LSP languageIds:
+# # [language_servers.my-lsp.language_ids]
+# # "JavaScript" = "javascript"
+# # "TSX" = "typescriptreact"
+
+# --- Context servers (MCP / Rust) --------------------------------------------
+# Exposes an MCP server to the Agent Panel. Requires src/lib.rs implementing
+# context_server_command. See references/context-servers.md
+# [context_servers.my-mcp]
+# # (no required keys here; configuration is surfaced from Rust)
+
+# --- Debug adapters (DAP / Rust) ---------------------------------------------
+# Requires src/lib.rs implementing get_dap_binary + dap_request_kind.
+# See references/debug-adapters.md
+# [debug_adapters.my-debugger]
+# schema_path = "debug_adapter_schemas/my-debugger.json"  # JSON schema for config
+
+# --- Debug locators (DAP / Rust) ---------------------------------------------
+# Turns ordinary tasks (e.g. `cargo run`) into debug sessions.
+# [debug_locators.my-locator]
+# # (declared here; logic lives in the Rust locator methods)
+
+# --- Themes (no Rust) --------------------------------------------------------
+# Color themes MUST be a standalone extension (can't ride with language support).
+# Files validate against https://zed.dev/schema/themes/v0.2.0.json
+# See references/themes.md
+# themes = ["themes/my-theme.json"]
+
+# --- Icon themes (no Rust) ---------------------------------------------------
+# Also standalone-only. Validate against
+# https://zed.dev/schema/icon_themes/v0.3.0.json
+# icon_themes = ["icon_themes/my-icons.json"]
+
+# --- Snippets (no Rust) ------------------------------------------------------
+# VS Code-style snippet JSON. See references/snippets.md
+# snippets = ["./snippets/my-language.json"]
+
+# =============================================================================
+# PERMISSIONS — [[capabilities]]
+# The wasm sandbox denies network + process exec by default. Declare exactly
+# what the Rust code needs. Globs: "*" = one segment, "**" = any number.
+# Omit this whole block for no-Rust extensions (languages-by-grammar excepted —
+# grammar fetching is handled by Zed, not by you).
+# =============================================================================
+
+# Run a downloaded/located binary (language server, DAP, MCP server):
+# [[capabilities]]
+# kind = "process:exec"
+# command = "*"
+# args = ["**"]
+
+# Download a release asset (e.g. from GitHub):
+# [[capabilities]]
+# kind = "download_file"
+# host = "github.com"
+# path = ["**"]
+
+# Install an npm package (npm-distributed servers):
+# [[capabilities]]
+# kind = "npm:install"
+# package = "my-language-server"

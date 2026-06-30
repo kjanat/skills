@@ -8,14 +8,22 @@ Collection of [Agent Skills] for AI coding agents.
 | --------------------------- | -------------------------------------------------------------- |
 | `build-skill`               | How to author new skills — format, conventions, validation     |
 | `changelog-writing`         | Keep a Changelog convention for CHANGELOG.md                   |
+| `commit`                    | Safe commit workflow with quality gates and clear messages     |
 | `discoveries-writing`       | Agent memory files for repo-specific gotchas in DISCOVERIES.md |
+| `dprint-plugin-creator`     | Scaffold dprint formatter plugins                              |
 | `ezelsbruggen-schrijven`    | Write short Dutch mnemonics and recall hooks                   |
 | `github-docker-action`      | Docker container GitHub Actions — Dockerfile, action.yml       |
 | `github-script`             | Secure `actions/github-script@v8` workflow steps               |
 | `github-service-containers` | Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
 | `index-knowledge`           | Generate hierarchical AGENTS.md knowledge bases                |
+| `lightning`                 | Lightning physics reference corpus                             |
 | `statute-proxy`             | Go config-as-code reverse proxy DSL — explain/scaffold/review  |
+| `threlte`                   | Threlte (Svelte + three.js) docs routing and examples          |
+| `twoslash`                  | Twoslash docs snippets and notation authoring                  |
 | `uv-versioning`             | Version bumping workflows for uv Python projects               |
+| `xstate`                    | XState v5 docs and API types routing                           |
+| `zed-extension-creator`     | Scaffold, implement, and ship Zed editor extensions            |
+| `zod`                       | Zod v4 docs routing and schema/API guidance                    |
 
 ## Install with the [`skills` CLI](https://github.com/vercel-labs/skills)
 
