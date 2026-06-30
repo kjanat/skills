@@ -1,7 +1,7 @@
 {
   "lineWidth": 120,
   "useTabs": false,
-  "extends": "https://github.com/kjanat/kjanat/raw/83172ba/configs/dprint.remote.json",
+  "extends": "https://github.com/kjanat/kjanat/raw/e5f1f678/configs/dprint.remote.json",
   "excludes": ["**/dist", "**/node_modules", "**/coverage", "**/examples"],
   "exec": {
     "cwd": "${configDir}",
