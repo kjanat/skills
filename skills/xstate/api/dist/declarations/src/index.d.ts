@@ -7,7 +7,7 @@ export { mapState } from "./mapState.js";
 export { getInitialSnapshot, getNextSnapshot } from "./getNextSnapshot.js";
 export { and, not, or, stateIn } from "./guards.js";
 export type { GuardPredicate, GuardArgs } from "./guards.js";
-export type { InspectedActionEvent, InspectedActorEvent, InspectedEventEvent, InspectedMicrostepEvent, InspectedSnapshotEvent, InspectionEvent } from "./inspection.js";
+export type { InspectedActionEvent, InspectedActorEvent, InspectedEventEvent, InspectedMicrostepEvent, InspectedSnapshotEvent, InspectedTransitionEvent, InspectionEvent } from "./inspection.js";
 export { setup, type SetupReturn } from "./setup.js";
 export { SimulatedClock } from "./SimulatedClock.js";
 export { type Spawner } from "./spawn.js";

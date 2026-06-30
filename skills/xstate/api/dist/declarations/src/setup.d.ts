@@ -29,6 +29,18 @@ type ToStateSchema<TSchema extends StateSchema> = {
     } : TSchema[K];
 };
 type RequiredSetupKeys<TChildrenMap> = IsNever<keyof TChildrenMap> extends true ? never : 'actors';
+type ExtractInvokeEntry<T> = T extends {
+    id: infer TId extends string;
+    src: infer TSrc extends string;
+} ? {
+    [K in TId]: TSrc;
+} : {};
+type ExtractInvokeChildren<T> = T extends readonly (infer E)[] ? UnionToIntersection<ExtractInvokeEntry<E>> : ExtractInvokeEntry<T>;
+type UnionToIntersection<U> = (U extends any ? (x: U) => void : never) extends (x: infer I) => void ? I : never;
+type ExtractConfigChildren<TConfig> = TConfig extends {
+    invoke: infer TInvoke;
+} ? ExtractInvokeChildren<TInvoke> : {};
+type MergeChildrenMap<TExplicit extends Record<string, string>, TInferred extends Record<string, string>> = IsNever<keyof TExplicit> extends true ? TInferred : TExplicit;
 export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEventObject, TActors extends Record<string, UnknownActorLogic>, TChildrenMap extends Record<string, string>, TActions extends Record<string, ParameterizedObject['params'] | undefined>, TGuards extends Record<string, ParameterizedObject['params'] | undefined>, TDelay extends string, TTag extends string, TInput, TOutput extends NonReducibleUnknown, TEmitted extends EventObject, TMeta extends MetaObject> = {
     extend: <TExtendActions extends Record<string, ParameterizedObject['params'] | undefined> = {}, TExtendGuards extends Record<string, ParameterizedObject['params'] | undefined> = {}, TExtendDelays extends string = never>({ actions, guards, delays }: {
         actions?: {
@@ -96,10 +108,10 @@ export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEvent
      * ```
      */
     createAction: (action: ActionFunction<TContext, TEvent, TEvent, unknown, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TEmitted>) => typeof action;
-    createMachine: <const TConfig extends MachineConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, TInput, TOutput, TEmitted, TMeta>>(config: TConfig) => StateMachine<TContext, TEvent | ([RoutableStateId<TConfig>] extends [never] ? never : {
+    createMachine: <const TConfig extends MachineConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, TInput, TOutput, TEmitted, TMeta>, TResolvedChildren extends Record<string, string> = MergeChildrenMap<TChildrenMap, Cast<ExtractConfigChildren<TConfig>, Record<string, string>>>>(config: TConfig) => StateMachine<TContext, TEvent | ([RoutableStateId<TConfig>] extends [never] ? never : {
         type: 'xstate.route';
         to: RoutableStateId<TConfig>;
-    }), Cast<ToChildren<ToProvidedActor<TChildrenMap, TActors>>, Record<string, AnyActorRef | undefined>>, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, ToStateValue<TConfig>, TTag, TInput, TOutput, TEmitted, TMeta, ToStateSchema<TConfig>>;
+    }), Cast<ToChildren<ToProvidedActor<TResolvedChildren, TActors>>, Record<string, AnyActorRef | undefined>>, ToProvidedActor<TResolvedChildren, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, ToStateValue<TConfig>, TTag, TInput, TOutput, TEmitted, TMeta, ToStateSchema<TConfig>>;
     assign: typeof assign<TContext, TEvent, undefined, TEvent, ToProvidedActor<TChildrenMap, TActors>>;
     sendTo: <TTargetActor extends AnyActorRef>(...args: Parameters<typeof sendTo<TContext, TEvent, undefined, TTargetActor, TEvent, TDelay, TDelay>>) => ReturnType<typeof sendTo<TContext, TEvent, undefined, TTargetActor, TEvent, TDelay, TDelay>>;
     raise: typeof raise<TContext, TEvent, TEvent, undefined, TDelay, TDelay>;

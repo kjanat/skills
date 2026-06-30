@@ -937,12 +937,13 @@ type ExtractLiteralString<T extends string | undefined> = T extends string ? str
 type ToConcreteChildren<TActor extends ProvidedActor> = {
     [A in TActor as ExtractLiteralString<A['id']>]?: ActorRefFromLogic<A['logic']>;
 };
+type NonConcreteActors<TActor extends ProvidedActor> = TActor extends any ? ExtractLiteralString<TActor['id']> extends never ? TActor : never : never;
 export type ToChildren<TActor extends ProvidedActor> = string extends TActor['src'] ? Record<string, AnyActorRef> : Compute<ToConcreteChildren<TActor> & {
     include: {
-        [id: string]: TActor extends any ? ActorRefFromLogic<TActor['logic']> | undefined : never;
+        [id: string]: NonConcreteActors<TActor> extends never ? AnyActorRef | undefined : NonConcreteActors<TActor> extends any ? ActorRefFromLogic<NonConcreteActors<TActor>['logic']> | undefined : never;
     };
     exclude: unknown;
-}[undefined extends TActor['id'] ? 'include' : string extends TActor['id'] ? 'include' : 'exclude']>;
+}[NonConcreteActors<TActor> extends never ? 'exclude' : 'include']>;
 export type StateSchema = {
     id?: string;
     route?: unknown;
