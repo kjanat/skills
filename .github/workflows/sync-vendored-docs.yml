@@ -36,6 +36,21 @@ jobs:
       - name: Validate skills
         run: ./scripts/maintain.sh validate
 
+      - name: Install dprint
+        uses: kjanat/install-dprint@v1
+
+      - name: Format synced docs
+        run: |
+          # Make the synced output dprint-clean so it won't ping-pong with
+          # local `dprint fmt`. Scoped to the markdown/json the sync writes —
+          # avoids invoking the TOML formatter (tombi), which isn't in CI.
+          mapfile -t changed < <(git diff --name-only --diff-filter=ACMR -- '*.md' '*.mdx' '*.json')
+          if [[ ${#changed[@]} -eq 0 ]]; then
+            echo "No formattable changes."
+            exit 0
+          fi
+          dprint fmt "${changed[@]}"
+
       - name: Commit and push drift
         run: |
           if [[ -z "$(git status --porcelain)" ]]; then
