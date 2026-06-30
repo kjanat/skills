@@ -10,6 +10,7 @@ This covers the inner dev loop and the path to the Zed extension registry.
 4. If the published version of the same `id` is installed, it's uninstalled/overridden — the page shows "Overridden by dev extension." (On some setups a pre-installed extension with the same name must be uninstalled first.)
 
 ### Debugging
+
 - `stdout`/`stderr` from your extension forwards to Zed. To see `println!`/`dbg!` and INFO logs, launch Zed from a terminal: **`zed --foreground`**.
 - Errors and general logs: `zed: open log` (`Zed.log`).
 - If a Rust extension "does nothing," re-read the WASM constraints in `references/rust-api.md` §6 — `std::env::var`, `#[cfg]`, and `chdir` are the usual culprits.
@@ -82,6 +83,7 @@ To automate updates, the community [`huacnlee/zed-extension-action`](https://git
 ## What lives where (canonical sources)
 
 When you need ground truth beyond the docs:
+
 - `zed_extension_api` crate (trait, types, helpers): <https://docs.rs/zed_extension_api> and <https://crates.io/crates/zed_extension_api>.
 - The WIT contract per API version: `crates/extension_api/wit/since_v0.X.0/` in `zed-industries/zed`.
 - Real built-in languages (config + queries): `crates/languages/src/` in `zed-industries/zed`.

@@ -13,6 +13,7 @@ The fastest way to author a color theme is Zed's visual **Theme Builder** (<http
 ```toml
 themes = ["themes/my-theme.json"]
 ```
+
 Array of paths (relative to `extension.toml`) to theme-family files.
 
 ### File structure (schema v0.2.0)
@@ -32,8 +33,8 @@ Array of paths (relative to `extension.toml`) to theme-family files.
         "editor.background": "#1e1e1e",
         "editor.foreground": "#d4d4d4",
         "...": "...",
-        "players": [ /* see below */ ],
-        "syntax": { /* see below */ }
+        "players": [/* see below */],
+        "syntax": {/* see below */}
       }
     },
     {
@@ -75,6 +76,7 @@ An array (typically 8 entries) defining per-participant colors for multiplayer:
   { "cursor": "#4ec9b0", "background": "#4ec9b0", "selection": "#4ec9b033" }
 ]
 ```
+
 Each entry: `cursor`, `background` (avatar/cursor label), `selection` (their selection highlight, usually the cursor color at low alpha).
 
 ### `syntax` (highlighting)
@@ -101,9 +103,11 @@ Maps highlight capture names (the `@...` names from `highlights.scm`, written **
   "attribute":       { "color": "#9cdcfe" }
 }
 ```
+
 Per-key style fields: `color`, `font_style` (`"normal"`/`"italic"`), `font_weight` (100–900). The complete set of syntax keys mirrors the capture list in `references/languages.md` (§3.1) — define styles for the captures your target languages emit; undefined captures fall back per the right-to-left fallback rule.
 
 ### Tips
+
 - Set `appearance` correctly — it controls the base defaults Zed merges in, so a "dark" theme with light values will look wrong on unset keys.
 - You don't have to set every key; start from a built-in theme's JSON and adjust.
 - Test by installing as a dev extension and toggling with the theme selector (`cmd-k cmd-t` / `ctrl-k ctrl-t`), which previews live as you navigate.
@@ -117,6 +121,7 @@ Per-key style fields: `color`, `font_style` (`"normal"`/`"italic"`), `font_weigh
 ```toml
 icon_themes = ["icon_themes/my-icon-theme.json"]
 ```
+
 Plus the SVG assets the JSON references (commonly under `icon_themes/icons/`).
 
 ### File structure (schema v0.3.0)
@@ -148,9 +153,9 @@ Plus the SVG assets the JSON references (commonly under `icon_themes/icons/`).
       "file_suffixes": { "mp3": "audio", "rs": "rust", "ts": "typescript" },
       "file_icons": {
         "default": { "path": "./icons/file.svg" },
-        "audio":   { "path": "./icons/audio.svg" },
-        "make":    { "path": "./icons/make.svg" },
-        "rust":    { "path": "./icons/rust.svg" },
+        "audio": { "path": "./icons/audio.svg" },
+        "make": { "path": "./icons/make.svg" },
+        "rust": { "path": "./icons/rust.svg" },
         "typescript": { "path": "./icons/typescript.svg" }
       }
     }
@@ -159,6 +164,7 @@ Plus the SVG assets the JSON references (commonly under `icon_themes/icons/`).
 ```
 
 How resolution works:
+
 - **`directory_icons`** — default collapsed/expanded folder icons.
 - **`named_directory_icons`** — per-folder-name overrides (keyed by a logical name that ties into how Zed matches directory names).
 - **`chevron_icons`** — the expand/collapse chevrons in the project panel.
@@ -171,6 +177,7 @@ So a `.rs` file resolves: `file_suffixes["rs"]` → `"rust"` → `file_icons["ru
 `appearance` works as for color themes; you can ship separate light/dark icon variants in the `themes` array.
 
 ### SVG guidelines
+
 - Use `fill="currentColor"` (or `stroke="currentColor"`) so icons inherit the UI color and adapt to light/dark:
   ```svg
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
@@ -183,4 +190,5 @@ So a `.rs` file resolves: `file_suffixes["rs"]` → `"rust"` → `file_icons["ru
 ---
 
 ## Publishing (both)
+
 Theme and icon-theme extensions follow the standard flow in `references/publishing.md`: a repo with `extension.toml` + the JSON (+ SVGs), a license, a submodule PR to `zed-industries/extensions`. Remember the id convention (`-theme` / `-icon-theme`) and that they must be standalone extensions. Third-party gallery for color-theme inspiration with live previews: <https://zed-themes.com>.

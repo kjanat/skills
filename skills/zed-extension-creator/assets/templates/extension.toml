@@ -9,15 +9,15 @@
 # =============================================================================
 
 # --- Identity (required) -----------------------------------------------------
-id = "my-extension"          # immutable once published. lowercase, hyphenated,
-                             # must NOT contain "zed", "Zed", or "extension".
-                             # convention: themes end "-theme", snippets "-snippets".
-name = "My Extension"        # human-readable display name (free to change later)
-version = "0.0.1"            # semver; bump on every published change
-schema_version = 1           # manifest schema version — keep at 1
-authors = ["Your Name <you@example.com>"]
-description = "One sentence describing what this adds to Zed."
-repository = "https://github.com/you/my-extension"   # required to publish
+id             = "my-extension"                                    # immutable once published. lowercase, hyphenated,
+# must NOT contain "zed", "Zed", or "extension".
+# convention: themes end "-theme", snippets "-snippets".
+name           = "My Extension"                                    # human-readable display name (free to change later)
+version        = "0.0.1"                                           # semver; bump on every published change
+schema_version = 1                                                 # manifest schema version — keep at 1
+authors        = ["Your Name <you@example.com>"]
+description    = "One sentence describing what this adds to Zed."
+repository     = "https://github.com/you/my-extension"             # required to publish
 
 # =============================================================================
 # CAPABILITIES — delete every section you don't use.

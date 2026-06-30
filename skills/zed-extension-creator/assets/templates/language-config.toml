@@ -6,8 +6,8 @@
 #
 # `name` and `grammar` are the only required keys.
 
-name = "My Language"          # display name; referenced by language_servers.languages
-grammar = "my-language"       # must match a [grammars.<name>] id in extension.toml
+name    = "My Language"  # display name; referenced by language_servers.languages
+grammar = "my-language"  # must match a [grammars.<name>] id in extension.toml
 
 # Files that map to this language. These are SUFFIXES, not globs.
 path_suffixes = ["mylang", "ml2"]
@@ -22,8 +22,8 @@ line_comments = ["# "]
 # block_comment = ["/* ", " */"]
 
 # --- Indentation -------------------------------------------------------------
-tab_size = 2
-hard_tabs = false             # true => indent with tabs, false => spaces
+tab_size  = 2
+hard_tabs = false  # true => indent with tabs, false => spaces
 
 # --- Bracket / autoclose pairs ----------------------------------------------
 # `close` autocloses; `newline` expands the pair on Enter. `not_in` suppresses

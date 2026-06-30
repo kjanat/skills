@@ -22,19 +22,20 @@ This skill takes someone from "I want to add X to Zed" to a tested, dev-installe
 
 Zed extensions come in distinct flavors, and the flavor decides almost everything (whether you need Rust, what files go where, what the manifest declares). Pin this down first, because building a "language extension" and a "language server extension" are different jobs that happen to live in the same repo.
 
-| Goal | Needs Rust? | Read this reference |
-|---|---|---|
-| Syntax highlighting / indentation / outline for a language (grammar + queries) | No | `references/languages.md` |
-| Run a language server (LSP) for a language — completions, diagnostics, go-to-def | **Yes** | `references/language-servers.md` (+ `references/languages.md` for the language half) |
-| A color theme | No | `references/themes.md` |
-| An icon theme (file/folder icons) | No | `references/themes.md` (icon section) |
-| Expose an MCP / context server to the Agent Panel | **Yes** | `references/context-servers.md` |
-| A debug adapter (DAP) and/or debug locator | **Yes** | `references/debug-adapters.md` |
-| Code snippets | No | `references/snippets.md` |
+| Goal                                                                             | Needs Rust? | Read this reference                                                                  |
+| -------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------ |
+| Syntax highlighting / indentation / outline for a language (grammar + queries)   | No          | `references/languages.md`                                                            |
+| Run a language server (LSP) for a language — completions, diagnostics, go-to-def | **Yes**     | `references/language-servers.md` (+ `references/languages.md` for the language half) |
+| A color theme                                                                    | No          | `references/themes.md`                                                               |
+| An icon theme (file/folder icons)                                                | No          | `references/themes.md` (icon section)                                                |
+| Expose an MCP / context server to the Agent Panel                                | **Yes**     | `references/context-servers.md`                                                      |
+| A debug adapter (DAP) and/or debug locator                                       | **Yes**     | `references/debug-adapters.md`                                                       |
+| Code snippets                                                                    | No          | `references/snippets.md`                                                             |
 
 Two flavors often combine: a real "language support" extension usually ships **both** the grammar+queries (the `languages/` half) **and** a language server adapter (the Rust half). Read both references in that case.
 
 Cross-cutting references, useful for almost every build:
+
 - `references/manifest.md` — the complete `extension.toml` schema: every field, every capability section, the `[[capabilities]]` permission declarations, `schema_version`, and API-version compatibility.
 - `references/rust-api.md` — the full `Extension` trait (every method, when to implement it), the helper functions (`latest_github_release`, `npm_install_package`, `download_file`, `current_platform`, …), the `Worktree`/`Command`/`CodeLabel` types, and the **WASM sandbox constraints that trip everyone up**.
 - `references/publishing.md` — installing as a dev extension, testing, the mandatory license, and the `zed-industries/extensions` PR flow.
@@ -64,6 +65,7 @@ my-extension/
 ```
 
 Use the annotated templates in `assets/templates/` as starting points:
+
 - `extension.toml` — every manifest section, commented, so you delete what you don't need rather than remember what to add.
 - `Cargo.toml` — the correct `crate-type = ["cdylib"]` + dependency.
 - `language-server-lib.rs` — a **complete, working** language-server extension (downloads the server from GitHub releases, caches it, reports install status). The best starting point for any Rust extension; adapt it for MCP/DAP by swapping the trait method.
@@ -72,13 +74,13 @@ Use the annotated templates in `assets/templates/` as starting points:
 The minimal manifest is just identity:
 
 ```toml
-id = "my-extension"          # immutable after publishing; lowercase, no "zed"/"extension"
-name = "My Extension"
-version = "0.0.1"
+id             = "my-extension"                         # immutable after publishing; lowercase, no "zed"/"extension"
+name           = "My Extension"
+version        = "0.0.1"
 schema_version = 1
-authors = ["Your Name <you@example.com>"]
-description = "What it does"
-repository = "https://github.com/you/my-extension"
+authors        = ["Your Name <you@example.com>"]
+description    = "What it does"
+repository     = "https://github.com/you/my-extension"
 ```
 
 Then add the capability sections for the chosen type — see `references/manifest.md` and the type-specific reference for exactly which keys.
@@ -134,14 +136,14 @@ These come from the WASM sandbox and Zed's distribution model. Most "my extensio
 
 ## Reference map
 
-| File | Covers |
-|---|---|
-| `references/manifest.md` | Full `extension.toml` schema, every capability section, `[[capabilities]]`, version compatibility |
-| `references/rust-api.md` | `Extension` trait (all methods), helper functions, `Worktree`/`Command`/`CodeLabel`, WASM constraints, slash commands, docs indexing |
-| `references/languages.md` | `config.toml`, grammar registration, all tree-sitter query files + every capture, semantic tokens |
-| `references/language-servers.md` | LSP extensions: download/cache patterns (GitHub, npm), install status, completion/symbol labels, init/workspace config |
-| `references/themes.md` | Color theme v0.2.0 + icon theme v0.3.0 schemas, style keys, syntax keys, players, SVG guidance |
-| `references/context-servers.md` | MCP servers: `context_server_command`, `ContextServerConfiguration`, transport, settings |
-| `references/debug-adapters.md` | DAP servers + locators: `get_dap_binary`, `dap_request_kind`, `dap_config_to_scenario`, scenarios |
-| `references/snippets.md` | Snippet JSON format, manifest `snippets` field, placeholders, language scoping |
-| `references/publishing.md` | Dev install + testing, license requirement, the extensions-repo PR flow, versioning, naming |
+| File                             | Covers                                                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `references/manifest.md`         | Full `extension.toml` schema, every capability section, `[[capabilities]]`, version compatibility                                    |
+| `references/rust-api.md`         | `Extension` trait (all methods), helper functions, `Worktree`/`Command`/`CodeLabel`, WASM constraints, slash commands, docs indexing |
+| `references/languages.md`        | `config.toml`, grammar registration, all tree-sitter query files + every capture, semantic tokens                                    |
+| `references/language-servers.md` | LSP extensions: download/cache patterns (GitHub, npm), install status, completion/symbol labels, init/workspace config               |
+| `references/themes.md`           | Color theme v0.2.0 + icon theme v0.3.0 schemas, style keys, syntax keys, players, SVG guidance                                       |
+| `references/context-servers.md`  | MCP servers: `context_server_command`, `ContextServerConfiguration`, transport, settings                                             |
+| `references/debug-adapters.md`   | DAP servers + locators: `get_dap_binary`, `dap_request_kind`, `dap_config_to_scenario`, scenarios                                    |
+| `references/snippets.md`         | Snippet JSON format, manifest `snippets` field, placeholders, language scoping                                                       |
+| `references/publishing.md`       | Dev install + testing, license requirement, the extensions-repo PR flow, versioning, naming                                          |

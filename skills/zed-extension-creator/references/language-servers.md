@@ -8,18 +8,19 @@ The trait method surface is in `references/rust-api.md`. This file is about the 
 
 ```toml
 [language_servers.my-lsp]
-name = "My Language LSP"
-languages = ["My Language"]   # must match config.toml `name`s
+name      = "My Language LSP"
+languages = ["My Language"]    # must match config.toml `name`s
 
 # capabilities you'll need (tune to your acquisition strategy):
 [[capabilities]]
 kind = "download_file"
 host = "github.com"
 path = ["**"]
+
 [[capabilities]]
-kind = "process:exec"
+kind    = "process:exec"
 command = "*"
-args = ["**"]
+args    = ["**"]
 ```
 
 ## The core method
@@ -186,11 +187,13 @@ fn language_server_command(&mut self, id: &zed::LanguageServerId, worktree: &zed
     })
 }
 ```
+
 Requires `[[capabilities]] kind = "npm:install"` (and `process:exec` for node).
 
 ## Installation status
 
 Always drive `set_language_server_installation_status` so the user sees progress and errors:
+
 - `CheckingForUpdate` while resolving a release/version,
 - `Downloading` during fetch/install,
 - `Failed(msg)` on error (the message surfaces in the UI),
@@ -221,6 +224,7 @@ fn language_server_workspace_configuration(
     Ok(Some(settings))
 }
 ```
+
 This is the bridge that lets users configure the server via `"lsp": { "my-lsp": { "initialization_options": {...}, "settings": {...} } }`.
 
 ## Completion & symbol labels
@@ -249,6 +253,7 @@ fn label_for_completion(
     }
 }
 ```
+
 `CodeLabelSpan::code_range(range)` highlights a slice of `code` using the language grammar; `CodeLabelSpan::literal(text, Some("highlight_name"))` applies a named highlight directly. `filter_range` is the portion used when matching the user's typed query.
 
 ## Multi-language servers
@@ -257,12 +262,13 @@ If one server handles several languages, list them all and map Zed names to LSP 
 
 ```toml
 [language_servers.my-lsp]
-name = "My LSP"
+name      = "My LSP"
 languages = ["JavaScript", "TSX", "CSS"]
+
 [language_servers.my-lsp.language_ids]
 "JavaScript" = "javascript"
-"TSX" = "typescriptreact"
-"CSS" = "css"
+"TSX"        = "typescriptreact"
+"CSS"        = "css"
 ```
 
 ## Real examples

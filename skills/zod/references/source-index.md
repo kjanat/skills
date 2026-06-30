@@ -4,8 +4,8 @@ Canonical sources and version pins for vendored content.
 
 ## Provenance
 
-| Source | Ref | Resolved | Sync date |
-| --- | --- | --- | --- |
+| Source                                              | Ref    | Resolved       | Sync date  |
+| --------------------------------------------------- | ------ | -------------- | ---------- |
 | [colinhacks/zod](https://github.com/colinhacks/zod) | `main` | `912f0f51b0ce` | 2026-06-30 |
 
 ## Vendored subtree

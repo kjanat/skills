@@ -12,10 +12,11 @@ Trait surface: `references/rust-api.md`. WASM constraints (especially `worktree`
 
 # capabilities, tuned to how you launch the server:
 [[capabilities]]
-kind = "process:exec"
+kind    = "process:exec"
 command = "npx"
-args = ["**"]
+args    = ["**"]
 ```
+
 Multiple servers → multiple `[context_servers.X]` tables. The table key is the `ContextServerId`.
 
 ## The core method
@@ -66,6 +67,7 @@ Identical to the GitHub-release flow in `references/language-servers.md` (Patter
 ### Reading the environment / project
 
 The server often needs env vars (API keys, project paths). Get them the sandbox-correct way:
+
 - From the `project`/worktree, not `std::env`.
 - From user settings via `context_server_configuration` (below), which exposes a settings schema and the user's filled-in values.
 
@@ -99,6 +101,7 @@ fn context_server_configuration(
 ```
 
 `ContextServerConfiguration` fields (all `String`):
+
 - `installation_instructions` — Markdown shown to the user for setup.
 - `settings_schema` — a JSON Schema string used to validate the user's settings and drive completion.
 - `default_settings` — a settings template the user starts from.
@@ -110,4 +113,5 @@ The user fills these in via Zed settings; you then read the values (e.g. in `con
 Install as a dev extension, open the Agent Panel, and confirm the server connects and its tools appear. Run Zed with `zed --foreground` to see the server's stdout/stderr and any launch errors. See `references/publishing.md`.
 
 ## Real examples
+
 Published MCP extensions (Context7, code-runner, various docs servers) in the registry show common launch strategies; filter the extensions site by MCP servers and read their repos.

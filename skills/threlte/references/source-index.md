@@ -4,8 +4,8 @@ Canonical sources and version pins for vendored content.
 
 ## Provenance
 
-| Source | Ref | Resolved | Date |
-|--------|-----|----------|------|
+| Source                                                | Ref    | Resolved       | Date       |
+| ----------------------------------------------------- | ------ | -------------- | ---------- |
 | [threlte/threlte](https://github.com/threlte/threlte) | `main` | `8e7aa269ab32` | 2026-06-30 |
 
 ## External references (not vendored)
@@ -42,6 +42,7 @@ bash scripts/sync-docs.sh --ref 8e7aa269ab32
 ## Freshness rule
 
 Guidance is pinned to versions above. When user asks about newer APIs:
+
 1. Answer with pinned guidance first
 2. State version limit
 3. Recommend checking latest docs

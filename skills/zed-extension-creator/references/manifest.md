@@ -5,16 +5,17 @@ The manifest at the repo root is the source of truth for an extension's identity
 ## Identity fields (required)
 
 ```toml
-id = "my-extension"          # Primary identifier. IMMUTABLE after publishing.
-name = "My Extension"        # Human-readable, shown in the Extensions UI.
-version = "0.0.1"            # SemVer. Must match the version entry in extensions.toml when publishing.
-schema_version = 1           # Manifest schema version. Currently 1.
-authors = ["Your Name <you@example.com>"]
-description = "What the extension does"
-repository = "https://github.com/you/my-extension"
+id             = "my-extension"                         # Primary identifier. IMMUTABLE after publishing.
+name           = "My Extension"                         # Human-readable, shown in the Extensions UI.
+version        = "0.0.1"                                # SemVer. Must match the version entry in extensions.toml when publishing.
+schema_version = 1                                      # Manifest schema version. Currently 1.
+authors        = ["Your Name <you@example.com>"]
+description    = "What the extension does"
+repository     = "https://github.com/you/my-extension"
 ```
 
 Naming rules (enforced at publish time):
+
 - `id` must **not** contain `zed`, `Zed`, or `extension` — every extension is a Zed extension, so it's redundant.
 - `id` should describe the purpose. Convention: themes end in `-theme`, icon themes in `-icon-theme` (or similar), snippet packs in `-snippets`. Language/tooling extensions may use the tool's name directly (e.g. `gleam`, `ruby`) when users would expect to find it under that id.
 - `id` cannot be changed after the extension is published — choose carefully.
@@ -30,7 +31,7 @@ Register each tree-sitter grammar the extension uses. Grammars are compiled from
 ```toml
 [grammars.my-language]
 repository = "https://github.com/org/tree-sitter-my-language"
-rev = "58b7cac8fc14c92b0677c542610d8738c373fa81"   # a commit SHA (or tag)
+rev        = "58b7cac8fc14c92b0677c542610d8738c373fa81"        # a commit SHA (or tag)
 # path = "subdir"   # optional: if the grammar lives in a subdirectory of the repo
 ```
 
@@ -47,12 +48,13 @@ Declares that the extension provides an LSP adapter. The Rust code implements th
 
 ```toml
 [language_servers.my-language-lsp]
-name = "My Language LSP"            # display name
-languages = ["My Language"]         # must match the `name` in the language's config.toml
+name      = "My Language LSP"  # display name
+languages = ["My Language"]    # must match the `name` in the language's config.toml
+
 # language_ids maps Zed language names -> the LSP's own languageId strings, for multi-language servers:
 [language_servers.my-language-lsp.language_ids]
 "JavaScript" = "javascript"
-"TSX" = "typescriptreact"
+"TSX"        = "typescriptreact"
 ```
 
 - `languages` — the Zed language names this server attaches to. Each must equal a `name` from some `languages/<lang>/config.toml` (in this extension or built into Zed).
@@ -117,7 +119,7 @@ Slash commands target the older Assistant flow. They still exist in the API but 
 
 ```toml
 [slash_commands.my-command]
-description = "What the command does"
+description       = "What the command does"
 requires_argument = false
 # tooltip_text = "..."   # optional
 ```
@@ -131,9 +133,9 @@ Separately from *what features it provides*, an extension declares the **host op
 ```toml
 # Allow running a specific command (here: any args to `git`)
 [[capabilities]]
-kind = "process:exec"
+kind    = "process:exec"
 command = "git"
-args = ["**"]
+args    = ["**"]
 
 # Allow downloading from a host (here: anything on github.com)
 [[capabilities]]
@@ -143,17 +145,17 @@ path = ["**"]
 
 # Allow installing a specific npm package
 [[capabilities]]
-kind = "npm:install"
+kind    = "npm:install"
 package = "typescript"
 ```
 
 The three capability kinds:
 
-| `kind` | Grants | Fields |
-|---|---|---|
-| `process:exec` | `zed::process::Command` execution | `command` (name or `*`), `args` (glob array, `**` = anything) |
-| `download_file` | `zed::download_file` | `host` (or `*`), `path` (glob array) |
-| `npm:install` | `zed::npm_install_package` | `package` (name or `*`) |
+| `kind`          | Grants                            | Fields                                                        |
+| --------------- | --------------------------------- | ------------------------------------------------------------- |
+| `process:exec`  | `zed::process::Command` execution | `command` (name or `*`), `args` (glob array, `**` = anything) |
+| `download_file` | `zed::download_file`              | `host` (or `*`), `path` (glob array)                          |
+| `npm:install`   | `zed::npm_install_package`        | `package` (name or `*`)                                       |
 
 Globs: `*` matches one segment, `**` matches any number. Narrow these to what you actually need — broad capabilities draw reviewer scrutiny and reduce user trust. A language-server extension that downloads from GitHub typically needs `download_file` for `github.com` plus maybe `process:exec` for the server binary; an npm-based server needs `npm:install` and a `process:exec` for `node`.
 

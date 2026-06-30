@@ -4,10 +4,10 @@ Canonical sources and version pins for vendored content.
 
 ## Provenance
 
-| Source | Ref | Resolved | Date |
-|--------|-----|----------|------|
+| Source                                              | Ref    | Resolved       | Date       |
+| --------------------------------------------------- | ------ | -------------- | ---------- |
 | [statelyai/docs](https://github.com/statelyai/docs) | `main` | `750ddb69e758` | 2026-06-30 |
-| [xstate npm](https://www.npmjs.com/package/xstate) | `5` | `5.32.2` | 2026-06-30 |
+| [xstate npm](https://www.npmjs.com/package/xstate)  | `5`    | `5.32.2`       | 2026-06-30 |
 
 ## External references (not vendored)
 
@@ -33,6 +33,7 @@ bash scripts/sync-docs.sh --xstate-version 5.32.2 --docs-ref 750ddb69e758
 ## Freshness rule
 
 Guidance is pinned to versions above. When user asks about newer APIs:
+
 1. Answer with pinned guidance first
 2. State version limit
 3. Recommend checking latest docs
