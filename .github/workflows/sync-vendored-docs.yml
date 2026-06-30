@@ -40,16 +40,11 @@ jobs:
         uses: kjanat/install-dprint@v1
 
       - name: Format synced docs
-        run: |
-          # Make the synced output dprint-clean so it won't ping-pong with
-          # local `dprint fmt`. Scoped to the markdown/json the sync writes —
-          # avoids invoking the TOML formatter (tombi), which isn't in CI.
-          mapfile -t changed < <(git diff --name-only --diff-filter=ACMR -- '*.md' '*.mdx' '*.json')
-          if [[ ${#changed[@]} -eq 0 ]]; then
-            echo "No formattable changes."
-            exit 0
-          fi
-          dprint fmt "${changed[@]}"
+        # Re-format whatever the sync touched so the commit is dprint-clean and
+        # won't ping-pong with local runs. --dirty covers new (untracked) files
+        # too; --allow-no-files keeps a no-drift run green; exclude TOML since
+        # its formatter (tombi) isn't installed in CI.
+        run: dprint fmt --dirty --allow-no-files --excludes '**/*.toml'
 
       - name: Commit and push drift
         run: |
