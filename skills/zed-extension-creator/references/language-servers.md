@@ -52,12 +52,11 @@ A robust server extension tries these in order:
 1. **User-specified binary.** Let power users point at their own install via settings. Read `lsp.<server>.binary.path`:
    ```rust
    use zed_extension_api::settings::LspSettings;
-   if let Ok(settings) = LspSettings::for_worktree("my-lsp", worktree) {
-       if let Some(binary) = settings.binary {
-           if let Some(path) = binary.path {
-               return Ok(zed::Command { command: path, args: binary.arguments.unwrap_or_default(), env: vec![] });
-           }
-       }
+   if let Ok(settings) = LspSettings::for_worktree("my-lsp", worktree)
+       && let Some(binary) = settings.binary
+       && let Some(path) = binary.path
+   {
+       return Ok(zed::Command { command: path, args: binary.arguments.unwrap_or_default(), env: vec![] });
    }
    ```
 2. **Binary on `PATH`.** Many users already have the server installed:
@@ -88,10 +87,10 @@ impl MyExtension {
             return Ok(path);
         }
         // 2. reuse cached download if it's still on disk
-        if let Some(path) = &self.cached_binary_path {
-            if std::fs::metadata(path).map_or(false, |s| s.is_file()) {
-                return Ok(path.clone());
-            }
+        if let Some(path) = &self.cached_binary_path
+            && std::fs::metadata(path).is_ok_and(|s| s.is_file())
+        {
+            return Ok(path.clone());
         }
 
         // 3. resolve the latest release for the current platform
@@ -124,7 +123,7 @@ impl MyExtension {
         let version_dir = format!("my-language-server-{}", release.version);
         let binary_path = format!("{version_dir}/my-language-server");
 
-        if !std::fs::metadata(&binary_path).map_or(false, |s| s.is_file()) {
+        if !std::fs::metadata(&binary_path).is_ok_and(|s| s.is_file()) {
             zed::set_language_server_installation_status(
                 language_server_id, &zed::LanguageServerInstallationStatus::Downloading);
             zed::download_file(

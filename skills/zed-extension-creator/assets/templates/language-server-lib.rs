@@ -20,7 +20,7 @@
 //!
 //! Reference: references/language-servers.md and references/rust-api.md
 
-use zed_extension_api::{self as zed, settings::LspSettings, LanguageServerId, Result};
+use zed_extension_api::{self as zed, LanguageServerId, Result, settings::LspSettings};
 
 const SERVER_BINARY_NAME: &str = "my-language-server";
 const GITHUB_REPO: &str = "org/my-language-server";
@@ -40,12 +40,11 @@ impl MyExtension {
         worktree: &zed::Worktree,
     ) -> Result<String> {
         // (1) User override: "lsp": { "my-lsp": { "binary": { "path": "..." } } }
-        if let Ok(settings) = LspSettings::for_worktree(LSP_SETTINGS_KEY, worktree) {
-            if let Some(binary) = settings.binary {
-                if let Some(path) = binary.path {
-                    return Ok(path);
-                }
-            }
+        if let Ok(settings) = LspSettings::for_worktree(LSP_SETTINGS_KEY, worktree)
+            && let Some(binary) = settings.binary
+            && let Some(path) = binary.path
+        {
+            return Ok(path);
         }
 
         // (2) Already on PATH — respect an existing user install.
@@ -54,10 +53,10 @@ impl MyExtension {
         }
 
         // (3) Reuse a previous download if the file is still present.
-        if let Some(path) = &self.cached_binary_path {
-            if std::fs::metadata(path).map_or(false, |stat| stat.is_file()) {
-                return Ok(path.clone());
-            }
+        if let Some(path) = &self.cached_binary_path
+            && std::fs::metadata(path).is_ok_and(|stat| stat.is_file())
+        {
+            return Ok(path.clone());
         }
 
         // (4) Resolve the latest GitHub release for this platform.
@@ -111,7 +110,7 @@ impl MyExtension {
             format!("{version_dir}/{SERVER_BINARY_NAME}")
         };
 
-        if !std::fs::metadata(&executable).map_or(false, |stat| stat.is_file()) {
+        if !std::fs::metadata(&executable).is_ok_and(|stat| stat.is_file()) {
             zed::set_language_server_installation_status(
                 language_server_id,
                 &zed::LanguageServerInstallationStatus::Downloading,
