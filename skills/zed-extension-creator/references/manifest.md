@@ -40,7 +40,7 @@ rev        = "58b7cac8fc14c92b0677c542610d8738c373fa81"        # a commit SHA (o
 - `path` — optional subdirectory, for monorepos that contain the grammar under a subfolder.
 - One extension can register multiple grammars (multiple `[grammars.X]` tables).
 
-The grammar `name` (the table key) is what `languages/<lang>/config.toml`'s `grammar = "..."` field references. See `references/languages.md`.
+The grammar `name` (the table key) is what `languages/<lang>/config.toml`'s `grammar = "..."` field references. Grammar names are global in Zed's registry; reusing a built-in/common key replaces that grammar entry editor-wide. See `references/languages.md`.
 
 ### Language servers
 
@@ -57,7 +57,7 @@ languages = ["My Language"]    # must match the `name` in the language's config.
 "TSX"        = "typescriptreact"
 ```
 
-- `languages` — the Zed language names this server attaches to. Each must equal a `name` from some `languages/<lang>/config.toml` (in this extension or built into Zed).
+- `languages` — the Zed language names this server attaches to. Each must equal a language name from this extension, a built-in language, or another installed language. If the target language already exists, declare only the language server and do not add `[grammars.*]` or `languages/<lang>/config.toml`.
 - `language_ids` — optional. Use when one server handles several languages and needs the LSP-spec `languageId` per language.
 - Multiple servers: add multiple `[language_servers.X]` tables. Users can order/disable them via the `language_servers` setting.
 

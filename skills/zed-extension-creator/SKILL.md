@@ -32,7 +32,7 @@ Zed extensions come in distinct flavors, and the flavor decides almost everythin
 | A debug adapter (DAP) and/or debug locator                                       | **Yes**     | `references/debug-adapters.md`                                                       |
 | Code snippets                                                                    | No          | `references/snippets.md`                                                             |
 
-Two flavors often combine: a real "language support" extension usually ships **both** the grammar+queries (the `languages/` half) **and** a language server adapter (the Rust half). Read both references in that case.
+Two flavors often combine: a real new-language extension usually ships **both** the grammar+queries (the `languages/` half) **and** a language server adapter (the Rust half). But if the language already exists in Zed and you only need IDE features, attach the server to that existing language name; do **not** declare a new language or grammar just to scope the server.
 
 Cross-cutting references, useful for almost every build:
 
@@ -89,9 +89,9 @@ Then add the capability sections for the chosen type — see `references/manifes
 
 Follow the matching reference. The shape of the work per type:
 
-- **Language (no Rust):** register the grammar in `extension.toml` (`[grammars.<name>]` with `repository` + `rev`), write `languages/<lang>/config.toml`, then author the tree-sitter `.scm` queries (`highlights.scm` at minimum; add `injections`, `brackets`, `indents`, `outline`, `textobjects`, `runnables`, `overrides`, `redactions` as needed). The single best reference for real queries is Zed's own built-in languages at [`crates/languages/src/`](https://github.com/zed-industries/zed/tree/main/crates/languages/src). Details + every capture name: `references/languages.md`.
+- **Language (no Rust):** register the grammar in `extension.toml` (`[grammars.<name>]` with `repository` + `rev`), write `languages/<lang>/config.toml`, then author the tree-sitter `.scm` queries (`highlights.scm` at minimum; add `injections`, `brackets`, `indents`, `outline`, `textobjects`, `runnables`, `overrides`, `redactions` as needed). Grammar names are global in Zed; reusing a common key like `toml` replaces the existing grammar by that name. The single best reference for real queries is Zed's own built-in languages at [`crates/languages/src/`](https://github.com/zed-industries/zed/tree/main/crates/languages/src). Details + every capture name: `references/languages.md`.
 
-- **Language server (Rust):** implement `language_server_command` to return the `Command` that launches the server. The hard part is *acquiring* the binary — download from GitHub releases or install via npm, cache it under the extension's working dir, and only check for updates periodically (the method is called on every server start). Optionally implement `label_for_completion`/`label_for_symbol` for nicer completion styling and `language_server_initialization_options`/`language_server_workspace_configuration` for config. Details + the download/caching patterns: `references/language-servers.md`.
+- **Language server (Rust):** implement `language_server_command` to return the `Command` that launches the server. If the server targets an existing Zed language, declare `[language_servers.<id>] languages = ["TOML"]` (or the relevant built-in name) and skip `languages/<lang>/` plus `[grammars.*]`. The hard part is *acquiring* the binary — download from GitHub releases or install via npm, cache it under the extension's working dir, and only check for updates periodically (the method is called on every server start). Optionally implement `label_for_completion`/`label_for_symbol` for nicer completion styling and `language_server_initialization_options`/`language_server_workspace_configuration` for config. Details + the download/caching patterns: `references/language-servers.md`.
 
 - **Theme / icon theme (no Rust):** author the JSON against the published schema (`https://zed.dev/schema/themes/v0.2.0.json` for color, `https://zed.dev/schema/icon_themes/v0.3.0.json` for icons), declare it with `themes = [...]` / `icon_themes = [...]`. Themes and icon themes **must be their own extension** — they can't be bundled with language support. Details + the full style-key catalog: `references/themes.md`.
 
@@ -131,6 +131,7 @@ These come from the WASM sandbox and Zed's distribution model. Most "my extensio
 - **The extension cannot change its working directory** (`chdir` is deliberately blocked) and must not read or modify anything outside the environment Zed grants it.
 - **Don't bundle a language server / DAP / MCP binary in the extension.** Download it at runtime or locate it in the user's `PATH`. Shipping the binary will get a publish rejected.
 - **Themes and icon themes can't ride along with other features.** Ship them as separate extensions, even if developed in the same repo.
+- **Grammar keys are global, not extension-local.** Registering `[grammars.toml]` overwrites the editor-wide `toml` grammar entry. Do not reuse a built-in/common grammar key to create a scoped variant. If you only need an LSP for an existing language, attach to the existing language name instead.
 - **`id` is immutable once published** and must not contain `zed`, `Zed`, or `extension`. Theme ids conventionally end in `-theme`, snippet ids in `-snippets`.
 - **`rustup`, not Homebrew.** (Worth repeating — it's the #1 setup failure.)
 

@@ -1,6 +1,6 @@
 # Language Server Extensions Reference
 
-A language-server extension provides IDE features (completions, diagnostics, go-to-definition, formatting) by launching an LSP server and adapting it to Zed. This is the Rust half; the language-definition half (grammar + queries) is in `references/languages.md`, and a full language extension usually ships both.
+A language-server extension provides IDE features (completions, diagnostics, go-to-definition, formatting) by launching an LSP server and adapting it to Zed. This is the Rust half. The language-definition half (grammar + queries) is in `references/languages.md`; use it only when adding a new language or replacing language syntax behavior.
 
 The trait method surface is in `references/rust-api.md`. This file is about the **patterns that make a server extension actually work**: acquiring the binary, caching it, reporting status, and styling output.
 
@@ -9,7 +9,7 @@ The trait method surface is in `references/rust-api.md`. This file is about the 
 ```toml
 [language_servers.my-lsp]
 name      = "My Language LSP"
-languages = ["My Language"]    # must match config.toml `name`s
+languages = ["My Language"]    # must match Zed language names
 
 # capabilities you'll need (tune to your acquisition strategy):
 [[capabilities]]
@@ -22,6 +22,16 @@ kind    = "process:exec"
 command = "*"
 args    = ["**"]
 ```
+
+`languages` entries attach the server to existing Zed language names. They may refer to a `name` from this extension's `languages/<lang>/config.toml` or to a built-in/installed language. If the language already exists, skip `languages/<lang>/` and skip `[grammars.*]`:
+
+```toml
+[language_servers.tombi]
+name      = "Tombi"
+languages = ["TOML"]
+```
+
+This avoids global grammar-key collisions. Do not create a fake/scoped language that reuses a common grammar key just to narrow an LSP to certain files.
 
 ## The core method
 

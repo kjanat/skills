@@ -1,6 +1,6 @@
 # Language Extensions Reference
 
-Adding a language to Zed has up to four parts: **metadata** (`config.toml`), a **grammar** (tree-sitter, registered in `extension.toml`), **queries** (`.scm` files that tell Zed how to use the syntax tree), and optionally a **language server** (covered in `references/language-servers.md`). Highlighting, indentation, outline, brackets, etc. come purely from the grammar + queries — **no Rust needed**. The language server is a separate, optional Rust layer.
+Adding a language to Zed has up to four parts: **metadata** (`config.toml`), a **grammar** (tree-sitter, registered in `extension.toml`), **queries** (`.scm` files that tell Zed how to use the syntax tree), and optionally a **language server** (covered in `references/language-servers.md`). Highlighting, indentation, outline, brackets, etc. come purely from the grammar + queries — **no Rust needed**. The language server is a separate, optional Rust layer. If the target language already exists in Zed and you only need a language server, do not add a language definition; attach the server to the existing language name.
 
 The single best source of real-world examples is Zed's own built-in languages: <https://github.com/zed-industries/zed/tree/main/crates/languages/src>. When unsure how to write a query, copy the pattern from a similar built-in language.
 
@@ -38,6 +38,8 @@ rev        = "<commit-sha>"
 - `rev` should be a commit SHA for reproducibility (a tag works too).
 - `file://` URLs are allowed for **local** grammar development.
 - The table key (`my-language`) is referenced by `grammar = "my-language"` in `config.toml`.
+- Grammar table keys are **global identifiers** in Zed's grammar registry, not namespaced to your extension. Registering `[grammars.toml]` replaces the editor-wide grammar entry named `toml`. Avoid built-in/common grammar names unless you intend to replace that grammar.
+- Do not guess that a grammar key must or must not match a parser symbol. If you need an alias or scoped variant, verify it against Zed's current grammar loading path and test in a dev install. The safest path for existing languages is usually no grammar registration at all.
 - If no suitable tree-sitter grammar exists, you can [write one](https://tree-sitter.github.io/tree-sitter/creating-parsers/3-writing-the-grammar.html); grammars are JS that the tree-sitter CLI compiles to C, which Zed compiles to wasm.
 
 ## 3. Tree-sitter queries (`.scm` files)
@@ -204,7 +206,7 @@ Mark values to render redacted during screen-share.
 
 ## 4. Language servers from a language extension
 
-To also provide IDE features, declare the server in `extension.toml` and implement the Rust side. The `languages` array must list `name`s matching your `config.toml`:
+To also provide IDE features for a new language, declare the server in `extension.toml` and implement the Rust side. The `languages` array must list Zed language names. For a language you define, that means the `name` from your `config.toml`:
 
 ```toml
 [language_servers.my-language-lsp]

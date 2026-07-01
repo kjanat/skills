@@ -26,6 +26,8 @@ repository     = "https://github.com/you/my-extension"             # required to
 # --- Grammars (language extensions) ------------------------------------------
 # Registers a tree-sitter grammar Zed will fetch and compile. Pair with a
 # languages/<lang>/config.toml + *.scm query files. See references/languages.md
+# Grammar keys are global in Zed. Do not reuse built-in/common keys like `toml`
+# unless you intend to replace that grammar editor-wide.
 # [grammars.my-language]
 # repository = "https://github.com/org/tree-sitter-my-language"
 # rev = "0000000000000000000000000000000000000000"  # a full commit SHA, not a tag
@@ -36,7 +38,8 @@ repository     = "https://github.com/you/my-extension"             # required to
 # references/language-servers.md (+ language-server-lib.rs template).
 # [language_servers.my-lsp]
 # name = "My Language LSP"
-# languages = ["My Language"]          # must match config.toml `name` values
+# languages = ["My Language"]          # Zed language names; built-ins allowed
+# # Example: attach to existing TOML with languages = ["TOML"], no grammar needed.
 # # If one server serves several languages, map Zed names -> LSP languageIds:
 # # [language_servers.my-lsp.language_ids]
 # # "JavaScript" = "javascript"
