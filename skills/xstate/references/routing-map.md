@@ -19,7 +19,7 @@ Load the file matching the user's question.
 | @xstate/store-svelte                     | `docs/xstate-store/svelte.mdx`            |
 | @xstate/store-vue                        | `docs/xstate-store-v3/vue.mdx`            |
 | @xstate/store-vue                        | `docs/xstate-store/vue.mdx`               |
-| AI Agents                                | `docs/agents/agents.mdx`                  |
+| AI agents                                | `docs/agents/agents.mdx`                  |
 | Actions                                  | `docs/actions.mdx`                        |
 | Actors                                   | `docs/actors.mdx`                         |
 | Callback Actors                          | `docs/callback-actors.mdx`                |

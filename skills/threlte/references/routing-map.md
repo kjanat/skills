@@ -3,7 +3,7 @@
 Auto-generated from vendored doc frontmatter. Topic → doc file.
 Load the file matching the user's question.
 
-Pinned to commit `8e7aa269ab32`.
+Pinned to commit `ca3e1977acfb`.
 
 ## Learn: Getting Started
 
@@ -179,25 +179,26 @@ Pinned to commit `8e7aa269ab32`.
 
 ## @threlte/theatre
 
-| Title             | File                                              |
-| ----------------- | ------------------------------------------------- |
-| <Declare>         | `docs/reference/theatre/declare.mdx`              |
-| <Project>         | `docs/reference/theatre/project.mdx`              |
-| <Sequence>        | `docs/reference/theatre/sequence.mdx`             |
-| <Sheet>           | `docs/reference/theatre/sheet.mdx`                |
-| <SheetObject>     | `docs/reference/theatre/sheet-object.mdx`         |
-| <Studio>          | `docs/reference/theatre/studio.mdx`               |
-| <Sync>            | `docs/reference/theatre/sync.mdx`                 |
-| <Theatre>         | `docs/reference/theatre/theatre.mdx`              |
-| <Transform>       | `docs/reference/theatre/transform.mdx`            |
-| Components        | `docs/reference/theatre/components.mdx`           |
-| Getting Started   | `docs/reference/theatre/getting-started.mdx`      |
-| Sheet Object      | `docs/reference/theatre/sheet-object-section.mdx` |
-| actions           | `docs/reference/theatre/actions.mdx`              |
-| hooks             | `docs/reference/theatre/hooks.mdx`                |
-| sheetObjectAction | `docs/reference/theatre/sheet-object-action.mdx`  |
-| useSequence       | `docs/reference/theatre/use-sequence.mdx`         |
-| useStudio         | `docs/reference/theatre/use-studio.mdx`           |
+| Title                | File                                              |
+| -------------------- | ------------------------------------------------- |
+| <Declare>            | `docs/reference/theatre/declare.mdx`              |
+| <Project>            | `docs/reference/theatre/project.mdx`              |
+| <Sequence>           | `docs/reference/theatre/sequence.mdx`             |
+| <Sheet>              | `docs/reference/theatre/sheet.mdx`                |
+| <SheetObject>        | `docs/reference/theatre/sheet-object.mdx`         |
+| <Studio>             | `docs/reference/theatre/studio.mdx`               |
+| <Sync>               | `docs/reference/theatre/sync.mdx`                 |
+| <Theatre>            | `docs/reference/theatre/theatre.mdx`              |
+| <Transform>          | `docs/reference/theatre/transform.mdx`            |
+| Components           | `docs/reference/theatre/components.mdx`           |
+| Getting Started      | `docs/reference/theatre/getting-started.mdx`      |
+| Sheet Object         | `docs/reference/theatre/sheet-object-section.mdx` |
+| Your First Animation | `docs/reference/theatre/your-first-animation.mdx` |
+| actions              | `docs/reference/theatre/actions.mdx`              |
+| hooks                | `docs/reference/theatre/hooks.mdx`                |
+| sheetObjectAction    | `docs/reference/theatre/sheet-object-action.mdx`  |
+| useSequence          | `docs/reference/theatre/use-sequence.mdx`         |
+| useStudio            | `docs/reference/theatre/use-studio.mdx`           |
 
 ## @threlte/xr
 
