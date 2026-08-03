@@ -1,0 +1,14 @@
+interface:
+  display_name: GitHub Stack
+  short_description: Manage dependent GitHub pull request stacks
+  default_prompt: Use $gh-stack to inspect and safely manage this repository’s stacked
+    pull requests.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+    - chatgpt
+    - codex
+    - api
+    - atlas
+  allow_implicit_invocation: true
