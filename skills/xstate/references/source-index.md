@@ -6,8 +6,8 @@ Canonical sources and version pins for vendored content.
 
 | Source                                              | Ref    | Resolved       | Date       |
 | --------------------------------------------------- | ------ | -------------- | ---------- |
-| [statelyai/docs](https://github.com/statelyai/docs) | `main` | `9beacf59fdd4` | 2026-07-27 |
-| [xstate npm](https://www.npmjs.com/package/xstate)  | `5`    | `5.32.5`       | 2026-07-27 |
+| [statelyai/docs](https://github.com/statelyai/docs) | `main` | `9beacf59fdd4` | 2026-08-03 |
+| [xstate npm](https://www.npmjs.com/package/xstate)  | `5`    | `5.32.5`       | 2026-08-03 |
 
 ## External references (not vendored)
 
