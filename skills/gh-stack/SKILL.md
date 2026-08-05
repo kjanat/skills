@@ -1,18 +1,34 @@
 ---
 name: gh-stack
-description: Manage stacked branches and dependent pull requests with the GitHub `gh stack` CLI extension. Use for planning, creating, adopting, pushing, submitting, inspecting, navigating, rebasing, syncing, restructuring, checking out, linking, or merging stacked diffs and linear branch chains, including conflict recovery and incremental review workflows.
+description: Manages linear branch stacks and dependent pull requests with the GitHub `gh stack` CLI extension. Use when planning, creating, adopting, splitting, inspecting, navigating, editing, pushing, submitting, syncing, rebasing, restructuring, linking, checking out, or diagnosing stacked PRs, or whenever the user mentions stack layers, dependent PRs, or `gh stack`.
+compatibility: Requires Git, GitHub CLI, and the `github/gh-stack` extension.
 ---
 
 # Manage GitHub PR stacks
 
-Use `gh stack` to manage a linear chain in which every branch builds on the branch below it and maps to a PR whose base is that lower branch. Treat the branch nearest trunk as the bottom and the furthest branch as the top.
+Use `gh stack` for a linear chain in which each branch builds on the branch
+below it and each PR targets that lower branch.
+
+```text
+(trunk) <- models <- api <- ui
+            bottom          top
+```
+
+`up` moves toward the top; `down` moves toward trunk. A stack is linear, so
+parallel children require separate stacks.
 
 ## Inspect before changing
 
-1. Confirm the repository, worktree status, current branch, remotes, and authentication.
-2. Run `gh stack view --json` when local stack state exists. Never run the interactive view.
-3. Determine the trunk and order branches from foundational changes at the bottom to dependent changes at the top.
-4. Preserve unrelated working-tree changes. Use ordinary `git add <paths>` and `git commit` to keep each layer deliberate.
+1. Confirm the repository, worktree status, current branch, remotes, and
+   `gh auth status`.
+2. Preserve staged and unstaged user changes. Do not clean, unstage, or rewrite
+   them unless explicitly requested.
+3. Run `gh stack view --json` when local stack state exists. Treat it as the
+   canonical machine-readable view.
+4. Resolve the actual trunk and push remote rather than assuming `main` and
+   `origin`.
+5. Before any push or submit, inspect applicable branch rules and the exact
+   branches and PRs that will change.
 
 Install the extension only when missing:
 
@@ -20,96 +36,110 @@ Install the extension only when missing:
 gh extension install github/gh-stack
 ```
 
-Prevent prompts before stack operations:
+When multiple remotes exist, pass `--remote <name>` where supported or set the
+repository's intended push remote:
 
 ```bash
-git config rerere.enabled true
-git config remote.pushDefault origin
+git config remote.pushDefault <name>
 ```
 
-If the repository uses another push remote, configure that actual remote instead. For commands supporting `--remote`, prefer passing the resolved remote explicitly when multiple remotes exist.
+## Keep automation non-interactive
 
-## Keep every invocation non-interactive
+| Operation | Automation-safe form |
+| --- | --- |
+| Inspect | `gh stack view --json` (preferred) or `--short` |
+| Initialize | `gh stack init --base <trunk> <bottom> ... <top>` |
+| Add | `gh stack add <branch>` |
+| Submit | `gh stack submit --auto [--open] [--remote <name>]` |
+| Checkout | `gh stack checkout <stack-or-pr-or-branch>` |
+| Merge | `gh stack merge <target> --yes --<method>` |
 
-- Supply branch names to `gh stack init` and `gh stack add`.
-- Supply a branch, PR URL/number, or stack number to `gh stack checkout`.
-- Always run `gh stack submit --auto`; add `--open` only when PRs should be ready rather than drafts.
-- Always run `gh stack view --json`; never use `view`, `view --short`, or its TUI.
-- Run `gh stack merge --yes` and explicitly select `--squash`, `--rebase`, or `--merge` when the desired merge method is known.
-- Do not use `gh pr merge` for a stack.
-- Never invoke a command that can prompt and then wait for it. If no non-interactive path exists, stop and explain the blocker.
+Bare `view`, argumentless `init`, `add`, or `checkout`, and `submit` without
+`--auto` may prompt. `modify` is a TUI-only workflow and has no non-interactive
+mode. Never launch an interactive command and leave it waiting for input.
 
-`push`, `submit`, `sync`, `rebase`, and `link` accept `--remote`. `checkout`, `trunk`, and `modify` do not; they rely on `remote.pushDefault`.
+## Route the task
 
-## Plan and build a stack
+| Task | Read first |
+| --- | --- |
+| Plan a new stack or split existing work | [stack-design.md](references/stack-design.md) |
+| Execute or verify a command | [commands.md](references/commands.md) |
+| Resolve conflicts, divergence, or interrupted state | [troubleshooting.md](references/troubleshooting.md) |
 
-Keep one cohesive story per stack. Put shared models, schemas, APIs, and utilities lower than their consumers, UI, integration tests, or documentation. Create a separate stack for unrelated work.
+Read only the references needed for the task. For restructuring, read both
+stack design and troubleshooting before changing ancestry or metadata.
 
-For a new stack:
+## Build and edit deliberately
+
+For new work, create the intended layer before writing it when practical:
 
 ```bash
-gh stack init --base main models
-git add src/models
-git commit -m "Add shared models"
-
-gh stack add api
-git add src/api
-git commit -m "Add API endpoints"
-
-gh stack add ui
-git add src/ui
-git commit -m "Add UI"
-
-gh stack submit --auto
-gh stack view --json
+gh stack init --base <trunk> <bottom-branch>
+# edit, stage exact paths, test, commit
+gh stack add <next-branch>
+# edit, stage exact paths, test, commit
 ```
 
-Resolve the actual trunk rather than assuming `main`. Existing branches may be adopted by passing them bottom-to-top to `init`.
+Put shared types, schemas, APIs, and utilities below their consumers. Keep one
+cohesive story per stack and put unrelated work in another stack.
 
-## Change a lower layer
+When a higher layer needs a lower-layer correction:
 
-When work on a higher branch reveals a lower-layer change:
+1. Determine the owning layer. If unclear, inspect `git log --all -- <path>`.
+2. Navigate to it with `down`, `bottom`, or `checkout <branch>`.
+3. Edit, stage exact paths, test, and commit there.
+4. Run `gh stack rebase --upstack` to replay dependent layers.
+5. Return to the previous layer, verify the stack, then push or submit.
 
-1. Navigate to the branch where the change logically belongs with `down`, `bottom`, or `checkout <branch>`.
-2. Edit, stage, test, and commit there.
-3. Run `gh stack rebase --upstack` to replay dependent branches.
-4. Return to the original layer and continue.
-5. Push or submit the updated stack.
+Do not hide a foundational change in an upper PR merely to avoid a rebase.
 
-Do not hide lower-layer changes in an upper PR.
+## Control generated PR bodies
 
-## Synchronize and recover
+`gh stack submit` can add a GitHub Stacks CLI attribution footer when it creates
+a PR without a non-empty repository PR template, and the inspected CLI has no
+opt-out flag. If the footer is unacceptable or the user wants full control of
+every PR body:
 
-Use `gh stack sync` for routine fetch/rebase/push/PR-state synchronization. Add `--prune` only when deleting local branches for merged PRs is intended.
+1. Push the stack with `gh stack push --remote <name>`.
+2. Create each missing PR explicitly with `gh pr create`, using the parent
+   branch as `--base` and the layer branch as `--head`.
+3. Run `gh stack submit --auto --remote <name>` to link and update those
+   existing PRs.
 
-If a rebase exits with code 3:
+A non-empty default PR template also prevents the generated footer path, but it
+replaces the generated commit-derived body. Pre-creating PRs is the explicit,
+predictable option. See [commands.md](references/commands.md) for details.
 
-1. Inspect reported paths and conflict markers.
-2. Resolve each conflict without discarding unrelated edits.
-3. Stage resolved files with `git add <paths>`.
-4. Run `gh stack rebase --continue`.
-5. Repeat or run `gh stack rebase --abort` to restore the pre-rebase state.
+## Synchronize and recover safely
 
-If local and GitHub stack compositions diverge, non-interactive `sync` may print `Sync aborted` while exiting successfully. Treat that message as failure, inspect both chains, then deliberately rebuild tracking rather than assuming success.
+Use `gh stack sync --remote <name>` for routine fetch, rebase, push, and PR-state
+reconciliation. Add `--prune` only when local deletion of merged branches is
+explicitly intended.
 
-If checkout would trigger an unbypassable local/remote composition prompt, run `gh stack unstack --local` first, then retry the explicit checkout. This retains the GitHub stack.
+Exit code 3 needs different handling by command:
 
-## Restructure, link, and merge
+- Failed `rebase`: resolve, stage, then `gh stack rebase --continue`, or abort.
+- Failed `sync`: sync already restores all branches. Run `gh stack rebase` to
+  recreate the conflict, then resolve and continue.
 
-- To remove, reorder, or rename layers, use `gh stack unstack`, make the branch changes, then recreate the chain with `gh stack init --base <trunk> <bottom...top>`.
-- To keep external tooling such as jj or Sapling in control of local branches, use `gh stack link <bottom...top>`; it creates no local stack tracking.
-- To append to an existing remote stack, use `gh stack link <stack-number> <new-pr-or-branch...>`.
-- Merge bottom-to-top atomically with `gh stack merge [stack-or-pr] --yes --<method>`. If merge requirements fail, no PR is merged. With a merge queue, the queue controls the merge method and may land PRs in separate groups.
+If local and GitHub stack compositions diverge, non-interactive `sync` can print
+`Sync aborted` while exiting 0. Inspect output as well as the exit code.
 
-## Handle safety and errors
+## Respect mutation boundaries
 
-- Branches shared by multiple stacks cause exit code 6. Check out a non-shared branch before retrying.
-- Exit code 8 means another stack process holds the lock; retry after the short lock timeout.
-- Exit code 9 means stacked PRs are unavailable for the repository; report that stacks must be enabled.
-- Exit code 10 means interrupted `modify` recovery; run `gh stack modify --abort` because this workflow does not use `modify`.
-- Treat partial pushes as partial remote mutation. Inspect state and safely rerun rather than assuming atomicity.
-- Never delete branches or PRs merely to repair stack metadata unless the user explicitly requests deletion.
+- `push`, `submit`, `sync`, `link`, and `merge` can mutate remote state; run only
+  the operation the user authorized and verify the resulting state.
+- `submit` is not status-only: it may push branches, create PRs, correct bases,
+  and update stack metadata. Preflight it accordingly.
+- A request to commit, push, submit, publish, or fix checks does not authorize a
+  merge, merge queue, or auto-merge. Run `gh stack merge` only when governing
+  instructions permit it and the user explicitly requests that exact action.
+- Never bypass branch protection or required workflows. Treat a reported bypass
+  as failure and stop further remote mutation.
+- Never delete branches or PRs merely to repair stack metadata unless deletion
+  is explicitly requested.
+- Push and submit are not transactionally all-or-nothing. After failure, inspect
+  local branches, remote refs, PR bases, and stack state before retrying.
 
-## Load detailed reference only when needed
-
-Read [references/commands.md](references/commands.md) for exact command forms, flags, JSON fields, exit codes, output behavior, limitations, and recovery notes when executing or diagnosing a specific `gh stack` operation.
+After any remote mutation, verify independently with `gh stack view --json` and
+targeted `gh pr view` or `gh pr list` queries.
