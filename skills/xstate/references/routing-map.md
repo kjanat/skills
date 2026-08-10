@@ -145,8 +145,8 @@ Load the file matching the user's question.
 | Stately Sky getting started                | `docs/stately-sky-getting-started.mdx`   |
 | Stately Studio                             | `docs/studio.mdx`                        |
 | Stately Studio API                         | `docs/studio-api.mdx`                    |
-| Stately Studio Community plan              | `docs/studio-community-plan.mdx`         |
 | Stately Studio Enterprise plan             | `docs/studio-enterprise-plan.mdx`        |
+| Stately Studio Free plan                   | `docs/studio-community-plan.mdx`         |
 | Stately Studio Pro plan                    | `docs/studio-pro-plan.mdx`               |
 | Stately Studio Team plan                   | `docs/studio-team-plan.mdx`              |
 | States and transitions in Stately’s editor | `docs/editor-states-and-transitions.mdx` |
