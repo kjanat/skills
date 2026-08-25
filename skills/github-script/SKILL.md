@@ -4,7 +4,7 @@ description: Writes secure actions/github-script workflow steps. Use when GitHub
 license: MIT
 metadata:
   author: kjanat
-  version: "1.1"
+  version: "1.2"
 ---
 
 # github-script
