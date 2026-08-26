@@ -3,7 +3,7 @@
 Read this when publishing a plugin, adding it to the registry, or deciding whether to ship an npm
 package. Keep these four surfaces distinct:
 
-1. **Registry name** — `dprint add <USER>/<short>` is the stable user-facing command.
+1. **Proxy name** — `dprint add <USER>/<short>` is the stable user-facing command.
 2. **GitHub release** — owns immutable `plugin.wasm` or `plugin.json` assets used by the proxy.
 3. **npm package** — a first-class source for the dprint CLI for both Wasm and process plugins.
 4. **`@dprint/formatter`** — a programmatic Wasm host; it does not run process plugins.
@@ -23,13 +23,17 @@ supporting older CLIs, keep the documented install path and config examples with
 
 ## Registry metadata
 
-Keep the registry entry and the plugin's `latest.json` aligned with the release:
+Keep the committed registry entry, dynamically served metadata, and plugin `latest.json` distinct:
 
-- The registry `info.json` entry carries `name`, `version`, `url`, `configKey`, `fileExtensions`,
-  `fileNames`, `configExcludes`, and an optional `checksum`.
-- The plugin's `latest.json` carries `version`, `url`, and an optional `checksum` for update resolution.
-- Either file may declare `npm: { "name": "<package>" }`; add `path` when the plugin is not at the
-  package root. Keep both declarations identical when both are present.
+- Current source entries in `dprint/plugins`'s `info.json` carry `name`, `description`, `selected`, `configKey`,
+  `keywords`, `fileExtensions`, `configExcludes`, and optional `website`, `fileNames`, `npm`,
+  `defaultConfig`, and `configItems`. Do not add release-derived `version`, `url`, or `checksum` there;
+  the service resolves current release/npm data dynamically.
+- The plugin's served `latest.json` carries required `schemaVersion: 1`, `version`, and `url`, plus
+  optional `checksum` and `npm`. Omitting `schemaVersion` makes a hand-hosted equivalent invalid.
+- `npm` has `{ "name": "<package>" }`; add `path` when the plugin is not at the package root. The proxy
+  derives `latest.json`'s declaration from the registry entry, while its served `info.json` additionally
+  resolves npm's latest version ([dprint/plugins#71], [dprint/plugins#72]).
 - In `info.json`, `defaultConfig` is an object inserted into the selected plugin's config block by
   `dprint init`.
 - Also in `info.json`, `configItems` contains `{ match, config }` fragments. Each `match` may declare
@@ -42,11 +46,34 @@ only files the plugin genuinely handles. See [#1185], [#1186], and [#1187].
 [#1185]: https://github.com/dprint/dprint/pull/1185
 [#1186]: https://github.com/dprint/dprint/pull/1186
 [#1187]: https://github.com/dprint/dprint/pull/1187
+[dprint/plugins#71]: https://github.com/dprint/plugins/pull/71
+[dprint/plugins#72]: https://github.com/dprint/plugins/pull/72
 
 When `npm` is declared, dprint resolves the version from npm's `dist-tags.latest`, not the possibly stale
 version in `info.json` or `latest.json`. Publish the npm version before advertising it in registry
 metadata. A malformed or unreachable npm declaration falls back differently by command, so test `init`,
 `add`, and `config update` rather than assuming one happy path.
+
+## Proxy asset routing
+
+The proxy resolves versioned `plugin.wasm`, `plugin.json`, and `schema.json` assets from any public GitHub
+repository. A `dprint-plugin-` repo prefix is optional; it only enables the shorter repo name in proxy
+URLs. Tags may contain letters, digits, `_`, and `.`, but not `-`; keep the bare-version house convention.
+
+Non-Wasm assets have an extra boundary:
+
+- Non-Wasm URLs, including `plugin.json`, `schema.json`, and native archives, are redirected through the
+  proxy's `/asset/` route. This also lets relative manifest URLs resolve against a release-scoped location
+  ([dprint/plugins#42]).
+- dprint-owned repositories are served and persisted through R2 automatically. A community repository
+  must open a PR adding its exact owner/repo to the asset allowlist to receive the same direct serving;
+  otherwise `/asset/` redirects to GitHub ([dprint/plugins#44], [dprint/plugins#57]).
+- Keep absolute release URLs in `plugin.json` by default. If relying on proxy-relative assets, obtain
+  approval and test every platform through the published proxy URL, including browser/CORS consumers.
+
+[dprint/plugins#42]: https://github.com/dprint/plugins/pull/42
+[dprint/plugins#44]: https://github.com/dprint/plugins/pull/44
+[dprint/plugins#57]: https://github.com/dprint/plugins/pull/57
 
 ## npm package layouts
 
@@ -80,6 +107,14 @@ platform-specific: npm transports the manifest, but does not make an absent plat
 ## Checksums and install behavior
 
 - Process plugins always require a checksum.
+- The proxy derives a GitHub-backed plugin checksum only from the `plugin.wasm` or `plugin.json` release
+  asset's GitHub `sha256:` digest. It no longer scrapes a checksum-looking value from release notes
+  ([dprint/plugins#78]).
+- A pinned npm process-plugin specifier requires the **npm package tarball's** SHA-256. That is distinct
+  from the `plugin.json` hash, its per-platform archive hashes, and GitHub's release-asset digest. Hash the
+  exact published tarball and test the complete specifier ([dprint/dprint#1183]). As of
+  [dprint/plugins#72], the registry resolves only the npm version, so its displayed process-plugin
+  specifier omits this mandatory checksum; do not copy that value as a complete install specifier.
 - Wasm checksums are optional, but `dprint add --checksum <plugin>` forces one ([#1184]).
 - A registry-backed `dprint add <USER>/<short>` may write an npm specifier when `npm` metadata is present.
 - A versionless `npm:<package>` resolves through nearby `node_modules`; a pinned specifier resolves from
@@ -87,6 +122,7 @@ platform-specific: npm transports the manifest, but does not make an absent plat
 - npm and proxy/GitHub artifacts are immutable. A bad artifact requires a version bump.
 
 [#1184]: https://github.com/dprint/dprint/pull/1184
+[dprint/plugins#78]: https://github.com/dprint/plugins/pull/78
 
 ## Release verification
 

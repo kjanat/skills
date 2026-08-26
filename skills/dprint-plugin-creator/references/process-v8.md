@@ -105,10 +105,14 @@ calling `getExtensions()` at build time.
 - The release job downloads all platform artifacts, generates `schema.json`, builds `plugin.json` (with
   per-platform zip URLs under the GitHub release), and publishes. Install URL embeds the `plugin.json`
   checksum: `…/releases/download/<tag>/plugin.json@<checksum>`.
+- Keep manifest archive references absolute by default. Community repositories need approval in
+  `dprint/plugins` before the proxy serves and persists their individual archives instead of redirecting
+  them to GitHub; see [distribution.md](distribution.md).
 - Optionally package `plugin.json` for npm CLI distribution. A pinned entry is
   `npm:<package>@<version>/plugin.json@<tarball-sha256>`; dprint detects this layout automatically when
-  `dprint add npm:<package>` is given without a path ([dprint/dprint#1183]). npm transport does not remove
-  the manifest's per-platform archive checksums.
+  `dprint add npm:<package>` is given without a path ([dprint/dprint#1183]). This is the npm tarball hash,
+  not the manifest or GitHub release-asset hash. npm transport does not remove the manifest's per-platform
+  archive checksums.
 
 ### The `plugin.json` manifest (required deliverable)
 

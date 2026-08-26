@@ -81,7 +81,7 @@ schema property defaults) is fully worked out in tex-fmt's `build.rs` — copy a
 ## Approach B — hand-built body string (process plugin / generated CI)
 
 When the release job is generated (svgo's `.github/workflows/ci.generate.ts`), build the body inline. This
-form bakes in the per-version checksum the proxy needs:
+form gives users a checksum-pinned direct install URL:
 
 ````markdown
 # <UPSTREAM> <upstream-version>
@@ -114,7 +114,11 @@ In a dprint configuration file:
 ````
 
 In the workflow, the `<TAG>` and `<CHECKSUM>` are filled from step outputs
-(`shasum -a 256 plugin.json`). See svgo's `releaseBody()` for the exact interpolation.
+(`shasum -a 256 plugin.json`). See svgo's `releaseBody()` for the exact interpolation. This checksum is
+for the documented URL; `plugins.dprint.dev` derives `latest.json.checksum` from the GitHub release
+asset's digest and no longer scrapes release-note text ([dprint/plugins#78]).
+
+[dprint/plugins#78]: https://github.com/dprint/plugins/pull/78
 
 ## Approach C — native changelog (Go / goreleaser)
 

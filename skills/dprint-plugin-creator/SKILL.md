@@ -6,6 +6,8 @@ description: >-
   JavaScript formatter, or working on dprint plugin config resolution, schema generation, handler traits,
   registry metadata, npm distribution, or release flow. Selects Rust/Wasm, Go/TinyGo Wasm, or a
   V8-backed JavaScript process plugin.
+metadata:
+  version: "2026-08-26"
 ---
 
 # dprint plugin creator
@@ -67,9 +69,8 @@ These are house defaults. Apply them unless the user says otherwise.
 
 ### Naming & the proxy
 
-- Repo: `github.com/<USER>/dprint-plugin-<NAME>`.
-- dprint's registry proxies that exact repo shape, so users install with **`dprint add <USER>/<NAME>`**
-  (note: `dprint-plugin-` is stripped). e.g. repo `kjanat/dprint-plugin-svg` → `dprint add kjanat/svg`.
+- House repo: `github.com/<USER>/dprint-plugin-<NAME>`. Any public repo works; this prefix enables the
+  short **`dprint add <USER>/<NAME>`** form, e.g. `kjanat/dprint-plugin-svg` → `dprint add kjanat/svg`.
 - The published wasm asset on each release **must** be named `plugin.wasm` — that's the file the proxy
   serves for `dprint add <USER>/<NAME>`.
 - Crate/lib name: `dprint-plugin-<NAME>` / `dprint_plugin_<NAME>`. Config key in `dprint.json`: the short
@@ -133,8 +134,11 @@ or `-ldflags` injection (Go) so the runtime can never drift from the published a
   bump and release again.
 - **Tag on bare semver `*.*.*`, not `v*.*.*`.** The house convention is unprefixed tags
   (`tags: ["[0-9]+.[0-9]+.[0-9]+"]`), e.g. `0.1.0`, not `v0.1.0`. Keep tag, `Cargo.toml`/`go.mod` version,
-  and schema `$id` in lockstep.
+  and schema `$id` in lockstep. The proxy forbids `-` in tags, so prerelease tags such as `1.0.0-beta.1`
+  do not resolve even though they are valid SemVer.
 - Tag-triggered CI builds and tests the artifact, regenerates the schema, and publishes the GitHub release.
+  The proxy selects the newest release that is neither a draft nor marked prerelease, so the proxy-facing
+  release must be published and non-prerelease.
 - npm is a first-class CLI source for both Wasm and process plugins. If registry `info.json`/`latest.json`
   declares an `npm` package, dprint prefers an npm specifier and resolves its version from npm ([#1215]).
   `dprint add npm:<package>` auto-detects Wasm versus `plugin.json` when no path is supplied ([#1183]).
