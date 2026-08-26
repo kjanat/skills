@@ -1,10 +1,16 @@
 # Process plugin over V8 (deno_core)
 
-**Last resort.** Use only when the wrapped formatter is **JavaScript/Node with no Rust or Go equivalent**
-that can reasonably be ported (e.g. SVGO). Unlike the Wasm paths, this ships **native per-platform
-binaries** that embed a V8 runtime and run the JS formatter — much heavier to build, release, and
-maintain. Prefer Wasm if there's any way to avoid this. Canonical template:
+**Last resort for JavaScript.** Use only when the wrapped formatter is **JavaScript/Node with no Rust or
+Go equivalent** that can reasonably be ported (e.g. SVGO). Unlike the Wasm paths, this ships **native
+per-platform binaries** that embed a V8 runtime and run the JS formatter — much heavier to build,
+release, and maintain. This is one implementation of dprint's generic process protocol. The protocol is
+not inherently V8-specific—the [Swift plugin] demonstrates another native process adapter
+([dprint/dprint#1191])—but this reference does not scaffold non-JavaScript implementations. Canonical V8
+template:
 [`dprint-plugin-svgo`](https://github.com/kjanat/dprint-plugin-svgo).
+
+[dprint/dprint#1191]: https://github.com/dprint/dprint/pull/1191
+[Swift plugin]: https://github.com/drluckyspin/dprint-plugin-swift
 
 ## Why it's different
 
@@ -24,8 +30,14 @@ run in the Wasm host, so a JS formatter must be embedded in a process plugin via
   security risk, so it's disallowed. Wasm plugins load fine from remote configs (they're sandboxed). This
   is a real, user-facing limitation: anyone who wants to share your plugin through a shared/remote config
   simply can't if it's a process plugin. Yet another reason to take a Wasm path if there's any way to.
-- **No `@dprint/formatter` / npm consumption.** The JS programmatic ecosystem (see the npm note in
-  SKILL.md) is Wasm-only, so a process plugin can't be consumed that way either.
+- **No `@dprint/formatter` execution.** That programmatic host is Wasm-only. This does **not** prevent
+  npm distribution to the dprint CLI: npm may carry `plugin.json`, whose manifest URLs locate the native
+  archives ([dprint/dprint#1183], [dprint/dprint#1215]). See [distribution.md](distribution.md).
+- A process plugin works only on platform entries present in its `plugin.json`. New dprint CLI targets do
+  not create matching plugin binaries automatically; decide and test the supported matrix explicitly.
+
+[dprint/dprint#1183]: https://github.com/dprint/dprint/pull/1183
+[dprint/dprint#1215]: https://github.com/dprint/dprint/pull/1215
 
 ## Workspace layout (two crates)
 
@@ -93,6 +105,10 @@ calling `getExtensions()` at build time.
 - The release job downloads all platform artifacts, generates `schema.json`, builds `plugin.json` (with
   per-platform zip URLs under the GitHub release), and publishes. Install URL embeds the `plugin.json`
   checksum: `…/releases/download/<tag>/plugin.json@<checksum>`.
+- Optionally package `plugin.json` for npm CLI distribution. A pinned entry is
+  `npm:<package>@<version>/plugin.json@<tarball-sha256>`; dprint detects this layout automatically when
+  `dprint add npm:<package>` is given without a path ([dprint/dprint#1183]). npm transport does not remove
+  the manifest's per-platform archive checksums.
 
 ### The `plugin.json` manifest (required deliverable)
 
@@ -147,6 +163,12 @@ avoid the V8 embedding, the multi-platform build matrix, the snapshot machinery,
 This path exists because some mature JS formatters (SVGO) have no equivalent worth reimplementing.
 
 Also weigh the **distribution** cost, not just the build cost: a process plugin can't be loaded from a
-remote `extends` config and can't be consumed via `@dprint/formatter` on npm. If the plugin needs to be
-shareable through a hosted config or usable from JS tooling, a process plugin is a dead end — only Wasm
-works for those. If you can get acceptable output from a Rust/Go formatter, you keep both doors open.
+remote `extends` config or executed by `@dprint/formatter`, even if its manifest is published on npm. If
+the plugin needs either capability, only Wasm works. If a Rust/Go formatter gives acceptable output, it
+keeps both doors open.
+
+Before committing to embedded V8, check [dprint/dprint#1107]. It proposes a sandboxed, platform-independent
+Deno plugin kind; use it only if it has landed in a released dprint CLI and its manifest/protocol are
+documented as stable.
+
+[dprint/dprint#1107]: https://github.com/dprint/dprint/pull/1107

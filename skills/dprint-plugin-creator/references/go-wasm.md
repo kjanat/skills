@@ -31,7 +31,7 @@ from its struct tags. Example (from shfmt's `handler_config.go`):
 
 ```go
 //go:generate go run .../gen-config-resolver -type configuration -out handler_config_generated.go -extra-known-keys locked
-//go:generate go run .../gen-json-schema -type configuration -out schema.json -schema-id https://plugins.dprint.dev/<USER>/<short>/latest/schema.json -include-locked -locked-description "..."
+//go:generate go run .../gen-json-schema -type configuration -out schema.json -schema-id https://plugins.dprint.dev/<USER>/<short>/<version>/schema.json -include-locked -locked-description "..."
 
 type configuration struct {
     IndentWidth uint32 `description:"Spaces per indent level." dprint:"default=2,global"  json:"indentWidth"`
@@ -45,6 +45,8 @@ type configuration struct {
   `dprint.ResolveConfigWithSpec`.
 - `gen-json-schema` emits `schema.json` from the same tags. Only `bool` and `uint32` fields are supported
   by the codegen — extend the generators if you need string enums.
+- Ensure the generated schema `$id` exactly matches the versioned `config_schema_url` emitted by
+  `PluginInfo`; pass the release version through the generator rather than committing `latest` as the ID.
 - Run `go generate ./...` after editing the struct; **never hand-edit** `*_generated.go` or `schema.json`.
 
 ## The format method
@@ -98,6 +100,8 @@ tag-triggered (`tags: ["[0-9]+.[0-9]+.[0-9]+*"]`).
 - Integration tests under `integration/` (build tag `integration`) build the wasm with TinyGo and run the
   real `dprint fmt --stdin` over fixture cases in `integration/testdata/cases/<case>/{config.json,input.sh,expected.stdout}`.
   This is the real end-to-end gate; keep the idempotence/diagnostic cases here.
+- Add a published-artifact install/update pass from [distribution.md](distribution.md), including the
+  registry metadata that drives smart `dprint init` selection and optional npm preference.
 
 ## Gotchas
 
@@ -106,3 +110,8 @@ tag-triggered (`tags: ["[0-9]+.[0-9]+.[0-9]+*"]`).
   codegen and the formatter's behavior are the two things most likely to regress. shfmt notes this in its
   `AGENTS.md`.
 - Codegen supports only `bool`/`uint32` config fields out of the box.
+- dprint may eventually route extensionless files from a top-level shebang map. Check
+  [dprint/dprint#1230] before adding host-level assumptions; keep plugin-local dialect detection where the
+  formatter itself still needs the shebang.
+
+[dprint/dprint#1230]: https://github.com/dprint/dprint/pull/1230
