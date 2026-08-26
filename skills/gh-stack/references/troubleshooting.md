@@ -142,13 +142,13 @@ PR bases independently.
 
 ## Other exit codes
 
-| Code | Meaning | Next action |
-| ---: | --- | --- |
-| 1 | Generic Git or operation error | Inspect diagnostics and mutation scope. |
-| 2 | Unknown target or not in a stack | Correct target, initialize, or checkout. |
-| 4 | GitHub API failure | Check auth and remote state before retrying. |
-| 5 | Invalid invocation or state | Correct flags or navigate to the top. |
-| 9 | Stacked PRs unavailable | Report that repository stacks must be enabled. |
+| Code | Meaning                          | Next action                                    |
+| ---: | -------------------------------- | ---------------------------------------------- |
+|    1 | Generic Git or operation error   | Inspect diagnostics and mutation scope.        |
+|    2 | Unknown target or not in a stack | Correct target, initialize, or checkout.       |
+|    4 | GitHub API failure               | Check auth and remote state before retrying.   |
+|    5 | Invalid invocation or state      | Correct flags or navigate to the top.          |
+|    9 | Stacked PRs unavailable          | Report that repository stacks must be enabled. |
 
 After recovery, rerun relevant tests and verify local ancestry, remote refs, PR
 bases, draft state, and stack membership. Recovery is complete only when all of

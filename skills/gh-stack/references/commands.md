@@ -3,36 +3,35 @@
 Use this reference for exact command forms and side effects. Prefer explicit
 targets and remotes in automation.
 
-Behavioral baseline: [`github/gh-stack` commit
-`14fc42ed9b6c376a53b2f999f138d3bd26dac546`](https://github.com/github/gh-stack/tree/14fc42ed9b6c376a53b2f999f138d3bd26dac546).
+Behavioral baseline: [`github/gh-stack` commit `14fc42ed9b6c376a53b2f999f138d3bd26dac546`](https://github.com/github/gh-stack/tree/14fc42ed9b6c376a53b2f999f138d3bd26dac546).
 Check the installed command's `--help` when its version differs.
 
 ## Command map
 
-| Task | Command |
-| --- | --- |
-| Create or adopt a stack | `gh stack init [--base <trunk>] <bottom> ... <top>` |
-| Add a top branch | `gh stack add <branch>` |
-| Add, stage all, and commit | `gh stack add -Am "message" <branch>` |
-| Push branches | `gh stack push [--remote <name>]` |
-| Create or update draft PRs | `gh stack submit --auto [--remote <name>]` |
-| Mark PRs ready | `gh stack submit --auto --open [--remote <name>]` |
-| Inspect machine-readable state | `gh stack view --json` |
-| Inspect compact human-readable state | `gh stack view --short` |
-| Synchronize | `gh stack sync [--remote <name>] [--prune]` |
-| Rebase all | `gh stack rebase [--remote <name>]` |
-| Rebase current through top | `gh stack rebase --upstack` |
-| Rebase trunk through current | `gh stack rebase --downstack` |
-| Rebase without updating trunk | `gh stack rebase --no-trunk` |
-| Continue or abort a rebase | `gh stack rebase --continue` / `--abort` |
-| Navigate | `gh stack up [n]`, `down [n]`, `top`, `bottom`, `trunk` |
-| Explicit checkout | `gh stack checkout <stack-or-pr-or-branch>` |
-| Remove current stack grouping | `gh stack unstack` |
-| Remove remote stack grouping | `gh stack unstack <stack-number>` |
-| Remove local tracking only | `gh stack unstack --local` |
-| Link without local tracking | `gh stack link [--base <trunk>] <bottom> ... <top>` |
-| Append to a remote stack | `gh stack link <stack-number> <new-items...>` |
-| Merge through a target | `gh stack merge <target> --yes --<method>` |
+| Task                                 | Command                                                 |
+| ------------------------------------ | ------------------------------------------------------- |
+| Create or adopt a stack              | `gh stack init [--base <trunk>] <bottom> ... <top>`     |
+| Add a top branch                     | `gh stack add <branch>`                                 |
+| Add, stage all, and commit           | `gh stack add -Am "message" <branch>`                   |
+| Push branches                        | `gh stack push [--remote <name>]`                       |
+| Create or update draft PRs           | `gh stack submit --auto [--remote <name>]`              |
+| Mark PRs ready                       | `gh stack submit --auto --open [--remote <name>]`       |
+| Inspect machine-readable state       | `gh stack view --json`                                  |
+| Inspect compact human-readable state | `gh stack view --short`                                 |
+| Synchronize                          | `gh stack sync [--remote <name>] [--prune]`             |
+| Rebase all                           | `gh stack rebase [--remote <name>]`                     |
+| Rebase current through top           | `gh stack rebase --upstack`                             |
+| Rebase trunk through current         | `gh stack rebase --downstack`                           |
+| Rebase without updating trunk        | `gh stack rebase --no-trunk`                            |
+| Continue or abort a rebase           | `gh stack rebase --continue` / `--abort`                |
+| Navigate                             | `gh stack up [n]`, `down [n]`, `top`, `bottom`, `trunk` |
+| Explicit checkout                    | `gh stack checkout <stack-or-pr-or-branch>`             |
+| Remove current stack grouping        | `gh stack unstack`                                      |
+| Remove remote stack grouping         | `gh stack unstack <stack-number>`                       |
+| Remove local tracking only           | `gh stack unstack --local`                              |
+| Link without local tracking          | `gh stack link [--base <trunk>] <bottom> ... <top>`     |
+| Append to a remote stack             | `gh stack link <stack-number> <new-items...>`           |
+| Merge through a target               | `gh stack merge <target> --yes --<method>`              |
 
 ## Initialize and add branches
 
@@ -174,16 +173,16 @@ instructions may reserve all merging for the user.
 
 ## Exit codes
 
-| Code | Meaning | Recovery |
-| ---: | --- | --- |
-| 0 | Success | Also inspect output for an aborted sync. |
-| 1 | Git or operation error | Read diagnostics and inspect local/remote state. |
-| 2 | Not in a stack or unknown target | Initialize, check out, or correct target. |
-| 3 | Rebase conflict | Use command-specific recovery described above. |
-| 4 | GitHub API failure | Check `gh auth status`; retry only when safe. |
-| 5 | Invalid invocation or state | Correct arguments or navigate to the top. |
-| 6 | Ambiguous shared branch | Check out a branch belonging to one stack. |
-| 7 | Rebase already active | Continue or abort it. |
-| 8 | Stack lock held | Retry after the short lock timeout. |
-| 9 | Stacked PRs unavailable | Report that stacks must be enabled. |
-| 10 | Interrupted `modify` | Run `gh stack modify --abort`. |
+| Code | Meaning                          | Recovery                                         |
+| ---: | -------------------------------- | ------------------------------------------------ |
+|    0 | Success                          | Also inspect output for an aborted sync.         |
+|    1 | Git or operation error           | Read diagnostics and inspect local/remote state. |
+|    2 | Not in a stack or unknown target | Initialize, check out, or correct target.        |
+|    3 | Rebase conflict                  | Use command-specific recovery described above.   |
+|    4 | GitHub API failure               | Check `gh auth status`; retry only when safe.    |
+|    5 | Invalid invocation or state      | Correct arguments or navigate to the top.        |
+|    6 | Ambiguous shared branch          | Check out a branch belonging to one stack.       |
+|    7 | Rebase already active            | Continue or abort it.                            |
+|    8 | Stack lock held                  | Retry after the short lock timeout.              |
+|    9 | Stacked PRs unavailable          | Report that stacks must be enabled.              |
+|   10 | Interrupted `modify`             | Run `gh stack modify --abort`.                   |

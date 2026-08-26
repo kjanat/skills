@@ -45,14 +45,14 @@ git config remote.pushDefault <name>
 
 ## Keep automation non-interactive
 
-| Operation | Automation-safe form |
-| --- | --- |
-| Inspect | `gh stack view --json` (preferred) or `--short` |
-| Initialize | `gh stack init --base <trunk> <bottom> ... <top>` |
-| Add | `gh stack add <branch>` |
-| Submit | `gh stack submit --auto [--open] [--remote <name>]` |
-| Checkout | `gh stack checkout <stack-or-pr-or-branch>` |
-| Merge | `gh stack merge <target> --yes --<method>` |
+| Operation  | Automation-safe form                                |
+| ---------- | --------------------------------------------------- |
+| Inspect    | `gh stack view --json` (preferred) or `--short`     |
+| Initialize | `gh stack init --base <trunk> <bottom> ... <top>`   |
+| Add        | `gh stack add <branch>`                             |
+| Submit     | `gh stack submit --auto [--open] [--remote <name>]` |
+| Checkout   | `gh stack checkout <stack-or-pr-or-branch>`         |
+| Merge      | `gh stack merge <target> --yes --<method>`          |
 
 Bare `view`, argumentless `init`, `add`, or `checkout`, and `submit` without
 `--auto` may prompt. `modify` is a TUI-only workflow and has no non-interactive
@@ -60,10 +60,10 @@ mode. Never launch an interactive command and leave it waiting for input.
 
 ## Route the task
 
-| Task | Read first |
-| --- | --- |
-| Plan a new stack or split existing work | [stack-design.md](references/stack-design.md) |
-| Execute or verify a command | [commands.md](references/commands.md) |
+| Task                                                | Read first                                          |
+| --------------------------------------------------- | --------------------------------------------------- |
+| Plan a new stack or split existing work             | [stack-design.md](references/stack-design.md)       |
+| Execute or verify a command                         | [commands.md](references/commands.md)               |
 | Resolve conflicts, divergence, or interrupted state | [troubleshooting.md](references/troubleshooting.md) |
 
 Read only the references needed for the task. For restructuring, read both
