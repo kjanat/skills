@@ -125,11 +125,17 @@ confirmation before any POST, PUT, PATCH, or DELETE, and show the exact request 
 the user has already said "yes, make the change", that authorization covers the change you
 described, not adjacent tidying you noticed along the way.
 
-When you do write, prefer the narrowest change that solves the stated problem. If a block rule
-is in the way, an allow exception scoped to one host and the ports actually needed preserves the
-user's original intent; disabling their rule discards it. Firewall policy ordering is a separate
-call (`PUT /firewall/policies/ordering`) — a new allow rule does not automatically land ahead of
-the block it needs to precede, so verify the resulting order rather than assuming.
+When you do write, prefer the narrowest change that solves the stated problem. If a block rule is
+in the way, disabling it discards intent the user had; the fix is to make that rule match less.
+A policy's match is composable — address and port filters, each with a `matchOpposite` flag — so
+"block this subnet except on 80 and 443" is one rule, not a rule plus an ordered exception above
+it. Reach for an ordering change only when the model genuinely cannot express the intent in
+place, because ordering is a separate call (`PUT /firewall/policies/ordering`) and a pair of
+rules whose meaning depends on their order is easy for a later edit to break.
+
+Read one existing policy in full before designing any of this. Filtering the list down to name,
+action, and addresses hides the port filters entirely, and a site's own rules usually already
+show which mechanism fits.
 
 ## Diagnosing "X cannot reach Y"
 

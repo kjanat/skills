@@ -80,6 +80,38 @@ cannot reach B while B reaches A perfectly. See `diagnostics.md`.
 
 `index` is the evaluation order. Lower runs first.
 
+### A policy match is composable, and negatable
+
+`source` and `destination` each carry a `trafficFilter` that can hold an `ipAddressFilter`, a
+`portFilter`, or both. Each of those has a `matchOpposite` flag, and a `portFilter` can name a
+reusable traffic-matching list instead of inline ports:
+
+```json
+"portFilter": {
+  "type": "TRAFFIC_MATCHING_LIST",
+  "trafficMatchingListId": "a1b2c3d4-…",
+  "matchOpposite": true
+}
+```
+
+`matchOpposite: true` inverts that filter, so the example above means *every port except the ones
+in that list*. Lists live at `sites/{siteId}/traffic-matching-lists` and are worth reading when a
+policy references one — the id alone tells you nothing about what it exempts.
+
+This matters for how you make an exception to a block. The reflex from iptables and pf is to add
+an ALLOW rule with a lower index and rely on evaluation order. That works, but it leaves two
+rules whose combined meaning is only visible if you also read the ordering, and ordering is a
+separate API call (`PUT firewall/policies/ordering`) that a later edit can silently disturb.
+
+Narrowing the existing block is usually better: attach a `portFilter` with
+`matchOpposite: true` naming the ports that should still pass. One rule then expresses the whole
+policy — "this subnet cannot reach that one, except on 80 and 443" — and there is no order for
+anyone to get wrong later.
+
+Read at least one existing policy in full before proposing either. A site's own rules usually
+already demonstrate the mechanism that fits, and a filtered view of the list (name, action, IPs)
+hides `portFilter` entirely, which makes the composable model invisible exactly when you need it.
+
 ## Legacy controller API — read, and only for what integration lacks
 
 Base: `network/api/s/{site}/rest/`. Site id is the **short name**, usually `default`.

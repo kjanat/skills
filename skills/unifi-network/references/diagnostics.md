@@ -57,6 +57,14 @@ intra-zone traffic by default, so two networks in `Internal` look open — until
 policy with an explicit source and destination subnet blocks them. Read the actual policy list;
 zone membership alone proves nothing.
 
+**Do not reason from a projection of the data.** These responses are deeply nested, and the
+temptation is to flatten them to a few fields for readability. Every field dropped is a fact you
+then cannot see: a `jq` filter that pulls name, action, and addresses hides `portFilter`, so a
+rule that exempts two ports reads as a blanket block, and a rule that gained an exemption reads
+as unchanged. When comparing state before and after a change, diff the whole normalised response
+(`jq -S '.data | sort_by(.id)'` into a file, then `diff -u`) rather than a summary of it. Same
+discipline as `/v1/devices`: the projection is not the thing.
+
 ## The read sequence
 
 Once the pattern points at the gateway, four calls settle it. All through the connector:
@@ -115,9 +123,15 @@ metadata.origin        USER_DEFINED
 NAT translates the destination to 10.30.0.10, and the translated packet meets the block.
 
 The fix is a judgement call for the user, not a default. The rule is deliberate segmentation with
-a description explaining its intent, so disabling it discards something they wanted. An allow
-policy scoped to the single host and the two ports needed, ordered ahead of the block, keeps the
-segmentation and opens exactly what is required.
+a description explaining its intent, so disabling it discards something they wanted.
+
+The change that keeps that intent is to narrow the rule rather than override it: attach a
+`portFilter` to its destination with `matchOpposite: true`, naming a traffic-matching list that
+holds 80 and 443. The block then reads "this subnet cannot reach that one, except over HTTP and
+HTTPS" — one rule, no ordering to maintain, and the exception is visible to anyone who opens the
+rule that enforces it. An ALLOW policy placed above the block achieves the same traffic outcome
+and is the reflex an iptables background produces, but it splits one intent across two rules
+whose combined meaning depends on an ordering stored elsewhere.
 
 ## Before proposing a fix
 
