@@ -13,6 +13,7 @@ Collection of [Agent Skills] for AI coding agents.
 | `dprint-plugin-creator`     | Scaffold dprint formatter plugins                              |
 | `ezelsbruggen-schrijven`    | Write short Dutch mnemonics and recall hooks                   |
 | `github-docker-action`      | Docker container GitHub Actions — Dockerfile, action.yml       |
+| `github-maintainer`         | Active repo triage, review, landing, and Claude delegation     |
 | `github-script`             | Secure `actions/github-script@v8` workflow steps               |
 | `github-service-containers` | Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
 | `index-knowledge`           | Generate hierarchical AGENTS.md knowledge bases                |
