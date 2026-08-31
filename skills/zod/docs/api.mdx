@@ -455,13 +455,15 @@ To allow unqualified (timezone-less) datetimes:
 const schema = z.iso.datetime({ local: true });
 schema.parse("2020-01-01T06:15:01"); // ✅
 schema.parse("2020-01-01T06:15"); // ✅ seconds optional
+schema.parse("2020-01-01T06:15:00Z"); // ✅
+schema.parse("2020-01-01T06:15Z"); // ❌ (a `Z` requires seconds)
 ```
 
-To constrain the allowable time `precision`. By default, seconds are optional and arbitrary sub-second precision is allowed.
+To constrain the allowable time `precision`. By default, seconds are required and sub-second precision is arbitrary. RFC 3339 mandates the seconds wherever a `Z` or an offset is present, so only the unqualified form `local` adds may omit them.
 
 ```ts
 const a = z.iso.datetime();
-a.parse("2020-01-01T06:15Z"); // ✅
+a.parse("2020-01-01T06:15Z"); // ❌ (seconds required)
 a.parse("2020-01-01T06:15:00Z"); // ✅
 a.parse("2020-01-01T06:15:00.123Z"); // ✅
 
@@ -479,6 +481,15 @@ const d = z.iso.datetime({ precision: 3 }); // millisecond precision only
 d.parse("2020-01-01T06:15Z"); // ❌
 d.parse("2020-01-01T06:15:00Z"); // ❌
 d.parse("2020-01-01T06:15:00.123Z"); // ✅
+```
+
+To accept minute precision alongside the rest, union the two — no single `precision` covers both.
+
+```ts
+const mixed = z.union([z.iso.datetime(), z.iso.datetime({ precision: -1 })]);
+mixed.parse("2020-01-01T06:15Z"); // ✅
+mixed.parse("2020-01-01T06:15:00.123Z"); // ✅
+mixed.parse("2020-01-01T06:15"); // ❌ (still qualified-only)
 ```
 
 ### ISO dates
@@ -1559,9 +1570,34 @@ type Category = z.infer<typeof Category>;
 // { name: string; subcategories: Category[] }
 ```
 
-<Callout type="warn"> 
-  Though recursive schemas are supported, passing cyclical data into Zod will cause an infinite loop.
-</Callout>
+Cyclical inputs work out of the box with Zod. For bundle size reasons, Zod Mini requires you to register a memoizer explicitly (see code example).
+
+<Tabs groupId="lib" items={["Zod", "Zod Mini"]}>
+<Tab value="Zod">
+```ts
+const input: any = { name: "root", subcategories: [] };
+input.subcategories.push(input);
+
+const result = Category.parse(input);
+result.subcategories[0] === result; // true
+
+// the output graph mirrors the input graph
+result.subcategories[0].subcategories[0] === result; // true
+```
+</Tab>
+<Tab value="Zod Mini">
+```ts
+// Zod Mini requires a memoizer, registered before schemas are defined
+z.config({ memoizer: z.memoizer() });
+
+const input: any = { name: "root", subcategories: [] };
+input.subcategories.push(input);
+
+const result = Category.parse(input);
+result.subcategories[0] === result; // true
+```
+</Tab>
+</Tabs>
 
 You can also represent *mutually recursive types*:
 
@@ -1762,6 +1798,29 @@ To add a variadic ("rest") argument:
 const variadicTuple = z.tuple([z.string()], z.number());
 // => [string, ...number[]];
 ```
+
+To make every element optional:
+
+<Tabs groupId="lib" items={["Zod", "Zod Mini"]}>
+<Tab value="Zod">
+```ts zod
+const PartialTuple = z.tuple([z.string(), z.number()]).partial();
+// => [(string | undefined)?, (number | undefined)?]
+
+z.tuple([z.string()], z.number()).partial();
+// => [(string | undefined)?, ...number[]]
+```
+</Tab>
+<Tab value="Zod Mini">
+```ts
+const PartialTuple = z.partial(z.tuple([z.string(), z.number()]));
+// => [(string | undefined)?, (number | undefined)?]
+
+z.partial(z.tuple([z.string()], z.number()));
+// => [(string | undefined)?, ...number[]]
+```
+</Tab>
+</Tabs>
 
 ## Unions
 
@@ -1995,6 +2054,15 @@ intKeys.parse({
   12: "twelve", // ❌
   abc: "one" // ❌
 });
+```
+
+A value schema that can stand in for an absent key — `.default()`, `.prefault()`, `.optional()` — makes that key optional on the input side, the same as it does inside `z.object()`:
+
+```ts
+const Person = z.record(z.enum(["id", "name"]), z.string().default(""));
+
+type Input = z.input<typeof Person>; // { id?: string; name?: string }
+type Output = z.output<typeof Person>; // { id: string; name: string }
 ```
 
 ### `z.partialRecord`
@@ -2805,7 +2873,9 @@ z.input(Event).parse({ name: "launch", at: "2024-01-01T00:00:00Z" }); // ✅
 z.output(Event).parse({ name: "launch", at: new Date() });            // ✅
 ```
 
-Only codecs have two real sides; `z.output()` on a one-way [transform](#transforms) returns the transform, which validates nothing.
+Only codecs have two real sides. `z.output()` on a one-way [transform](#transforms) returns the transform, which validates nothing; `z.input()` on a `z.preprocess()` returns the schema the preprocessor feeds.
+
+A wrapper's stored value survives only on the side it belongs to, so with a codec underneath, `z.input()` drops a `.default()` or `.catch()` and `z.output()` drops a `.prefault()`.
 
 ## Transforms
 

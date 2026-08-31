@@ -6,8 +6,8 @@ Canonical sources and version pins for vendored content.
 
 | Source                                              | Ref    | Resolved       | Date       |
 | --------------------------------------------------- | ------ | -------------- | ---------- |
-| [statelyai/docs](https://github.com/statelyai/docs) | `main` | `993051e048e1` | 2026-08-24 |
-| [xstate npm](https://www.npmjs.com/package/xstate)  | `5`    | `5.32.5`       | 2026-08-24 |
+| [statelyai/docs](https://github.com/statelyai/docs) | `main` | `54827bcf6591` | 2026-08-31 |
+| [xstate npm](https://www.npmjs.com/package/xstate)  | `5`    | `5.32.6`       | 2026-08-31 |
 
 ## External references (not vendored)
 
@@ -21,7 +21,7 @@ Canonical sources and version pins for vendored content.
 bash scripts/sync-docs.sh
 
 # Pin specific versions
-bash scripts/sync-docs.sh --xstate-version 5.32.5 --docs-ref 993051e048e1
+bash scripts/sync-docs.sh --xstate-version 5.32.6 --docs-ref 54827bcf6591
 ```
 
 ## Vendored layout

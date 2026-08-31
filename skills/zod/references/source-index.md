@@ -6,7 +6,7 @@ Canonical sources and version pins for vendored content.
 
 | Source                                              | Ref    | Resolved       | Sync date  |
 | --------------------------------------------------- | ------ | -------------- | ---------- |
-| [colinhacks/zod](https://github.com/colinhacks/zod) | `main` | `e516c3baf226` | 2026-08-24 |
+| [colinhacks/zod](https://github.com/colinhacks/zod) | `main` | `b801439b5fb1` | 2026-08-31 |
 
 ## Vendored subtree
 

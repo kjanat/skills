@@ -3,7 +3,7 @@
 Auto-generated from vendored doc frontmatter. Topic → doc file.
 Load the file matching the user's question.
 
-Pinned to commit `ca3e1977acfb`.
+Pinned to commit `5b96022661f0`.
 
 ## Learn: Getting Started
 
