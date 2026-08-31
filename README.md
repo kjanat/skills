@@ -13,7 +13,6 @@ Collection of [Agent Skills] for AI coding agents.
 | `dprint-plugin-creator`     | Scaffold dprint formatter plugins                              |
 | `ezelsbruggen-schrijven`    | Write short Dutch mnemonics and recall hooks                   |
 | `github-docker-action`      | Docker container GitHub Actions — Dockerfile, action.yml       |
-| `github-maintainer`         | Active repo triage, review, landing, and Claude delegation     |
 | `github-script`             | Secure `actions/github-script@v8` workflow steps               |
 | `github-service-containers` | Docker sidecar services (Redis, Postgres) in GitHub Actions CI |
 | `index-knowledge`           | Generate hierarchical AGENTS.md knowledge bases                |
@@ -22,6 +21,7 @@ Collection of [Agent Skills] for AI coding agents.
 | `threlte`                   | Threlte (Svelte + three.js) docs routing and examples          |
 | `twoslash`                  | Twoslash docs snippets and notation authoring                  |
 | `uv-versioning`             | Version bumping workflows for uv Python projects               |
+| `working-with-claude`       | Bounded Claude collaboration with verified handoffs            |
 | `xstate`                    | XState v5 docs and API types routing                           |
 | `zed-extension-creator`     | Scaffold, implement, and ship Zed editor extensions            |
 | `zod`                       | Zod v4 docs routing and schema/API guidance                    |

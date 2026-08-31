@@ -16,7 +16,6 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `dprint-plugin-creator`     | scaffold dprint formatter plugins    | no           |
 | `ezelsbruggen-schrijven`    | Dutch mnemonics and recall hooks     | no           |
 | `github-docker-action`      | Docker container actions             | no           |
-| `github-maintainer`         | active repo triage, review, landing  | no           |
 | `github-script`             | secure `actions/github-script` usage | yes          |
 | `github-service-containers` | CI sidecar services                  | no           |
 | `index-knowledge`           | generate hierarchical AGENTS docs    | no           |
@@ -25,6 +24,7 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 | `threlte`                   | Threlte docs routing and examples    | yes          |
 | `twoslash`                  | Twoslash docs snippets and notations | yes          |
 | `uv-versioning`             | uv version bump planning             | no           |
+| `working-with-claude`       | bounded Claude collaboration         | no           |
 | `xstate`                    | XState v5 docs + API types           | yes          |
 | `zed-extension-creator`     | scaffold/ship Zed editor extensions  | no           |
 | `zod`                       | Zod v4 docs routing + API guidance   | yes          |
@@ -34,9 +34,8 @@ then read that skill's `SKILL.md` and local `AGENTS.md` (if present).
 - Building or modifying skills: start at `build-skill/SKILL.md`.
 - Agent memory files or `DISCOVERIES.md`: use `discoveries-writing/SKILL.md`.
 - Dutch mnemonics or recall hooks: use `ezelsbruggen-schrijven/SKILL.md`.
-- Active GitHub repository maintenance, PR/issue triage, landing reviewed work,
-  or delegating focused maintainer tasks to Claude: use
-  `github-maintainer/SKILL.md`.
+- Delegating bounded implementation, investigation, or review work to Claude:
+  use `working-with-claude/SKILL.md`.
 - GitHub Actions inline JS: use `github-script/SKILL.md`.
 - Vendored docs lookup: prefer `threlte`, `xstate`, or `zod` skill lanes.
 - Twoslash docs snippets or `ts twoslash` fences: use `twoslash/SKILL.md`.
