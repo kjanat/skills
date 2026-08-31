@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 """Qualify the references in a commit message and wrap it to the width GitHub shows.
 
-GitHub keeps the newlines a message contains and rewrites the references inside
-it. `owner/repo#123` is displayed as `owner#123`, and a bare `#123` that does
-not resolve in this repository is displayed as, and links to, the upstream one.
-Wrapping on stored width therefore leaves lines that are ragged once rendered.
+GitHub keeps the newlines a message contains and shortens qualified references
+when it displays them: `owner/repo#123` becomes `owner#123`. Wrapping on stored
+width therefore leaves lines that are ragged once rendered.
 
 Bare references are looked up in this repository through `gh`. Those that
-resolve are left bare. Those that do not are rewritten to the upstream
-repository, so that what is stored says where a reference points and what is
-displayed reaches the margin.
+resolve are left bare. Those confirmed absent are rewritten to the upstream
+repository; when the lookup itself fails, they stay as written.
 
 Takes a commit to read the message from, or reads one on stdin.
 
     wrap_message.py 4ad1e18
     git log -1 --format=%B | wrap_message.py
 
-Subject, fenced blocks, lists, quotes, indented blocks and trailers are passed
-through as they are, as is any paragraph holding a word too long to wrap.
+Subject (unless requested), fenced blocks, inline code, lists, quotes, indented
+blocks and trailers are passed through as they are, as is any paragraph holding
+a word too long to wrap.
 """
 
 from __future__ import annotations
@@ -27,8 +26,9 @@ import re
 import subprocess
 import sys
 
-TRAILER = re.compile(r"^[A-Za-z][A-Za-z-]*:\s")
+TRAILER = re.compile(r"^(?:[A-Za-z][A-Za-z-]*|BREAKING CHANGE):\s")
 MARKUP = re.compile(r"^\s*(?:[-*+>|]|\d+[.)]|#{1,6}\s|```|~~~)")
+FENCE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 REFERENCE = re.compile(
     r"(?<![\w./-])(?:(?P<owner>[\w.-]+)/(?P<repo>[\w.-]+))?#(?P<number>\d+)\b"
 )
@@ -43,6 +43,53 @@ def run(command: list[str]) -> str | None:
     if result.returncode != 0:
         return None
     return result.stdout.strip()
+
+
+def api_status(endpoint: str) -> tuple[int | None, str | None]:
+    """Final HTTP status and failure reason for a silent `gh api` request."""
+    try:
+        result = subprocess.run(
+            ["gh", "api", "--include", "--silent", endpoint],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return None, "gh is unavailable"
+
+    statuses = re.findall(r"^HTTP/\S+\s+(\d{3})\b", result.stdout, re.MULTILINE)
+    status = int(statuses[-1]) if statuses else None
+    if result.returncode == 0 and status is not None and 200 <= status < 300:
+        return status, None
+    return status, f"HTTP {status}" if status is not None else "gh api failed"
+
+
+def repository_accessible(repo: str) -> bool:
+    """Whether `repo` was positively reached through the API."""
+    _, reason = api_status(f"repos/{repo}")
+    if reason is None:
+        return True
+
+    print(
+        f"could not access {repo} ({reason}); leaving bare references unchanged",
+        file=sys.stderr,
+    )
+    return False
+
+
+def issue_exists(repo: str, number: str) -> bool | None:
+    """Whether `number` exists in a known-accessible `repo`, or is inconclusive."""
+    status, reason = api_status(f"repos/{repo}/issues/{number}")
+    if reason is None:
+        return True
+    if status == 404:
+        return False
+
+    print(
+        f"could not resolve #{number} in {repo} ({reason}); leaving it unchanged",
+        file=sys.stderr,
+    )
+    return None
 
 
 def repo_of_remote(remote: str) -> str | None:
@@ -73,21 +120,27 @@ class References:
     def __init__(self, local: str | None, upstream: str | None) -> None:
         self.local = local
         self.upstream = upstream
+        self.local_checked = False
+        self.local_accessible = False
         self.resolved: dict[str, str | None] = {}
 
     def target(self, number: str) -> str | None:
         """Repository a bare `#number` belongs to, or None when it cannot be told."""
         if self.local is None:
             return None
+        if not self.local_checked:
+            self.local_accessible = repository_accessible(self.local)
+            self.local_checked = True
+        if not self.local_accessible:
+            return None
         if number not in self.resolved:
-            found = run([
-                "gh",
-                "api",
-                f"repos/{self.local}/issues/{number}",
-                "-q",
-                ".number",
-            ])
-            self.resolved[number] = self.local if found else self.upstream
+            found = issue_exists(self.local, number)
+            if found is True:
+                self.resolved[number] = self.local
+            elif found is False:
+                self.resolved[number] = self.upstream
+            else:
+                self.resolved[number] = None
         return self.resolved[number]
 
     def qualify(self, text: str) -> str:
@@ -170,17 +223,39 @@ def wrap_paragraph(words: list[str], width: int, floor: int) -> list[str]:
     return lines
 
 
-def is_prose(paragraph: list[str], width: int) -> bool:
-    """Whether reflowing this paragraph is safe."""
+def prose_words(
+    paragraph: list[str], width: int, references: References
+) -> list[str] | None:
+    """Qualified words when reflowing this paragraph is safe, otherwise None."""
     for line in paragraph:
-        if line.startswith((" ", "\t")) or MARKUP.match(line) or TRAILER.match(line):
-            return False
-    return all(
-        References.width(word) <= width for line in paragraph for word in line.split()
+        if (
+            "`" in line
+            or line.startswith((" ", "\t"))
+            or MARKUP.match(line)
+            or TRAILER.match(line)
+        ):
+            return None
+
+    words = " ".join(paragraph).split()
+    if any(References.width(word) > width for word in words):
+        return None
+
+    qualified = references.qualify(" ".join(words)).split()
+    return (
+        qualified
+        if all(References.width(word) <= width for word in qualified)
+        else None
     )
 
 
-def wrap_message(message: str, width: int, floor: int, keep_subject: bool) -> str:
+def wrap_message(
+    message: str,
+    width: int,
+    floor: int,
+    keep_subject: bool,
+    references: References | None = None,
+) -> str:
+    references = references or References(None, None)
     lines = message.split("\n")
 
     head: list[str] = []
@@ -196,21 +271,32 @@ def wrap_message(message: str, width: int, floor: int, keep_subject: bool) -> st
     def flush() -> None:
         if not paragraph:
             return
-        if is_prose(paragraph, width):
-            out.extend(wrap_paragraph(" ".join(paragraph).split(), width, floor))
+        words = prose_words(paragraph, width, references)
+        if words is not None:
+            out.extend(wrap_paragraph(words, width, floor))
         else:
             out.extend(paragraph)
         paragraph.clear()
 
     fenced = False
+    fence_marker = ""
     for line in lines:
-        if line.lstrip().startswith(("```", "~~~")):
-            flush()
-            out.append(line)
-            fenced = not fenced
-            continue
         if fenced:
             out.append(line)
+            if re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_marker[0])}{{{len(fence_marker)},}}[ \t]*",
+                line,
+            ):
+                fenced = False
+                fence_marker = ""
+            continue
+
+        fence = FENCE.match(line)
+        if fence:
+            flush()
+            out.append(line)
+            fenced = True
+            fence_marker = fence.group("marker")
             continue
         if line.strip():
             paragraph.append(line)
@@ -282,10 +368,11 @@ def main() -> int:
     references = References(local, upstream)
     trailing_newline = message.endswith("\n")
     wrapped = wrap_message(
-        references.qualify(message.rstrip("\n")),
+        message.rstrip("\n"),
         args.width,
         floor,
         not args.wrap_subject,
+        references,
     )
 
     sys.stdout.write(wrapped + ("\n" if trailing_newline else ""))

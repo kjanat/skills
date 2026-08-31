@@ -4,7 +4,7 @@ description: Commits changes with strict safety gates and high-signal commit mes
 license: MIT
 metadata:
   author: kjanat
-  version: "1.8"
+  version: "1.9"
 ---
 
 # commit
@@ -152,9 +152,14 @@ the body to the width GitHub displays, which differs from the width it stores
 because `owner/repo#123` is shown as `owner#123`.
 
 - Bare `#123` is looked up in `origin` through `gh`. It stays bare when it
-  resolves there, and is rewritten to the `upstream` remote when it does not.
+  resolves there, and is rewritten to the `upstream` remote only when the
+  repository is reachable and a `404` confirms the issue is absent. Other
+  lookup failures leave it unchanged and warn.
 - `owner/repo#123` pointing at `origin` is reduced to `#123`, which is what
   GitHub shows for it anyway.
+- References in subjects (unless `--wrap-subject` is used), fenced blocks,
+  inline code, lists, quotes, indented blocks, trailers, and paragraphs that
+  cannot be wrapped safely stay as written.
 - `--width` defaults to 72, `--floor` to half of it, below which a paragraph's
   last line is refused.
 - `--offline` skips the lookups, `--repo` and `--upstream` override the remotes.
