@@ -4,7 +4,7 @@ description: Commits changes with strict safety gates and high-signal commit mes
 license: MIT
 metadata:
   author: kjanat
-  version: "1.7"
+  version: "1.8"
 ---
 
 # commit
@@ -83,7 +83,9 @@ Git-only skill. If `.jj/` exists, do not run this flow.
    ```
 
 5. Apply staging gate exactly.
-6. Write commit message using `Commit Message Forms`.
+6. Write commit message using `Commit Message Forms`, then run it through
+   `scripts/wrap_message.py` and commit what comes out. See
+   `Wrapping and References`.
 7. If the user corrected commit-message wording/format in this conversation, restate the exact intended commit artifact before mutating.
 
 8. Create one non-amend commit action.
@@ -141,6 +143,90 @@ structure for linting and transforms.
 
 git commit -m "$msg"
 ```
+
+## Wrapping and References
+
+Every drafted message goes through `scripts/wrap_message.py` before it becomes a
+commit artifact. It qualifies the issue and pull request references and reflows
+the body to the width GitHub displays, which differs from the width it stores
+because `owner/repo#123` is shown as `owner#123`.
+
+- Bare `#123` is looked up in `origin` through `gh`. It stays bare when it
+  resolves there, and is rewritten to the `upstream` remote when it does not.
+- `owner/repo#123` pointing at `origin` is reduced to `#123`, which is what
+  GitHub shows for it anyway.
+- `--width` defaults to 72, `--floor` to half of it, below which a paragraph's
+  last line is refused.
+- `--offline` skips the lookups, `--repo` and `--upstream` override the remotes.
+- Wording is never altered. The script decides where lines break and how
+  references are written, nothing else.
+
+### Worked example
+
+Draft the message as one paragraph per thought and let the script break it. Run
+it in the repository being committed to, since that is where its references are
+resolved. Here that is a fork with `origin` set to the fork and `upstream` to
+the parent:
+
+```bash
+scripts/wrap_message.py <<'EOF'
+worktree: Keep watching a single file that gets replaced by rename
+
+A watch follows the inode behind the name, so an atomic save leaves it on a file nothing writes to any more. This is the notification half of #63174, the same approach as #59908, with the save path guard tracked in #10.
+EOF
+```
+
+```text
+worktree: Keep watching a single file that gets replaced by rename
+
+A watch follows the inode behind the name, so an atomic save leaves
+it on a file nothing writes to any more. This is the notification half
+of zed-industries/zed#63174, the same approach as zed-industries/zed#59908,
+with the save path guard tracked in #10.
+```
+
+`#63174` and `#59908` were qualified for pointing at upstream, `#10` was left
+bare for resolving in this repository. The fourth line stores 75 characters and
+shows 67, because both qualified references lose the `/zed`.
+
+That output, verbatim, is the commit:
+
+```bash
+git commit -m "$(cat <<'EOF'
+worktree: Keep watching a single file that gets replaced by rename
+
+A watch follows the inode behind the name, so an atomic save leaves
+it on a file nothing writes to any more. This is the notification half
+of zed-industries/zed#63174, the same approach as zed-industries/zed#59908,
+with the save path guard tracked in #10.
+EOF
+)"
+```
+
+### Checking a layout
+
+`--report` adds a table on stderr giving the stored and displayed width of every
+line, while the message keeps stdout to itself, so it survives a pipe or a
+redirect:
+
+```bash
+scripts/wrap_message.py --report < message.txt > wrapped.txt
+```
+
+```text
+stored  shown
+    66     66  worktree: Keep watching a single file that gets replaced by rename
+     0      0
+    67     67  A watch follows the inode behind the name, so an atomic save leaves
+    70     70  it on a file nothing writes to any more. This is the notification half
+    75     67  of zed-industries/zed#63174, the same approach as zed-industries/zed#59908,
+    40     40  with the save path guard tracked in #10.
+```
+
+The two columns part company on any line holding a qualified reference, which is
+the whole reason the wrap is not measured on the stored text. Read the `shown`
+column against the width, and read `stored` only to know how long the line is in
+an editor.
 
 ## Heredoc Safety Rules
 
@@ -313,6 +399,7 @@ Amended. b0e75d6 → 52315a9. Message now describes what the diff actually conta
 | Asked to amend          | [`references/amend.md`]                                        |
 | Fix malformed message   | [`references/malformed-message-recovery.md`]                   |
 | Write better message    | [`SKILL.md`] (`Commit Message Forms` + `Heredoc Safety Rules`) |
+| Wrap a message          | [`scripts/wrap_message.py`]                                    |
 
 ## In This Reference
 
@@ -321,7 +408,9 @@ Amended. b0e75d6 → 52315a9. Message now describes what the diff actually conta
 | [`SKILL.md`]                                 | Primary flow, global safety gates            |
 | [`references/amend.md`]                      | Explicit amend workflow and constraints      |
 | [`references/malformed-message-recovery.md`] | Same-run malformed-message recovery playbook |
+| [`scripts/wrap_message.py`]                  | Reference qualifier and displayed-width wrap |
 
 [`SKILL.md`]: SKILL.md
 [`references/amend.md`]: references/amend.md
 [`references/malformed-message-recovery.md`]: references/malformed-message-recovery.md
+[`scripts/wrap_message.py`]: scripts/wrap_message.py
