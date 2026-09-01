@@ -159,7 +159,8 @@ because `owner/repo#123` is shown as `owner#123`.
   GitHub shows for it anyway.
 - References in subjects (unless `--wrap-subject` is used), fenced blocks,
   inline code, lists, quotes, indented blocks, trailers, and paragraphs that
-  cannot be wrapped safely stay as written.
+  cannot be wrapped safely stay as written. Inline code never splits across
+  lines, so a paragraph holding it still reflows.
 - `--width` defaults to 72, `--floor` to half of it, below which a paragraph's
   last line is refused.
 - `--offline` skips the lookups, `--repo` and `--upstream` override the remotes.

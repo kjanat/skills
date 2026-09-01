@@ -151,11 +151,28 @@ This-paragraph-has-a-word-that-is-far-too-long-for-the-width #10
             "BREAKING CHANGE: preserve #6",
             "- keep #7",
             "    echo #8",
-            "Run `echo #9` and keep this inline shell comment exactly as written.",
+            "Run `echo #9` and keep this inline",
             "This-paragraph-has-a-word-that-is-far-too-long-for-the-width #10",
         ):
             self.assertIn(unchanged, wrapped)
         self.assertEqual(references.lookups, ["2"])
+
+    def test_inline_code_reflows_without_splitting_or_qualifying(self) -> None:
+        references = TrackingReferences()
+        message = (
+            "subject\n\nCalling `git commit -m #11` on `master` refers to #12 "
+            "and `#13`, so this paragraph wraps."
+        )
+        wrapped = wrap_message.wrap_message(message, 40, 20, True, references)
+        self.assertEqual(
+            wrapped,
+            "subject\n\n"
+            "Calling `git commit -m #11` on `master`\n"
+            "refers to upstream/repo#12 and `#13`, so\n"
+            "this paragraph wraps.",
+        )
+        self.assertEqual(references.lookups, ["12"])
+        self.assertEqual(wrap_message.References.width("`a/b#1` a/b#1"), 11)
 
     def test_wrap_subject_opt_in_also_qualifies_it(self) -> None:
         references = TrackingReferences()

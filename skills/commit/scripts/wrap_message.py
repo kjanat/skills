@@ -14,9 +14,10 @@ Takes a commit to read the message from, or reads one on stdin.
     wrap_message.py 4ad1e18
     git log -1 --format=%B | wrap_message.py
 
-Subject (unless requested), fenced blocks, inline code, lists, quotes, indented
-blocks and trailers are passed through as they are, as is any paragraph holding
-a word too long to wrap.
+Subject (unless requested), fenced blocks, lists, quotes, indented blocks and
+trailers are passed through as they are, as is any paragraph holding a word too
+long to wrap. Inline code is never split across lines and its references are
+left alone.
 """
 
 from __future__ import annotations
@@ -32,6 +33,16 @@ FENCE = re.compile(r"^ {0,3}(?P<marker>`{3,}|~{3,})")
 REFERENCE = re.compile(
     r"(?<![\w./-])(?:(?P<owner>[\w.-]+)/(?P<repo>[\w.-]+))?#(?P<number>\d+)\b"
 )
+CODE_SPAN = re.compile(r"(`[^`]*`)")
+WORD = re.compile(r"(?:`[^`]*`|\S)+")
+
+
+def outside_code(text: str, transform) -> str:
+    """`text` with `transform` applied to every stretch outside inline code."""
+    parts = CODE_SPAN.split(text)
+    return "".join(
+        part if index % 2 else transform(part) for index, part in enumerate(parts)
+    )
 
 
 def run(command: list[str]) -> str | None:
@@ -151,7 +162,7 @@ class References:
                 return f"#{number}"
             return f"{target}#{number}"
 
-        return REFERENCE.sub(rewrite, text)
+        return outside_code(text, lambda part: REFERENCE.sub(rewrite, part))
 
     @staticmethod
     def displayed(text: str) -> str:
@@ -159,7 +170,7 @@ class References:
             owner, number = match.group("owner", "number")
             return f"{owner}#{number}" if owner else f"#{number}"
 
-        return REFERENCE.sub(render, text)
+        return outside_code(text, lambda part: REFERENCE.sub(render, part))
 
     @classmethod
     def width(cls, text: str) -> int:
@@ -228,19 +239,14 @@ def prose_words(
 ) -> list[str] | None:
     """Qualified words when reflowing this paragraph is safe, otherwise None."""
     for line in paragraph:
-        if (
-            "`" in line
-            or line.startswith((" ", "\t"))
-            or MARKUP.match(line)
-            or TRAILER.match(line)
-        ):
+        if line.startswith((" ", "\t")) or MARKUP.match(line) or TRAILER.match(line):
             return None
 
-    words = " ".join(paragraph).split()
+    words = WORD.findall(" ".join(paragraph))
     if any(References.width(word) > width for word in words):
         return None
 
-    qualified = references.qualify(" ".join(words)).split()
+    qualified = WORD.findall(references.qualify(" ".join(words)))
     return (
         qualified
         if all(References.width(word) <= width for word in qualified)
