@@ -90,6 +90,24 @@ works only with `--print`; pair it with `--output-format stream-json` when the
 caller also needs realtime output. A normal static assignment should keep the
 default text input.
 
+## Protect long-running invocations
+
+Claude may take longer than the surrounding agent harness expects. Use a
+timeout-free call or the largest supported timeout. If that is still too short,
+use a durable process, terminal session, task runner, or supervisor independent
+of the timed call. Log stdout and stderr, and record the process ID, stable
+`--name`, and session ID once available.
+
+Plain shell backgrounding is insufficient when the harness kills the process
+group, container, or execution session. Verify that the launcher survives that
+behavior. A harness timeout interrupts observation; it does not prove Claude
+failed or stopped.
+
+Before retrying, check the original process, log, named session, and repository
+state; recover or resume it when possible. Replace it only after proving it
+stopped or is unrecoverable and deciding another paid run is warranted. Blind
+retries can cause concurrent mutations and charge twice for one assignment.
+
 ## Manage the session lifecycle
 
 Always set `--name <repo>:<task>` on a delegated invocation. Choose a short,

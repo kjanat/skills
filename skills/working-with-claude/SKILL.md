@@ -54,6 +54,15 @@ the same assignment. Bypassing permission prompts does not expand the user's
 authorization. Keep the exact allowed mutations and remote actions explicit in
 the assignment.
 
+Claude can be thorough and slow. When the calling harness imposes a timeout,
+prefer disabling it or setting it to the maximum permitted duration. Otherwise,
+launch Claude through a durable background mechanism that survives the caller,
+capture its output in a known log, and retain its process and session identity.
+A caller timeout makes completion unknown; it does not prove the Claude run
+stopped. Before retrying, inspect the existing process, log, named session, and
+repository state. Never blindly start a duplicate run: the likely result is
+wasted work and an additional expensive invocation.
+
 For reusable prompt shapes, structured or streaming runs, session lifecycle,
 and higher-confidence review patterns, read
 [collaboration-patterns.md](references/collaboration-patterns.md).
