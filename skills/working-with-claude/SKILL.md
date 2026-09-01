@@ -1,6 +1,7 @@
 ---
 name: working-with-claude
 description: Delegates bounded implementation, investigation, and review tasks to Claude, then verifies the returned work against current repository state. Use when Claude should act as a focused collaborator or adversarial second engineer, not for general repository maintenance.
+disable-model-invocation: true
 ---
 
 # Work effectively with Claude
