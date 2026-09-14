@@ -41,7 +41,7 @@ type ExtractConfigChildren<TConfig> = TConfig extends {
     invoke: infer TInvoke;
 } ? ExtractInvokeChildren<TInvoke> : {};
 type MergeChildrenMap<TExplicit extends Record<string, string>, TInferred extends Record<string, string>> = IsNever<keyof TExplicit> extends true ? TInferred : TExplicit;
-export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEventObject, TActors extends Record<string, UnknownActorLogic>, TChildrenMap extends Record<string, string>, TActions extends Record<string, ParameterizedObject['params'] | undefined>, TGuards extends Record<string, ParameterizedObject['params'] | undefined>, TDelay extends string, TTag extends string, TInput, TOutput extends NonReducibleUnknown, TEmitted extends EventObject, TMeta extends MetaObject> = {
+export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEventObject, TActors extends Record<string, UnknownActorLogic>, TChildrenMap extends Record<string, string>, TActions extends Record<string, ParameterizedObject['params'] | undefined>, TGuards extends Record<string, ParameterizedObject['params'] | undefined>, TDelay extends string, TTag extends string, TInput, TOutput extends NonReducibleUnknown, TEmitted extends EventObject, TStateMeta extends MetaObject, TTransitionMeta extends MetaObject = TStateMeta> = {
     extend: <TExtendActions extends Record<string, ParameterizedObject['params'] | undefined> = {}, TExtendGuards extends Record<string, ParameterizedObject['params'] | undefined> = {}, TExtendDelays extends string = never>({ actions, guards, delays }: {
         actions?: {
             [K in keyof TExtendActions]: ActionFunction<TContext, TEvent, TEvent, TExtendActions[K], ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions & TExtendActions>, ToParameterizedObject<TGuards & TExtendGuards>, TDelay | TExtendDelays, TEmitted>;
@@ -52,7 +52,7 @@ export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEvent
         delays?: {
             [K in TExtendDelays]: DelayConfig<TContext, TEvent, ToParameterizedObject<TActions & TExtendActions>['params'], TEvent>;
         };
-    }) => SetupReturn<TContext, TEvent, TActors, TChildrenMap, TActions & TExtendActions, TGuards & TExtendGuards, TDelay | TExtendDelays, TTag, TInput, TOutput, TEmitted, TMeta>;
+    }) => SetupReturn<TContext, TEvent, TActors, TChildrenMap, TActions & TExtendActions, TGuards & TExtendGuards, TDelay | TExtendDelays, TTag, TInput, TOutput, TEmitted, TStateMeta, TTransitionMeta>;
     /**
      * Creates a state config that is strongly typed. This state config can be
      * used to create a machine.
@@ -82,7 +82,7 @@ export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEvent
      * });
      * ```
      */
-    createStateConfig: <TStateConfig extends StateNodeConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, unknown, TEmitted, TMeta>>(config: TStateConfig) => TStateConfig;
+    createStateConfig: <TStateConfig extends StateNodeConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, unknown, TEmitted, TStateMeta, TTransitionMeta>>(config: TStateConfig) => TStateConfig;
     /**
      * Creates a type-safe action.
      *
@@ -108,10 +108,10 @@ export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEvent
      * ```
      */
     createAction: (action: ActionFunction<TContext, TEvent, TEvent, unknown, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TEmitted>) => typeof action;
-    createMachine: <const TConfig extends MachineConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, TInput, TOutput, TEmitted, TMeta>, TResolvedChildren extends Record<string, string> = MergeChildrenMap<TChildrenMap, Cast<ExtractConfigChildren<TConfig>, Record<string, string>>>>(config: TConfig) => StateMachine<TContext, TEvent | ([RoutableStateId<TConfig>] extends [never] ? never : {
+    createMachine: <const TConfig extends MachineConfig<TContext, TEvent, ToProvidedActor<TChildrenMap, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, TTag, TInput, TOutput, TEmitted, TStateMeta, TTransitionMeta>, TResolvedChildren extends Record<string, string> = MergeChildrenMap<TChildrenMap, Cast<ExtractConfigChildren<TConfig>, Record<string, string>>>>(config: TConfig) => StateMachine<TContext, TEvent | ([RoutableStateId<TConfig>] extends [never] ? never : {
         type: 'xstate.route';
         to: RoutableStateId<TConfig>;
-    }), Cast<ToChildren<ToProvidedActor<TResolvedChildren, TActors>>, Record<string, AnyActorRef | undefined>>, ToProvidedActor<TResolvedChildren, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, ToStateValue<TConfig>, TTag, TInput, TOutput, TEmitted, TMeta, ToStateSchema<TConfig>>;
+    }), Cast<ToChildren<ToProvidedActor<TResolvedChildren, TActors>>, Record<string, AnyActorRef | undefined>>, ToProvidedActor<TResolvedChildren, TActors>, ToParameterizedObject<TActions>, ToParameterizedObject<TGuards>, TDelay, ToStateValue<TConfig>, TTag, TInput, TOutput, TEmitted, TStateMeta, ToStateSchema<TConfig>, TTransitionMeta>;
     assign: typeof assign<TContext, TEvent, undefined, TEvent, ToProvidedActor<TChildrenMap, TActors>>;
     sendTo: <TTargetActor extends AnyActorRef>(...args: Parameters<typeof sendTo<TContext, TEvent, undefined, TTargetActor, TEvent, TDelay, TDelay>>) => ReturnType<typeof sendTo<TContext, TEvent, undefined, TTargetActor, TEvent, TDelay, TDelay>>;
     raise: typeof raise<TContext, TEvent, TEvent, undefined, TDelay, TDelay>;
@@ -123,9 +123,9 @@ export type SetupReturn<TContext extends MachineContext, TEvent extends AnyEvent
     spawnChild: typeof spawnChild<TContext, TEvent, undefined, TEvent, ToProvidedActor<TChildrenMap, TActors>>;
 };
 export declare function setup<TContext extends MachineContext, TEvent extends AnyEventObject, // TODO: consider using a stricter `EventObject` here
-TActors extends Record<string, UnknownActorLogic> = {}, TChildrenMap extends Record<string, string> = {}, TActions extends Record<string, ParameterizedObject['params'] | undefined> = {}, TGuards extends Record<string, ParameterizedObject['params'] | undefined> = {}, TDelay extends string = never, TTag extends string = string, TInput = NonReducibleUnknown, TOutput extends NonReducibleUnknown = NonReducibleUnknown, TEmitted extends EventObject = EventObject, TMeta extends MetaObject = MetaObject>({ schemas, actors, actions, guards, delays }: {
+TActors extends Record<string, UnknownActorLogic> = {}, TChildrenMap extends Record<string, string> = {}, TActions extends Record<string, ParameterizedObject['params'] | undefined> = {}, TGuards extends Record<string, ParameterizedObject['params'] | undefined> = {}, TDelay extends string = never, TTag extends string = string, TInput = NonReducibleUnknown, TOutput extends NonReducibleUnknown = NonReducibleUnknown, TEmitted extends EventObject = EventObject, TStateMeta extends MetaObject = MetaObject, TTransitionMeta extends MetaObject = TStateMeta>({ schemas, actors, actions, guards, delays }: {
     schemas?: unknown;
-    types?: SetupTypes<TContext, TEvent, TChildrenMap, TTag, TInput, TOutput, TEmitted, TMeta>;
+    types?: SetupTypes<TContext, TEvent, TChildrenMap, TTag, TInput, TOutput, TEmitted, TStateMeta, TTransitionMeta>;
     actors?: {
         [K in keyof TActors | Values<TChildrenMap>]: K extends keyof TActors ? TActors[K] : never;
     };
@@ -140,5 +140,5 @@ TActors extends Record<string, UnknownActorLogic> = {}, TChildrenMap extends Rec
     };
 } & {
     [K in RequiredSetupKeys<TChildrenMap>]: unknown;
-}): SetupReturn<TContext, TEvent, TActors, TChildrenMap, TActions, TGuards, TDelay, TTag, TInput, TOutput, TEmitted, TMeta>;
+}): SetupReturn<TContext, TEvent, TActors, TChildrenMap, TActions, TGuards, TDelay, TTag, TInput, TOutput, TEmitted, TStateMeta, TTransitionMeta>;
 export {};

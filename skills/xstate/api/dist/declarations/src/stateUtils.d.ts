@@ -1,6 +1,6 @@
 import { MachineSnapshot } from "./State.js";
 import type { StateNode } from "./StateNode.js";
-import { ActionArgs, AnyEventObject, AnyMachineSnapshot, AnyStateNode, AnyTransitionDefinition, DelayedTransitionDefinition, EventObject, ExecutableActionObject, InitialTransitionConfig, InitialTransitionDefinition, MachineContext, StateValue, TransitionDefinition, TODO, UnknownAction, ParameterizedObject, AnyTransitionConfig, AnyActorScope } from "./types.js";
+import { ActionArgs, AnyEventObject, AnyMachineSnapshot, AnyStateNode, AnyTransitionDefinition, DelayedTransitionDefinition, EventObject, ExecutableActionObject, InitialTransitionConfig, InitialTransitionDefinition, MachineContext, StateValue, TransitionDefinition, TODO, UnknownAction, ParameterizedObject, AnyTransitionConfig, AnyActorScope, MetaObject } from "./types.js";
 type StateNodeIterable<TContext extends MachineContext, TE extends EventObject> = Iterable<StateNode<TContext, TE>>;
 type AnyStateNodeIterable = StateNodeIterable<any, any>;
 export declare function isAtomicStateNode(stateNode: StateNode<any, any>): boolean;
@@ -19,7 +19,7 @@ export declare function formatTransitions<TContext extends MachineContext, TEven
  * once on the root node to avoid O(N²) repeated traversals.
  */
 export declare function formatRouteTransitions(rootStateNode: AnyStateNode): void;
-export declare function formatInitialTransition<TContext extends MachineContext, TEvent extends EventObject>(stateNode: AnyStateNode, _target: string | undefined | InitialTransitionConfig<TContext, TEvent, TODO, TODO, TODO, TODO>): InitialTransitionDefinition<TContext, TEvent>;
+export declare function formatInitialTransition<TContext extends MachineContext, TEvent extends EventObject, TTransitionMeta extends MetaObject>(stateNode: StateNode<TContext, TEvent, any, TTransitionMeta>, _target: string | undefined | InitialTransitionConfig<TContext, TEvent, TODO, TODO, TODO, TODO, TODO, TTransitionMeta>): InitialTransitionDefinition<TContext, TEvent, TTransitionMeta>;
 /**
  * Returns the relative state node from the given `statePath`, or throws.
  *
