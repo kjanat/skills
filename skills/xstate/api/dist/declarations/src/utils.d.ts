@@ -10,7 +10,7 @@ export declare function toArray<T>(value: readonly T[] | T | undefined): readonl
 export declare function resolveOutput<TContext extends MachineContext, TExpressionEvent extends EventObject>(mapper: Mapper<TContext, TExpressionEvent, unknown, EventObject> | NonReducibleUnknown, context: TContext, event: TExpressionEvent, self: AnyActorRef): unknown;
 export declare function isErrorActorEvent(event: AnyEventObject): event is ErrorActorEvent;
 export declare function toTransitionConfigArray(configLike: SingleOrArray<AnyTransitionConfig | TransitionConfigTarget>): Array<AnyTransitionConfig>;
-export declare function normalizeTarget<TContext extends MachineContext, TEvent extends EventObject>(target: SingleOrArray<string | StateNode<TContext, TEvent>> | undefined): ReadonlyArray<string | StateNode<TContext, TEvent>> | undefined;
+export declare function normalizeTarget<TContext extends MachineContext, TEvent extends EventObject>(target: SingleOrArray<string | StateNode<TContext, TEvent, any, any>> | undefined): ReadonlyArray<string | StateNode<TContext, TEvent, any, any>> | undefined;
 export declare function toObserver<T>(nextHandler?: Observer<T> | ((value: T) => void), errorHandler?: (error: any) => void, completionHandler?: () => void): Observer<T>;
 export declare function createInvokeId(stateNodeId: string, index: number): string;
 export declare function resolveReferencedActor(machine: AnyStateMachine, src: string): any;

@@ -374,8 +374,8 @@ export interface StateNodeDefinition<TContext extends MachineContext, TEvent ext
 }
 export interface StateMachineDefinition<TContext extends MachineContext, TEvent extends EventObject, TStateMeta extends MetaObject = MetaObject, TTransitionMeta extends MetaObject = TStateMeta> extends StateNodeDefinition<TContext, TEvent, TStateMeta, TTransitionMeta> {
 }
-export type AnyStateNode = StateNode<any, any>;
-export type AnyStateNodeDefinition = StateNodeDefinition<any, any>;
+export type AnyStateNode = StateNode<any, any, any, any>;
+export type AnyStateNodeDefinition = StateNodeDefinition<any, any, any, any>;
 export type AnyMachineSnapshot = MachineSnapshot<any, any, any, any, any, any, any, any>;
 /** @deprecated Use `AnyMachineSnapshot` instead */
 export type AnyState = AnyMachineSnapshot;
@@ -523,17 +523,19 @@ export interface MachineTypes<TContext extends MachineContext, TEvent extends Ev
     meta?: TStateMeta;
     transitionMeta?: TTransitionMeta;
 }
-export interface HistoryStateNode<TContext extends MachineContext> extends StateNode<TContext> {
+export interface HistoryStateNode<TContext extends MachineContext> extends StateNode<TContext, EventObject, any, any> {
     history: 'shallow' | 'deep';
     target: string | undefined;
 }
-export type HistoryValue<TContext extends MachineContext, TEvent extends EventObject> = Record<string, Array<StateNode<TContext, TEvent>>>;
+/** Maps history state IDs to recalled nodes, preserving TContext and TEvent with arbitrary metadata. */
+export type HistoryValue<TContext extends MachineContext, TEvent extends EventObject> = Record<string, Array<StateNode<TContext, TEvent, any, any>>>;
 export type PersistedHistoryValue = Record<string, Array<{
     id: string;
 }>>;
 export type AnyHistoryValue = HistoryValue<any, any>;
 export type StateFrom<T extends AnyStateMachine | ((...args: any[]) => AnyStateMachine)> = T extends AnyStateMachine ? ReturnType<T['transition']> : T extends (...args: any[]) => AnyStateMachine ? ReturnType<ReturnType<T>['transition']> : never;
-export type Transitions<TContext extends MachineContext, TEvent extends EventObject> = Array<TransitionDefinition<TContext, TEvent>>;
+/** Transitions with known context and event types and arbitrary metadata. */
+export type Transitions<TContext extends MachineContext, TEvent extends EventObject> = Array<TransitionDefinition<TContext, TEvent, any>>;
 export interface DoneActorEvent<TOutput = unknown, TId extends string = string> extends EventObject {
     type: `xstate.done.actor.${TId}`;
     output: TOutput;

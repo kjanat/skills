@@ -1,19 +1,19 @@
 import { MachineSnapshot } from "./State.js";
 import type { StateNode } from "./StateNode.js";
 import { ActionArgs, AnyEventObject, AnyMachineSnapshot, AnyStateNode, AnyTransitionDefinition, DelayedTransitionDefinition, EventObject, ExecutableActionObject, InitialTransitionConfig, InitialTransitionDefinition, MachineContext, StateValue, TransitionDefinition, TODO, UnknownAction, ParameterizedObject, AnyTransitionConfig, AnyActorScope, MetaObject } from "./types.js";
-type StateNodeIterable<TContext extends MachineContext, TE extends EventObject> = Iterable<StateNode<TContext, TE>>;
+type StateNodeIterable<TContext extends MachineContext, TE extends EventObject> = Iterable<StateNode<TContext, TE, any, any>>;
 type AnyStateNodeIterable = StateNodeIterable<any, any>;
-export declare function isAtomicStateNode(stateNode: StateNode<any, any>): boolean;
+export declare function isAtomicStateNode(stateNode: AnyStateNode): boolean;
 export declare function getProperAncestors(stateNode: AnyStateNode, toStateNode: AnyStateNode | undefined): Array<typeof stateNode>;
 export declare function getAllStateNodes(stateNodes: Iterable<AnyStateNode>): Set<AnyStateNode>;
 export declare function getStateValue(rootNode: AnyStateNode, stateNodes: AnyStateNodeIterable): StateValue;
 export declare function isInFinalState(stateNodeSet: Set<AnyStateNode>, stateNode: AnyStateNode): boolean;
 export declare const isStateId: (str: string) => boolean;
-export declare function getCandidates<TEvent extends EventObject>(stateNode: StateNode<any, TEvent>, receivedEventType: TEvent['type']): Array<TransitionDefinition<any, TEvent>>;
+export declare function getCandidates<TEvent extends EventObject>(stateNode: StateNode<any, TEvent, any, any>, receivedEventType: TEvent['type']): Array<TransitionDefinition<any, TEvent, any>>;
 /** All delayed transitions from the config. */
-export declare function getDelayedTransitions(stateNode: AnyStateNode): Array<DelayedTransitionDefinition<MachineContext, EventObject>>;
+export declare function getDelayedTransitions(stateNode: AnyStateNode): Array<DelayedTransitionDefinition<MachineContext, EventObject, any>>;
 export declare function formatTransition(stateNode: AnyStateNode, descriptor: string, transitionConfig: AnyTransitionConfig): AnyTransitionDefinition;
-export declare function formatTransitions<TContext extends MachineContext, TEvent extends EventObject>(stateNode: AnyStateNode): Map<string, TransitionDefinition<TContext, TEvent>[]>;
+export declare function formatTransitions<TContext extends MachineContext, TEvent extends EventObject>(stateNode: AnyStateNode): Map<string, TransitionDefinition<TContext, TEvent, any>[]>;
 /**
  * Collects route transitions from all descendants with explicit IDs. Called
  * once on the root node to avoid O(N²) repeated traversals.
@@ -32,7 +32,7 @@ export declare function getStateNodeByPath(stateNode: AnyStateNode, statePath: s
  * @param stateValue The state value or State instance
  */
 export declare function getStateNodes(stateNode: AnyStateNode, stateValue: StateValue): Array<AnyStateNode>;
-export declare function transitionNode<TContext extends MachineContext, TEvent extends EventObject>(stateNode: AnyStateNode, stateValue: StateValue, snapshot: MachineSnapshot<TContext, TEvent, any, any, any, any, any, any>, event: TEvent): Array<TransitionDefinition<TContext, TEvent>> | undefined;
+export declare function transitionNode<TContext extends MachineContext, TEvent extends EventObject>(stateNode: AnyStateNode, stateValue: StateValue, snapshot: MachineSnapshot<TContext, TEvent, any, any, any, any, any, any>, event: TEvent): Array<TransitionDefinition<TContext, TEvent, any>> | undefined;
 type Microstep = readonly [AnyMachineSnapshot, ExecutableActionObject[]];
 export declare function initialMicrostep(root: AnyStateNode, preInitialState: AnyMachineSnapshot, actorScope: AnyActorScope, initEvent: AnyEventObject, internalQueue: AnyEventObject[]): Microstep;
 export interface BuiltinAction {

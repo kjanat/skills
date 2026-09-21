@@ -1,5 +1,5 @@
-import { EventObject, StateNode, TransitionDefinition, Snapshot, MachineContext, ActorLogic, MachineSnapshot } from "../index.js";
-export type AnyStateNode = StateNode<any, any>;
+import { AnyStateNode, EventObject, AnyTransitionDefinition, Snapshot, MachineContext, ActorLogic, MachineSnapshot } from "../index.js";
+export type { AnyStateNode };
 type JSONSerializable<T extends object, U> = T & {
     toJSON: () => U;
 };
@@ -13,7 +13,7 @@ export type DirectedGraphEdge = JSONSerializable<{
     source: AnyStateNode;
     target: AnyStateNode;
     label: DirectedGraphLabel;
-    transition: TransitionDefinition<any, any>;
+    transition: AnyTransitionDefinition;
 }, {
     source: string;
     target: string;
@@ -21,7 +21,7 @@ export type DirectedGraphEdge = JSONSerializable<{
 }>;
 export type DirectedGraphNode = JSONSerializable<{
     id: string;
-    stateNode: StateNode;
+    stateNode: AnyStateNode;
     children: DirectedGraphNode[];
     /** The edges representing all transitions from this `stateNode`. */
     edges: DirectedGraphEdge[];
@@ -157,4 +157,3 @@ export interface AdjacencyValue<TState, TEvent> {
 export interface AdjacencyMap<TState, TEvent> {
     [key: SerializedSnapshot]: AdjacencyValue<TState, TEvent>;
 }
-export {};

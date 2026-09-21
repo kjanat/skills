@@ -6,7 +6,7 @@ Canonical sources and version pins for vendored content.
 
 | Source                                                | Ref    | Resolved       | Date       |
 | ----------------------------------------------------- | ------ | -------------- | ---------- |
-| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `5b96022661f0` | 2026-09-14 |
+| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `5b96022661f0` | 2026-09-21 |
 
 ## External references (not vendored)
 
