@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { BoxGeometry, Vector2 } from 'three'
-  import { Gizmo, OrbitControls } from '@threlte/extras'
-  import { T } from '@threlte/core'
+  import { BoxGeometry, Vector2 } from 'three/webgpu'
+  import { OrbitControls } from '@threlte/extras/webgpu'
+  import { T } from '@threlte/core/webgpu'
 
   const positions: Vector2[] = []
   const count = 4
@@ -17,9 +17,7 @@
   position={15}
   fov={60}
 >
-  <OrbitControls>
-    <Gizmo />
-  </OrbitControls>
+  <OrbitControls />
 </T.PerspectiveCamera>
 
 <!-- Make a box in every second cell to show aligment -->

@@ -3,7 +3,7 @@
 Auto-generated from vendored doc frontmatter. Topic → doc file.
 Load the file matching the user's question.
 
-Pinned to commit `5b96022661f0`.
+Pinned to commit `1ea6de5b62eb`.
 
 ## Learn: Getting Started
 
@@ -119,6 +119,7 @@ Pinned to commit `5b96022661f0`.
 | <Wireframe>              | `docs/reference/extras/wireframe.mdx`                |
 | <Wobble>                 | `docs/reference/extras/wobble.mdx`                   |
 | Getting Started          | `docs/reference/extras/getting-started.mdx`          |
+| WebGPU                   | `docs/reference/extras/webgpu.mdx`                   |
 | bvh                      | `docs/reference/extras/bvh.mdx`                      |
 | interactivity            | `docs/reference/extras/interactivity.mdx`            |
 | layers                   | `docs/reference/extras/layers.mdx`                   |

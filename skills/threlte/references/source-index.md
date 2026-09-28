@@ -6,7 +6,7 @@ Canonical sources and version pins for vendored content.
 
 | Source                                                | Ref    | Resolved       | Date       |
 | ----------------------------------------------------- | ------ | -------------- | ---------- |
-| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `5b96022661f0` | 2026-09-21 |
+| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `1ea6de5b62eb` | 2026-09-28 |
 
 ## External references (not vendored)
 
@@ -20,13 +20,13 @@ Canonical sources and version pins for vendored content.
 bash scripts/sync-docs.sh
 
 # Pin specific commit
-bash scripts/sync-docs.sh --ref 5b96022661f0
+bash scripts/sync-docs.sh --ref 1ea6de5b62eb
 ```
 
 ## Vendored layout
 
-- `docs/` — narrative MDX from apps/docs/src/content/ (247 files)
-- `examples/` — Svelte example components from apps/docs/src/examples/ (624 files)
+- `docs/` — narrative MDX from apps/docs/src/content/ (248 files)
+- `examples/` — Svelte example components from apps/docs/src/examples/ (631 files)
 
 ## Package order (from docs navigation)
 
