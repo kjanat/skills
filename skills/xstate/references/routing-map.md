@@ -142,7 +142,7 @@ Load the file matching the user's question.
 | Simulate mode                              | `docs/simulate-mode.mdx`                 |
 | Sources                                    | `docs/sources.mdx`                       |
 | Stately & XState docs                      | `docs/index.mdx`                         |
-| Stately Sky getting started                | `docs/stately-sky-getting-started.mdx`   |
+| Stately Sky                                | `docs/stately-sky-getting-started.mdx`   |
 | Stately Studio                             | `docs/studio.mdx`                        |
 | Stately Studio API                         | `docs/studio-api.mdx`                    |
 | Stately Studio Enterprise plan             | `docs/studio-enterprise-plan.mdx`        |
