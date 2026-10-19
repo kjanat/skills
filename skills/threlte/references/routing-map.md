@@ -3,7 +3,7 @@
 Auto-generated from vendored doc frontmatter. Topic → doc file.
 Load the file matching the user's question.
 
-Pinned to commit `dbc234bcfc42`.
+Pinned to commit `ec7f04432c19`.
 
 ## Learn: Getting Started
 
@@ -31,7 +31,7 @@ Pinned to commit `dbc234bcfc42`.
 | Custom Abstractions | `docs/learn/advanced/custom-abstractions.mdx` |
 | Migration Guides    | `docs/learn/advanced/migration-guides.mdx`    |
 | Plugins             | `docs/learn/advanced/plugins.mdx`             |
-| WebGPU and TSL      | `docs/learn/advanced/webgpu.mdx`              |
+| TSL                 | `docs/learn/advanced/webgpu.mdx`              |
 
 ## @threlte/core
 
@@ -45,6 +45,7 @@ Pinned to commit `dbc234bcfc42`.
 | Hooks                 | `docs/reference/core/hooks.mdx`                    |
 | Plugins               | `docs/reference/core/plugins.mdx`                  |
 | Utilities             | `docs/reference/core/utilities.mdx`                |
+| WebGPU                | `docs/reference/core/webgpu.mdx`                   |
 | useLoader             | `docs/reference/core/use-loader.mdx`               |
 | useStage              | `docs/reference/core/use-stage.mdx`                |
 | useTask               | `docs/reference/core/use-task.mdx`                 |
