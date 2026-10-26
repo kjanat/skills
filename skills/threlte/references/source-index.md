@@ -6,7 +6,7 @@ Canonical sources and version pins for vendored content.
 
 | Source                                                | Ref    | Resolved       | Date       |
 | ----------------------------------------------------- | ------ | -------------- | ---------- |
-| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `ec7f04432c19` | 2026-10-19 |
+| [threlte/threlte](https://github.com/threlte/threlte) | `main` | `d5f097ac2805` | 2026-10-26 |
 
 ## External references (not vendored)
 
@@ -20,7 +20,7 @@ Canonical sources and version pins for vendored content.
 bash scripts/sync-docs.sh
 
 # Pin specific commit
-bash scripts/sync-docs.sh --ref ec7f04432c19
+bash scripts/sync-docs.sh --ref d5f097ac2805
 ```
 
 ## Vendored layout
