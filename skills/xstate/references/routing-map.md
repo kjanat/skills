@@ -5,79 +5,80 @@ Load the file matching the user's question.
 
 ## Core Concepts
 
-| Title                                    | File                                      |
-| ---------------------------------------- | ----------------------------------------- |
-| @xstate/store-angular                    | `docs/xstate-store-v3/angular.mdx`        |
-| @xstate/store-angular                    | `docs/xstate-store/angular.mdx`           |
-| @xstate/store-preact                     | `docs/xstate-store-v3/preact.mdx`         |
-| @xstate/store-preact                     | `docs/xstate-store/preact.mdx`            |
-| @xstate/store-react                      | `docs/xstate-store-v3/react.mdx`          |
-| @xstate/store-react                      | `docs/xstate-store/react.mdx`             |
-| @xstate/store-solid                      | `docs/xstate-store-v3/solid.mdx`          |
-| @xstate/store-solid                      | `docs/xstate-store/solid.mdx`             |
-| @xstate/store-svelte                     | `docs/xstate-store-v3/svelte.mdx`         |
-| @xstate/store-svelte                     | `docs/xstate-store/svelte.mdx`            |
-| @xstate/store-vue                        | `docs/xstate-store-v3/vue.mdx`            |
-| @xstate/store-vue                        | `docs/xstate-store/vue.mdx`               |
-| AI agents                                | `docs/agents/agents.mdx`                  |
-| Actions                                  | `docs/actions.mdx`                        |
-| Actors                                   | `docs/actors.mdx`                         |
-| Callback Actors                          | `docs/callback-actors.mdx`                |
-| Cheatsheet                               | `docs/cheatsheet.mdx`                     |
-| Compare to Jotai                         | `docs/xstate-store/compare-jotai.mdx`     |
-| Compare to Pinia                         | `docs/xstate-store/compare-pinia.mdx`     |
-| Compare to Recoil                        | `docs/xstate-store/compare-recoil.mdx`    |
-| Compare to Redux                         | `docs/xstate-store/compare-redux.mdx`     |
-| Compare to Zustand                       | `docs/xstate-store/compare-zustand.mdx`   |
-| Context                                  | `docs/context.mdx`                        |
-| Delayed (after) transitions              | `docs/delayed-transitions.mdx`            |
-| Event emitter                            | `docs/event-emitter.mdx`                  |
-| Eventless (always) transitions           | `docs/eventless-transitions.mdx`          |
-| Events and transitions                   | `docs/transitions.mdx`                    |
-| Final states                             | `docs/final-states.mdx`                   |
-| Finite states                            | `docs/finite-states.mdx`                  |
-| Function Actors                          | `docs/function-actors.mdx`                |
-| Generate React app                       | `docs/generate-react.mdx`                 |
-| Generate test paths                      | `docs/generate-test-paths.mdx`            |
-| Generate with AI                         | `docs/generate-flow.mdx`                  |
-| Glossary                                 | `docs/glossary.mdx`                       |
-| Graph & Paths                            | `docs/graph.mdx`                          |
-| Guards                                   | `docs/guards.mdx`                         |
-| History states                           | `docs/history-states.mdx`                 |
-| Initial states                           | `docs/initial-states.mdx`                 |
-| Input                                    | `docs/input.mdx`                          |
-| Inspection                               | `docs/inspection.mdx`                     |
-| Installation                             | `docs/installation.mdx`                   |
-| Invoke                                   | `docs/invoke.mdx`                         |
-| Observable Actors                        | `docs/observable-actors.mdx`              |
-| Output                                   | `docs/output.mdx`                         |
-| Packages                                 | `docs/packages/index.mdx`                 |
-| Parallel states                          | `docs/parallel-states.mdx`                |
-| Parent states                            | `docs/parent-states.mdx`                  |
-| Persist                                  | `docs/xstate-store/persist.mdx`           |
-| Persistence                              | `docs/persistence.mdx`                    |
-| Promise actors                           | `docs/promise-actors.mdx`                 |
-| Pure transition functions                | `docs/pure-transitions.mdx`               |
-| Quick start                              | `docs/quick-start.mdx`                    |
-| Reset                                    | `docs/xstate-store/reset.mdx`             |
-| Self-hosting                             | `docs/self-hosting.mdx`                   |
-| Setup                                    | `docs/setup.mdx`                          |
-| Spawn                                    | `docs/spawn.mdx`                          |
-| State                                    | `docs/states.mdx`                         |
-| State done events                        | `docs/state-done-events.mdx`              |
-| State machine actors                     | `docs/state-machine-actors.mdx`           |
-| State machines                           | `docs/machines.mdx`                       |
-| Systems                                  | `docs/system.mdx`                         |
-| Tags                                     | `docs/tags.mdx`                           |
-| Testing                                  | `docs/testing.mdx`                        |
-| The Actor model                          | `docs/actor-model.mdx`                    |
-| Transition Actors                        | `docs/transition-actors.mdx`              |
-| TypeScript                               | `docs/typescript.mdx`                     |
-| Undo/redo                                | `docs/xstate-store/undo-redo.mdx`         |
-| Validate schemas                         | `docs/xstate-store/validate-schemas.mdx`  |
-| What are state machines and statecharts? | `docs/state-machines-and-statecharts.mdx` |
-| XState                                   | `docs/xstate.mdx`                         |
-| XState examples                          | `docs/examples.mdx`                       |
+| Title                                           | File                                      |
+| ----------------------------------------------- | ----------------------------------------- |
+| @xstate/store-angular                           | `docs/xstate-store-v3/angular.mdx`        |
+| @xstate/store-angular                           | `docs/xstate-store/angular.mdx`           |
+| @xstate/store-preact                            | `docs/xstate-store-v3/preact.mdx`         |
+| @xstate/store-preact                            | `docs/xstate-store/preact.mdx`            |
+| @xstate/store-react                             | `docs/xstate-store-v3/react.mdx`          |
+| @xstate/store-react                             | `docs/xstate-store/react.mdx`             |
+| @xstate/store-solid                             | `docs/xstate-store-v3/solid.mdx`          |
+| @xstate/store-solid                             | `docs/xstate-store/solid.mdx`             |
+| @xstate/store-svelte                            | `docs/xstate-store-v3/svelte.mdx`         |
+| @xstate/store-svelte                            | `docs/xstate-store/svelte.mdx`            |
+| @xstate/store-vue                               | `docs/xstate-store-v3/vue.mdx`            |
+| @xstate/store-vue                               | `docs/xstate-store/vue.mdx`               |
+| AI agents                                       | `docs/agents/agents.mdx`                  |
+| Actions                                         | `docs/actions.mdx`                        |
+| Actors                                          | `docs/actors.mdx`                         |
+| Callback Actors                                 | `docs/callback-actors.mdx`                |
+| Cheatsheet                                      | `docs/cheatsheet.mdx`                     |
+| Compare to Jotai                                | `docs/xstate-store/compare-jotai.mdx`     |
+| Compare to Pinia                                | `docs/xstate-store/compare-pinia.mdx`     |
+| Compare to Recoil                               | `docs/xstate-store/compare-recoil.mdx`    |
+| Compare to Redux                                | `docs/xstate-store/compare-redux.mdx`     |
+| Compare to Zustand                              | `docs/xstate-store/compare-zustand.mdx`   |
+| Context                                         | `docs/context.mdx`                        |
+| Delayed (after) transitions                     | `docs/delayed-transitions.mdx`            |
+| Event emitter                                   | `docs/event-emitter.mdx`                  |
+| Eventless (always) transitions                  | `docs/eventless-transitions.mdx`          |
+| Events and transitions                          | `docs/transitions.mdx`                    |
+| Final states                                    | `docs/final-states.mdx`                   |
+| Finite states                                   | `docs/finite-states.mdx`                  |
+| Function Actors                                 | `docs/function-actors.mdx`                |
+| Generate React app                              | `docs/generate-react.mdx`                 |
+| Generate test paths                             | `docs/generate-test-paths.mdx`            |
+| Generate with AI                                | `docs/generate-flow.mdx`                  |
+| Glossary                                        | `docs/glossary.mdx`                       |
+| Graph & Paths                                   | `docs/graph.mdx`                          |
+| Guards                                          | `docs/guards.mdx`                         |
+| History states                                  | `docs/history-states.mdx`                 |
+| Initial states                                  | `docs/initial-states.mdx`                 |
+| Input                                           | `docs/input.mdx`                          |
+| Inspection                                      | `docs/inspection.mdx`                     |
+| Installation                                    | `docs/installation.mdx`                   |
+| Invoke                                          | `docs/invoke.mdx`                         |
+| Observable Actors                               | `docs/observable-actors.mdx`              |
+| Output                                          | `docs/output.mdx`                         |
+| Packages                                        | `docs/packages/index.mdx`                 |
+| Parallel states                                 | `docs/parallel-states.mdx`                |
+| Parent states                                   | `docs/parent-states.mdx`                  |
+| Persist                                         | `docs/xstate-store/persist.mdx`           |
+| Persistence                                     | `docs/persistence.mdx`                    |
+| Promise actors                                  | `docs/promise-actors.mdx`                 |
+| Pure transition functions                       | `docs/pure-transitions.mdx`               |
+| Quick start                                     | `docs/quick-start.mdx`                    |
+| Reset                                           | `docs/xstate-store/reset.mdx`             |
+| Self-hosting                                    | `docs/self-hosting.mdx`                   |
+| Setup                                           | `docs/setup.mdx`                          |
+| Spawn                                           | `docs/spawn.mdx`                          |
+| State                                           | `docs/states.mdx`                         |
+| State done events                               | `docs/state-done-events.mdx`              |
+| State machine actors                            | `docs/state-machine-actors.mdx`           |
+| State machines                                  | `docs/machines.mdx`                       |
+| Systems                                         | `docs/system.mdx`                         |
+| Tags                                            | `docs/tags.mdx`                           |
+| Testing                                         | `docs/testing.mdx`                        |
+| The Actor model                                 | `docs/actor-model.mdx`                    |
+| Transition Actors                               | `docs/transition-actors.mdx`              |
+| TypeScript                                      | `docs/typescript.mdx`                     |
+| Undo/redo                                       | `docs/xstate-store/undo-redo.mdx`         |
+| Validate schemas                                | `docs/xstate-store/validate-schemas.mdx`  |
+| What are state machines and statecharts?        | `docs/state-machines-and-statecharts.mdx` |
+| What are statecharts? Coffee and donut examples | `docs/statecharts.mdx`                    |
+| XState                                          | `docs/xstate.mdx`                         |
+| XState examples                                 | `docs/examples.mdx`                       |
 
 ## Migration
 
