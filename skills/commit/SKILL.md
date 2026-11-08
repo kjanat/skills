@@ -52,6 +52,8 @@ Git-only skill. If `.jj/` exists, do not run this flow.
   - If anything already staged, never run `git add`.
   - `git add -A` allowed only if both true: nothing staged and no args/flags.
   - If nothing is staged and any flags/context are present, stop and report. Do not auto-stage.
+  - The staged set is the user's and is the commit. Never unstage, restage, or reshape it: no `git reset`, `git restore --staged`, `git rm --cached`, `git stash`, or `git add -p` over it, and no soft reset of a commit to split it.
+  - If the staged set looks wrong (unrelated files, mixed concerns), commit it as staged, or stop and report. The user decides what leaves the index.
 - Push gate:
   - If `push` present: push after successful commit.
   - If `no-push`/`nopush` present: do not push.

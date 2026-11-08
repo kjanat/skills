@@ -10,6 +10,7 @@ If `amend` was not explicit, do not amend.
 - Message must describe final full commit intent, not just the delta.
 - Never use `--no-verify` unless `no-verify` was explicit.
 - Never run `git add` if anything is already staged.
+- Never unstage or reshape the staged set (`git reset`, `git restore --staged`, `git rm --cached`, `git stash`). The user decides what leaves the index.
 - If `HEAD` is already on any remote branch, stop and report. Do not rewrite history implicitly.
 - If this amend creates a malformed message in this same run, allow one immediate message-only recovery amend via `references/malformed-message-recovery.md`.
 - If the branch has an upstream, compare local `HEAD` with upstream after amend before taking any follow-up action.
