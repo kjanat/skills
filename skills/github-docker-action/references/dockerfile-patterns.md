@@ -55,7 +55,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 ### Multi-stage build (compiled language)
 
 ```dockerfile
-FROM golang:1.22 AS builder
+FROM golang:1.27 AS builder
 WORKDIR /app
 COPY . .
 RUN go build -o /action ./cmd/main.go
