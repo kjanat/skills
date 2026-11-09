@@ -30,6 +30,7 @@ Load the file matching the user's question.
 | Compare to Redux                                | `docs/xstate-store/compare-redux.mdx`     |
 | Compare to Zustand                              | `docs/xstate-store/compare-zustand.mdx`   |
 | Context                                         | `docs/context.mdx`                        |
+| David Harel's statecharts paper, explained      | `docs/harel-statecharts.mdx`              |
 | Delayed (after) transitions                     | `docs/delayed-transitions.mdx`            |
 | Event emitter                                   | `docs/event-emitter.mdx`                  |
 | Eventless (always) transitions                  | `docs/eventless-transitions.mdx`          |

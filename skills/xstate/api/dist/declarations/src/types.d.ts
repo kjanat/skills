@@ -193,7 +193,7 @@ export type TransitionsConfig<TContext extends MachineContext, TEvent extends Ev
 };
 type PartialEventDescriptor<TEventType extends string> = TEventType extends `${infer TLeading}.${infer TTail}` ? `${TLeading}.*` | `${TLeading}.${PartialEventDescriptor<TTail>}` : never;
 export type EventDescriptor<TEvent extends EventObject> = TEvent['type'] | PartialEventDescriptor<TEvent['type']> | '*';
-type NormalizeDescriptor<TDescriptor extends string> = TDescriptor extends '*' ? string : TDescriptor extends `${infer TLeading}.*` ? `${TLeading}.${string}` : TDescriptor;
+type NormalizeDescriptor<TDescriptor extends string> = TDescriptor extends '*' ? string : TDescriptor extends `${infer TLeading}.*` ? TLeading | `${TLeading}.${string}` : TDescriptor;
 export type IsLiteralString<T extends string> = string extends T ? false : true;
 type DistributeActors<TContext extends MachineContext, TEvent extends EventObject, TActor extends ProvidedActor, TAction extends ParameterizedObject, TGuard extends ParameterizedObject, TDelay extends string, TEmitted extends EventObject, TTransitionMeta extends MetaObject, TSpecificActor extends ProvidedActor> = TSpecificActor extends {
     src: infer TSrc;
