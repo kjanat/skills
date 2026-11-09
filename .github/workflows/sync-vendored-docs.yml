@@ -37,7 +37,7 @@ jobs:
         run: ./scripts/maintain.sh validate
 
       - name: Install dprint
-        uses: kjanat/install-dprint@v1
+        uses: kjanat/install-dprint@v2
 
       - name: Install tombi
         # TOML formatter the dprint exec plugin shells out to.
