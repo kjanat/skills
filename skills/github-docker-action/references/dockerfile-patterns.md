@@ -6,7 +6,7 @@ Dockerfile templates, base image selection, and common pitfalls.
 
 ```dockerfile
 # Container image that runs your code
-FROM alpine:3.21
+FROM alpine:3.24
 
 # Copies your code file from your action repository to the filesystem path `/`
 COPY entrypoint.sh /entrypoint.sh
@@ -41,7 +41,7 @@ Prefer slim/alpine variants for faster pull times in CI.
 ### With package dependencies
 
 ```dockerfile
-FROM alpine:3.21
+FROM alpine:3.24
 
 RUN apk add --no-cache \
     curl \
@@ -60,7 +60,7 @@ WORKDIR /app
 COPY . .
 RUN go build -o /action ./cmd/main.go
 
-FROM alpine:3.21
+FROM alpine:3.24
 COPY --from=builder /action /action
 ENTRYPOINT ["/action"]
 ```
@@ -68,7 +68,7 @@ ENTRYPOINT ["/action"]
 ### With environment variables
 
 ```dockerfile
-FROM alpine:3.21
+FROM alpine:3.24
 
 ENV MY_VAR="default_value"
 
