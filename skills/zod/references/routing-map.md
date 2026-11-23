@@ -1,7 +1,7 @@
 # Routing Map
 
 Auto-generated from vendored Zod docs frontmatter. Topic to exact doc path.
-Pinned to commit `19c40d207228`.
+Pinned to commit `d40c32991043`.
 
 ## Core usage
 

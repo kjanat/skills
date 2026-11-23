@@ -12,7 +12,7 @@ These states are “finite”; the machine can only move through the states you�
 
 <Callout>
 
-You can visualize your state machines and easily add states in our drag-and-drop Stately editor. [Read more about states in Stately’s editor](editor-states-and-transitions).
+You can visualize your state machines and add states in our drag-and-drop Stately editor. [Read more about states in Stately’s editor](editor-states-and-transitions).
 
 </Callout>
 
@@ -30,7 +30,7 @@ The state object represents the current state of a running machine ([actor](acto
   - a string representing a simple state like `'playing'`, or:
   - an object representing nested states like `{ paused: 'buffering' }`.
 - **`context`**: the current [context](context) (extended state.)
-- **`meta`**: an object containing state node meta data.
+- **`getMeta()`**: a method that returns metadata from active state nodes.
 
 ```ts
 import { createMachine, createActor } from 'xstate';
@@ -59,11 +59,13 @@ console.log(actor.getSnapshot());
 //   value: 'question',
 //   context: {
 //     feedback: ''
-//   },
-//   meta: {
-//     'feedback.question': {
-//       question: 'How was your experience?'
-//     }
+//   }
+// }
+
+console.log(actor.getSnapshot().getMeta());
+// {
+//   'feedback.question': {
+//     question: 'How was your experience?'
 //   }
 // }
 ```
